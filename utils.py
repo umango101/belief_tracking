@@ -37,7 +37,10 @@ def collate_fn(model, tokenizer, examples) -> dict[str, torch.Tensor]:
         or model.config.architectures[0] == "LlaMAForCausalLM"
     ):
         inputs["target"] = [tokenizer.encode(ex["target"])[1] for ex in examples]
-    elif model.config.architectures[0] == "MistralForCausalLM":
+    elif (
+        model.config.architectures[0] == "MistralForCausalLM"
+        or model.config.architectures[0] == "MixtralForCausalLM"
+    ):
         inputs["target"] = [tokenizer.encode(" " + ex["target"])[2] for ex in examples]
     else:
         raise NotImplementedError

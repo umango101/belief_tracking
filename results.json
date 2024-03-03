@@ -1,0 +1,19 @@
+{
+    "gpt2": 0.47,
+    "gpt2-medium": 0.5,
+    "gpt2-large": 0.6,
+    "gpt2-xl": 0.57,
+    "gpt-j-6b": 0.56,
+    "gpt-neox-20b": 0.55,
+    "pythia-6.9b": 0.53,
+    "pythia-12b": 0.56,
+    "llama-7b": 0.48,
+    "llama-13b": 0.52,
+    "llama-30b": 0.5,
+    "llama-65b": 0.53,
+    "alpaca-7b": 0.5,
+    "vicuna-7b": 0.49,
+    "Mistral-7B-v0.1": 0.53,
+    "Mixtral-8x7B-v0.1": 0.59,
+    "Mistral-7B-Instruct-v0.2": 0.41
+}

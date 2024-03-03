@@ -1,3 +1,4 @@
+import os
 import json
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -9,7 +10,13 @@ from utils import get_dataset, collate_fn
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-with open("models.json", "r") as f:
+# Get current directory
+current_dir = os.path.dirname(os.path.realpath(__file__))
+if "mind" not in current_dir:
+    current_dir = f"{current_dir}/mind"
+print(f"Current directory: {current_dir}")
+
+with open(f"{current_dir}/models.json", "r") as f:
     models = json.load(f)
 
 
@@ -23,31 +30,47 @@ def main():
             del tokenizer
 
         model_name = model_details["model_name"]
-        half_precision = model_details["half_precision"]
+        precision = model_details["precision"]
 
-        tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
         tokenizer.pad_token = tokenizer.eos_token
 
-        model = AutoModelForCausalLM.from_pretrained(model_name)
-        if half_precision:
-            model.half()
-        try:
-            model.to(device)
-        except:
-            results[model_name.split("/")[-1]] = "Failed to move to gpu"
-            print(f"Failed to move {model_name}  to gpu. Skipping.")
-            continue
+        # try:
+        if precision == "fp32":
+            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        elif precision == "fp16":
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name, torch_dtype=torch.float16
+            ).to(device)
+        elif precision == "int8":
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                device_map="auto",
+                load_in_8bit=True,
+                torch_dtype=torch.float16,
+            )
+        elif precision == "int4":
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                device_map="auto",
+                load_in_4bit=True,
+                torch_dtype=torch.float16,
+            )
+        # except:
+        #     results[model_name.split("/")[-1]] = "Failed to load"
+        #     print(f"Failed to load {model_name}. Skipping.")
+        #     continue
 
         dataset = get_dataset(
             datafiles=[
-                "data/unexpected_contents.jsonl",
-                "data/unexpected_transfer.jsonl",
+                f"{current_dir}/data/unexpected_contents.jsonl",
+                f"{current_dir}/data/unexpected_transfer.jsonl",
             ]
         )
         try:
             dataloader = DataLoader(
                 dataset,
-                batch_size=8,
+                batch_size=1,
                 collate_fn=lambda x: collate_fn(model, tokenizer, x),
             )
         except:
@@ -67,18 +90,32 @@ def main():
 
                 for i, predicted_id in enumerate(predicted_ids):
                     if predicted_id == inp["target"][i]:
-                        # print(f"{tokenizer.decode(inp['input_ids'][0])}: {tokenizer.decode(predicted_id)} == {tokenizer.decode(inp['target'][i])}")
+                        with open(
+                            f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
+                        ) as f:
+                            f.write(
+                                f"{tokenizer.decode(predicted_id)}({predicted_id}) == {tokenizer.decode(inp['target'][i])}({inp['target'][i]})\n"
+                            )
                         correct += 1
                     else:
-                        pass
-                        # print(f"{tokenizer.decode(inp['input_ids'][0])}: {tokenizer.decode(predicted_id)} != {tokenizer.decode(inp['target'][i])}")
+                        with open(
+                            f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
+                        ) as f:
+                            f.write(
+                                f"{tokenizer.decode(predicted_id)}({predicted_id}) != {tokenizer.decode(inp['target'][i])}({inp['target'][i]})\n"
+                            )
                     total += 1
 
                 del inp, outputs, logits, predicted_ids
                 torch.cuda.empty_cache()
 
-        print(f"Model Name: {model_name.split('/')[-1]} | Accuracy: {correct/total:.2f}")
+        print(
+            f"Model Name: {model_name.split('/')[-1]} | Accuracy: {correct/total:.2f}"
+        )
         results[model_name.split("/")[-1]] = round(correct / total, 2)
+
+        with open(f"{current_dir}/results.json", "a") as f:
+            json.dump(results, f, indent=4)
 
 
 if __name__ == "__main__":

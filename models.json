@@ -1,70 +1,10 @@
 [
     {
-        "model_name": "gpt2",
-        "half_precision": false
-    },
-    {
-        "model_name": "gpt2-medium",
-        "half_precision": false
-    },
-    {
-        "model_name": "gpt2-large",
-        "half_precision": false
-    },
-    {
-        "model_name": "gpt2-xl",
-        "half_precision": false
-    },
-    {
-        "model_name": "ElutherAI/gpt-j-6B",
-        "half_precision": false
-    },
-    {
-        "model_name": "EleutherAI/gpt-neox-20b",
-        "half_precision": false
-    },
-    {
-        "model_name": "EleutherAI/pythia-6.9b",
-        "half_precision": false
-    },
-    {
-        "model_name": "EleutherAI/pythia-12b",
-        "half_precision": true
-    },
-    {
-        "model_name": "huggyllama/llama-7b",
-        "half_precision": false
-    },
-    {
-        "model_name": "huggyllama/llama-13b",
-        "half_precision": false
-    },
-    {
-        "model_name": "huggyllama/llama-30b",
-        "half_precision": true
-    },
-    {
-        "model_name": "huggyllama/llama-13b",
-        "half_precision": false
-    },
-    {
-        "model_name": "circulus/alpaca-7b",
-        "half_precision": false
-    },
-    {
-        "model_name": "AlekseyKorshuk/vicuna-7b",
-        "half_precision": false
-    },
-    {
-        "model_name": "mistralai/Mistral-7B-v0.1",
-        "half_precision": false
-    },
-    {
         "model_name": "mistralai/Mixtral-8x7B-v0.1",
-        "half_precision": true
+        "precision": "int4"
     },
     {
         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-        "half_precision": false
+        "precision": "fp16"
     }
 ]
