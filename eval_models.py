@@ -1,9 +1,11 @@
 import os
 import json
+import shutil
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+from pathlib import Path
 from collections import defaultdict
 
 from utils import get_dataset, collate_fn
@@ -35,7 +37,6 @@ def main():
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         tokenizer.pad_token = tokenizer.eos_token
 
-        # try:
         if precision == "fp32":
             model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         elif precision == "fp16":
@@ -56,10 +57,6 @@ def main():
                 load_in_4bit=True,
                 torch_dtype=torch.float16,
             )
-        # except:
-        #     results[model_name.split("/")[-1]] = "Failed to load"
-        #     print(f"Failed to load {model_name}. Skipping.")
-        #     continue
 
         dataset = get_dataset(
             datafiles=[
@@ -67,16 +64,11 @@ def main():
                 f"{current_dir}/data/unexpected_transfer.jsonl",
             ]
         )
-        try:
-            dataloader = DataLoader(
-                dataset,
-                batch_size=1,
-                collate_fn=lambda x: collate_fn(model, tokenizer, x),
-            )
-        except:
-            results[model_name.split("/")[-1]] = "Failed to create dataloader"
-            print(f"Failed to create dataloader for {model_name}. Skipping.")
-            continue
+        dataloader = DataLoader(
+            dataset,
+            batch_size=1,
+            collate_fn=lambda x: collate_fn(model, tokenizer, x),
+        )
 
         correct, total = 0, 0
         with torch.no_grad():
@@ -87,24 +79,20 @@ def main():
                 outputs = model(inp["input_ids"])
                 logits = outputs.logits
                 predicted_ids = torch.argmax(logits[:, -1], dim=-1)
+                predicted_token = tokenizer.decode(predicted_ids)
 
-                for i, predicted_id in enumerate(predicted_ids):
-                    if predicted_id == inp["target"][i]:
-                        with open(
-                            f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
-                        ) as f:
-                            f.write(
-                                f"{tokenizer.decode(predicted_id)}({predicted_id}) == {tokenizer.decode(inp['target'][i])}({inp['target'][i]})\n"
-                            )
-                        correct += 1
-                    else:
-                        with open(
-                            f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
-                        ) as f:
-                            f.write(
-                                f"{tokenizer.decode(predicted_id)}({predicted_id}) != {tokenizer.decode(inp['target'][i])}({inp['target'][i]})\n"
-                            )
-                    total += 1
+                if predicted_token.strip() == inp["target"][0].strip():
+                    with open(
+                        f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
+                    ) as f:
+                        f.write(f"{predicted_token} == {inp['target'][0].strip()}\n")
+                    correct += 1
+                else:
+                    with open(
+                        f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
+                    ) as f:
+                        f.write(f"{predicted_token} != {inp['target'][0].strip()}\n")
+                total += 1
 
                 del inp, outputs, logits, predicted_ids
                 torch.cuda.empty_cache()
@@ -116,6 +104,11 @@ def main():
 
         with open(f"{current_dir}/results.json", "a") as f:
             json.dump(results, f, indent=4)
+
+        home_dir = str(Path.home())
+        shutil.rmtree(
+            f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
+        )
 
 
 if __name__ == "__main__":

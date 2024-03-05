@@ -1,10 +1,70 @@
 [
     {
+        "model_name": "gpt2",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "gpt2-medium",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "gpt2-large",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "gpt2-xl",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "EleutherAI/gpt-j-6b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "EleutherAI/gpt-neox-20b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "EleutherAI/pythia-6.9b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "EleutherAI/pythia-12b",
+        "precision": "fp16"
+    },
+    {
+        "model_name": "huggyllama/llama-7b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "huggyllama/llama-13b",
+        "precision": "fp16"
+    },
+    {
+        "model_name": "huggyllama/llama-30b",
+        "precision": "fp16"
+    },
+    {
+        "model_name": "huggyllama/llama-65b",
+        "precision": "int4"
+    },
+    {
+        "model_name": "circulus/alpaca-7b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "AlekseyKorshuk/vicuna-7b",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "mistralai/Mistral-7B-v0.1",
+        "precision": "fp32"
+    },
+    {
         "model_name": "mistralai/Mixtral-8x7B-v0.1",
         "precision": "int4"
     },
     {
         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-        "precision": "fp16"
+        "precision": "fp32"
     }
 ]

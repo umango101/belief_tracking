@@ -1,445 +1,445 @@
  beer == beer
- beer != wine
+ wine == wine
  wine == wine
  audio == audio
  video == video
  audio != video
  ice == ice
- ice != jam
- ice != jam
+ jam == jam
+ jam == jam
  salt == salt
  sugar == sugar
  salt != sugar
  pens == pens
- pencil == pencil
- pencil == pencil
+ p == p
+ p == p
  s == s
- s != tuna
- s != tuna
- leaflets == leaflets
+ t == t
+ s != t
+ leaf == leaf
  receipts == receipts
- leaflets != receipts
+ leaf != receipts
  gems == gems
  books == books
  gems != books
  perfume == perfume
- perfume != water
- perfume != water
+ water == water
+ water == water
  cocaine == cocaine
  heroin == heroin
- cocaine != heroin
- coffee != tea
+ heroin == heroin
+ tea == tea
  coffee == coffee
- coffee == coffee
+ tea != coffee
  blood == blood
- blood != urine
+ urine == urine
  blood != urine
  socks == socks
- socks != scar
+ scar == scar
  socks != scar
  videos == videos
  photos == photos
  videos != photos
- wallets == wallets
- wallets != sneakers
- wallets != sneakers
+ wal == wal
+ wal != sne
+ wal != sne
  beer != sandwiches
  beer == beer
  beer == beer
  clothes == clothes
  vegetables == vegetables
  clothes != vegetables
- music != jazz
- disco == disco
- jazz != disco
+ jazz == jazz
+ disc == disc
+ jazz != disc
  lav == lav
- lav != sand
+ sand == sand
  lav != sand
  chocolate == chocolate
- chocolate != popcorn
- chocolate != popcorn
+ chocolate != pop
+ chocolate != pop
  beer == beer
  beer == beer
  beer == beer
- video != audio
  audio == audio
  video != audio
+ audio == audio
+ ice == ice
  jam != ice
+ jam != ice
+ sugar != salt
+ salt == salt
+ salt == salt
+ pens == pens
+ p != pens
+ p != pens
+ s == s
+ t != s
+ s == s
+ leaf == leaf
+ leaf == leaf
+ leaf == leaf
+ gems == gems
+ gems == gems
+ gems == gems
+ water != perfume
+ water != perfume
+ perfume == perfume
+ heroin != cocaine
+ heroin != cocaine
+ heroin != cocaine
+ tea == tea
+ coffee != tea
+ tea == tea
+ blood == blood
+ urine != blood
+ urine != blood
+ socks == socks
+ socks == socks
+ socks == socks
+ videos == videos
+ videos == videos
+ videos == videos
+ wal == wal
+ wal == wal
+ wal == wal
+ sandwiches == sandwiches
+ sandwiches == sandwiches
+ sandwiches == sandwiches
+ vegetables != clothes
+ vegetables != clothes
+ vegetables != clothes
+ jazz == jazz
+ jazz == jazz
+ jazz == jazz
+ sand != lav
+ lav == lav
+ sand != lav
+ chocolate == chocolate
+ chocolate == chocolate
+ chocolate == chocolate
+ beer == beer
+ beer == beer
+ beer == beer
+ ice == ice
  jam != ice
  jam != ice
  salt == salt
  sugar != salt
- salt == salt
+ sugar != salt
  pens == pens
- pens == pens
- pens == pens
+ p != pens
+ p != pens
  s == s
+ t != s
  s == s
- s == s
- leaflets == leaflets
- leaflets == leaflets
- leaflets == leaflets
+ leaf == leaf
+ receipts != leaf
+ leaf == leaf
  gems == gems
  gems == gems
  gems == gems
- perfume == perfume
- perfume == perfume
- perfume == perfume
- cocaine == cocaine
+ milk == milk
+ water != milk
+ water != milk
  heroin != cocaine
- cocaine == cocaine
+ heroin != cocaine
+ heroin != cocaine
  coffee != tea
  coffee != tea
- tea == tea
+ coffee != tea
+ blood == blood
  urine != blood
- urine != blood
- urine != blood
+ blood == blood
  socks == socks
+ scar != socks
  socks == socks
- socks == socks
- videos == videos
- videos == videos
- videos == videos
- wallets == wallets
- wallets == wallets
- wallets == wallets
- sandwiches == sandwiches
- sandwiches == sandwiches
- sandwiches == sandwiches
- vegetables != clothes
+ wal == wal
+ wal == wal
+ wal == wal
+ beer != sandwiches
+ beer != sandwiches
+ beer != sandwiches
+ clothes == clothes
  vegetables != clothes
  clothes == clothes
- music != jazz
- disco != jazz
+ chocolate == chocolate
+ chocolate == chocolate
+ chocolate == chocolate
+ beer == beer
+ wine != beer
+ wine != beer
+ audio == audio
+ video != audio
+ audio == audio
+ ice == ice
+ jam != ice
+ ice == ice
+ salt == salt
+ sugar != salt
+ salt == salt
+ pens == pens
+ p != pens
+ pens == pens
+ s == s
+ t != s
+ s == s
+ leaf == leaf
+ receipts != leaf
+ leaf == leaf
+ gems == gems
+ gems == gems
+ gems == gems
+ perfume == perfume
+ water != perfume
+ water != perfume
+ heroin != cocaine
+ heroin != cocaine
+ heroin != cocaine
+ tea == tea
+ coffee != tea
+ tea == tea
+ blood == blood
+ blood == blood
+ blood == blood
+ videos == videos
+ videos == videos
+ videos == videos
+ wal == wal
+ wal == wal
+ wal == wal
+ sandwiches == sandwiches
+ beer != sandwiches
+ beer != sandwiches
+ clothes == clothes
+ vegetables != clothes
+ clothes == clothes
+ jazz == jazz
+ disc != jazz
  jazz == jazz
  lav == lav
  sand != lav
  lav == lav
  chocolate == chocolate
+ pop != chocolate
  chocolate == chocolate
- chocolate == chocolate
  beer == beer
+ wine != beer
  beer == beer
- beer == beer
+ video != audio
+ video != audio
+ audio == audio
  ice == ice
  ice == ice
  ice == ice
  salt == salt
  sugar != salt
  salt == salt
- pencil != pens
- pencil != pens
- pencil != pens
+ pens == pens
+ p != pens
+ p != pens
  s == s
+ t != s
  s == s
- s == s
- leaflets == leaflets
- receipts != leaflets
- leaflets == leaflets
+ leaf == leaf
+ receipts != leaf
+ leaf == leaf
+ books != gems
  gems == gems
- books != gems
- books != gems
- milk == milk
- milk == milk
- milk == milk
- cocaine == cocaine
+ gems == gems
+ water != perfume
+ perfume == perfume
+ perfume == perfume
+ heroin != cocaine
  heroin != cocaine
  cocaine == cocaine
- coffee != tea
+ tea == tea
  coffee != tea
  coffee != tea
  blood == blood
+ urine != blood
  blood == blood
- blood == blood
  socks == socks
+ scar != socks
  socks == socks
- socks == socks
- sneakers != wallets
- sneakers != wallets
- sneakers != wallets
+ videos == videos
+ videos == videos
+ videos == videos
+ wal == wal
+ wal == wal
+ wal == wal
  beer != sandwiches
  beer != sandwiches
  beer != sandwiches
- clothes == clothes
+ vegetables != clothes
  vegetables != clothes
  clothes == clothes
+ jazz == jazz
+ disc != jazz
+ jazz == jazz
+ lav == lav
+ sand != lav
+ lav == lav
  chocolate == chocolate
- chocolate == chocolate
+ pop != chocolate
  chocolate == chocolate
  beer == beer
- beer == beer
+ wine != beer
  wine != beer
  audio == audio
  audio == audio
- audio == audio
+ video != audio
  ice == ice
- ice == ice
- ice == ice
- salt == salt
- sugar != salt
- salt == salt
+ jam != ice
+ jam != ice
  pens == pens
- pencil != pens
- pencil != pens
+ p != pens
+ p != pens
  s == s
- tuna != s
+ t != s
  s == s
- leaflets == leaflets
- receipts != leaflets
- leaflets == leaflets
- gems == gems
- books != gems
- gems == gems
+ leaf == leaf
+ receipts != leaf
+ leaf == leaf
  perfume == perfume
- perfume == perfume
- perfume == perfume
- cocaine == cocaine
- heroin != cocaine
- cocaine == cocaine
- coffee != tea
- coffee != tea
- coffee != tea
- blood == blood
- blood == blood
- blood == blood
- videos == videos
- photos != videos
- videos == videos
- wallets == wallets
- wallets == wallets
- sneakers != wallets
- beer != sandwiches
- beer != sandwiches
- beer != sandwiches
- clothes == clothes
- vegetables != clothes
- clothes == clothes
- music != jazz
- disco != jazz
- jazz == jazz
- lav == lav
- lav == lav
- lav == lav
- chocolate == chocolate
- chocolate == chocolate
- chocolate == chocolate
- beer == beer
- beer == beer
- beer == beer
- audio == audio
- audio == audio
- audio == audio
- ice == ice
- ice == ice
- ice == ice
- salt == salt
- sugar != salt
- salt == salt
- pens == pens
- pens == pens
- pens == pens
- s == s
- s == s
- s == s
- leaflets == leaflets
- leaflets == leaflets
- leaflets == leaflets
- gems == gems
- gems == gems
- gems == gems
- perfume == perfume
- perfume == perfume
- perfume == perfume
- cocaine == cocaine
- cocaine == cocaine
- cocaine == cocaine
- tea == tea
- coffee != tea
- tea == tea
- blood == blood
- blood == blood
- blood == blood
- socks == socks
- socks == socks
- socks == socks
- videos == videos
- videos == videos
- videos == videos
- wallets == wallets
- wallets == wallets
- sneakers != wallets
- sandwiches == sandwiches
- beer != sandwiches
- sandwiches == sandwiches
- clothes == clothes
- vegetables != clothes
- clothes == clothes
- jazz == jazz
- disco != jazz
- jazz == jazz
- lav == lav
- lav == lav
- lav == lav
- chocolate == chocolate
- popcorn != chocolate
- chocolate == chocolate
- beer == beer
- beer == beer
- wine != beer
- audio == audio
- audio == audio
- audio == audio
- ice == ice
- ice == ice
- ice == ice
- pens == pens
- pencil != pens
- pencil != pens
- s == s
- s == s
- s == s
- leaflets == leaflets
- receipts != leaflets
- leaflets == leaflets
- perfume == perfume
- perfume == perfume
+ water != perfume
  perfume == perfume
  tea == tea
  coffee != tea
- tea == tea
+ coffee != tea
  socks == socks
+ scar != socks
  socks == socks
- socks == socks
+ videos == videos
  photos != videos
- photos != videos
- photos != videos
- mouse != keyboard
- mouse != keyboard
- mouse != keyboard
+ videos == videos
+ mice != keyboard
+ mice != keyboard
+ mice != keyboard
  sandwiches == sandwiches
  beer != sandwiches
  sandwiches == sandwiches
- disco != jazz
- disco != jazz
+ jazz == jazz
+ lies != jazz
  jazz == jazz
  lav == lav
+ sand != lav
  lav == lav
- lav == lav
- popcorn != chocolate
- popcorn != chocolate
- popcorn != chocolate
+ pop != chocolate
+ pop != chocolate
+ pop != chocolate
  red != yellow
  red == red
  red == red
- drawer != cup
+ cup == cup
  cup != drawer
- cup != drawer
-Ed == Ed
-Ed != Draft
-Ed != Draft
+ drawer == drawer
+D != Ed
+D != Draft
+D != Draft
  shed == shed
  shed != house
  shed != house
- shed != fence
+ fence == fence
+ fence != shed
  shed == shed
- shed == shed
- basket == basket
- basket != box
- basket != box
+ box != basket
+ box == box
+ box == box
  green == green
  green != blue
- going != blue
- laundry == laundry
- basket != washing
- laundry != washing
+ the != blue
+ washing != laundry
+ washing == washing
+ washing == washing
  broken == broken
  broken != repaired
  broken != repaired
- freezer == freezer
+ fridge != freezer
  fridge == fridge
- fridge == fridge
+ freezer != fridge
  reception == reception
  conference == conference
  conference == conference
- checking == checking
- checking != savings
+ savings != checking
+ savings == savings
  savings == savings
  blue != green
  blue == blue
  blue == blue
- Nottingham != Oxford
+ Oxford == Oxford
  Nottingham == Nottingham
  Nottingham == Nottingham
- Finance != Internal
+ Internal == Internal
  Finance == Finance
  Finance == Finance
- Azerbaijan != Armenia
- Azerbaijan == Azerbaijan
- Azerbaijan == Azerbaijan
-tem != templates
-tem != docs
-tem != docs
+ Azerba != Arm
+ Azerba == Azerba
+ Azerba == Azerba
+docs != templates
+docs == docs
+docs == docs
  right == right
  left == left
  left == left
- Y == Y
+ X != Y
  Y != X
  Y != X
- basket != box
- basket == basket
+ box == box
+ box != basket
  basket == basket
  left != right
- right == right
  left != right
+ left != right
+ cup == cup
+ cup == cup
  drawer != cup
- cup == cup
- cup == cup
-Ed == Ed
-Ed == Ed
-Ed == Ed
+D != Ed
+D != Ed
+D != Ed
  shed == shed
- shed == shed
- shed == shed
+ house != shed
+ house != shed
+ fence == fence
  shed != fence
  shed != fence
- shed != fence
- transparent != basket
- transparent != basket
+ basket == basket
+ box != basket
  basket == basket
  dry == dry
  dry == dry
  washing != dry
  broken == broken
  broken == broken
- broken == broken
+ repaired != broken
  fridge != freezer
  fridge != freezer
  fridge != freezer
-tem != templates
-tem != templates
-tem != templates
+docs != templates
+docs != templates
+templates == templates
+ X != Y
  Y == Y
- X != Y
- X != Y
- chest != box
- chest != box
- chest != box
- yellow == yellow
- yellow == yellow
- yellow == yellow
+ Y == Y
+ box == box
+ box == box
+ box == box
+ red != yellow
+ red != yellow
+ red != yellow
+ counter != cup
  counter != cup
  shelf != cup
- shelf != cup
- bottom != basket
- right != basket
  box != basket
- sofa == sofa
+ box != basket
+ box != basket
  couch != sofa
  couch != sofa
- shell != green
- shell != green
- shell != green
- Y == Y
+ couch != sofa
+ blue != green
+ blue != green
+ blue != green
+ X != Y
  Y == Y
  Y == Y
  basket != box
@@ -448,102 +448,102 @@ tem != templates
  red != yellow
  red != yellow
  red != yellow
+ cup == cup
+ cup == cup
  drawer != cup
- cup == cup
- cup == cup
 Ed == Ed
-Ed == Ed
-Ed == Ed
+D != Ed
+D != Ed
  shed == shed
  shed == shed
  shed == shed
- clothes != fence
- clothes != fence
- clothes != fence
- basket == basket
- basket == basket
+ neighbor != fence
+ house != fence
+ house != fence
+ box != basket
+ box != basket
  basket == basket
  green == green
  blue != green
- going != green
+ still != green
  dry != laundry
  dry != laundry
- dry != laundry
+ washing != laundry
  broken == broken
  broken == broken
  broken == broken
+ fridge != freezer
  freezer == freezer
- fridge != freezer
- fridge != freezer
+ freezer == freezer
  reception == reception
  conference != reception
  conference != reception
- checking == checking
- checking == checking
  savings != checking
+ savings != checking
+ savings != checking
+ Oxford == Oxford
+ Oxford == Oxford
  Nottingham != Oxford
- Nottingham != Oxford
- Nottingham != Oxford
+ Internal == Internal
  Finance != Internal
  Finance != Internal
- Finance != Internal
- Azerbaijan != Armenia
- Azerbaijan != Armenia
- Azerbaijan != Armenia
-tem != templates
-tem != templates
-tem != templates
+ Azerba != Arm
+ Azerba != Arm
+ Azerba != Arm
+templates == templates
+docs != templates
+templates == templates
+ X != Y
+ X != Y
  Y == Y
- X != Y
- X != Y
- basket != box
- basket != box
+ box == box
+ box == box
  basket != box
  red != yellow
  red != yellow
  red != yellow
- drawer != cup
- drawer != cup
- drawer != cup
-Ed == Ed
-Ed == Ed
-Ed == Ed
+ cup == cup
+ cup == cup
+ cup == cup
+D != Ed
+D != Ed
+D != Ed
  shed == shed
  shed == shed
  shed == shed
- basket == basket
- basket == basket
- basket == basket
+ box != basket
+ box != basket
+ box != basket
  green == green
  green == green
- going != green
+ still != green
  laundry == laundry
- laundry == laundry
- laundry == laundry
+ washing != laundry
+ washing != laundry
  broken == broken
  broken == broken
- broken == broken
+ still != broken
  fridge != freezer
  fridge != freezer
  fridge != freezer
- reception == reception
- reception == reception
+ conference != reception
+ conference != reception
  conference != reception
  savings != checking
  savings != checking
  savings != checking
+ Oxford != Nottingham
+ Oxford != Nottingham
  Nottingham == Nottingham
- Nottingham == Nottingham
- Nottingham == Nottingham
- Finance != Internal
  Internal == Internal
  Internal == Internal
-tem != templates
-tem != templates
-tem != templates
+ Internal == Internal
+docs != templates
+docs != templates
+docs != templates
+ X != Y
  Y == Y
  X != Y
- X != Y
- basket != box
+ box == box
  basket != box
  basket != box
