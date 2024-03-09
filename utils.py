@@ -37,6 +37,7 @@ def collate_fn(model, tokenizer, examples) -> dict[str, torch.Tensor]:
     elif (
         model.config.architectures[0] == "LlamaForCausalLM"
         or model.config.architectures[0] == "LlaMAForCausalLM"
+        or model.config.architectures[0] == "GemmaForCausalLM"
     ):
         inputs["target"] = [
             tokenizer.decode(tokenizer.encode(ex["target"])[1]) for ex in examples
