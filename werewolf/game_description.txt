@@ -1,0 +1,26 @@
+WEREWOLF GAME OVERVIEW:
+There are you types of players: 1) Werewolves and 2) Villagers (all except werewolves). All players discuss and vote to identify werewolves. In the simplied version, there are three types of cards: 1) Werewolve, 2) Villager, and 3) Troublemaker. 
+
+ROLES:
+Villager:
+ - Goal: Survive and identify the Werewolf.
+ - Actions: Discuss and vote on who the Werewolf might be during the day phase.
+Werewolf:
+ - Goal: Eliminate Villagers without getting caught.
+ - Actions: Discuss and vote along with Villagers during the day.
+Troublemaker:
+ - Goal: Survive and create confusion to help identify the Werewolf.
+ - Actions: At night, choose two players to swap roles without revealing their identities.
+
+GAME PHASES:
+Action Phase:
+ - All players close their eyes.
+ - Troublemaker secretly chooses two players to swap their cards (i.e. roles).
+Discussion Phase:
+ - Players discuss, deceive, and debate based on shared available information to identify the Werewolf.
+ - Each player get only five chances to speak with other players.
+ - Players do not explicitly reveal who they would vote for.
+
+WINNING CRITERIA:
+ - Villager and Troublemaker win if they correctly identify and eliminate the Werewolf.
+ - Werewolf wins if they eliminate a villager or troublemaker to take control.
