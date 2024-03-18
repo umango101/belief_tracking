@@ -1,0 +1,15 @@
+Charlie talks: "Hey guys, I think David might be the Werewolf. He's been acting strange and avoiding eye contact. What do you think, Judy?"
+Judy talks: "Well, Charlie, I think you might be the Werewolf. You've been acting suspicious and avoiding eye contact too. David, what do you think?"
+David talks: "I think Judy might be the Werewolf. She's been acting nervous and fidgety. Charlie, what do you think?"
+Charlie talks: "Hmm, I still think David might be the Werewolf. He's been acting strange all along. Judy, what do you think now?"
+Judy talks: "You know what, Charlie? I think you might be onto something. David, have you been acting strange because you're the Werewolf? Or are you just trying to throw us off?"
+David talks: "I'm not the Werewolf, I swear! I'm just trying to figure out who it might be. But now that you mention it, Judy, you've been acting kind of suspicious too. Maybe we should both vote for you?"
+Charlie talks: "Wait, what? No way! I'm definitely not the Werewolf. I think we should vote for David. He's been acting strange from the beginning."
+Judy talks: "Okay, guys, let's take a moment to think. We know that the Werewolf is trying to blend in and avoid suspicion. So, whoever is acting the most suspicious might actually be the Werewolf. Charlie, you've been acting suspicious, but you also swapped our cards last night. David, you've been acting strange, but you also might be trying to throw us off. I think we should all vote for
+David talks: "Wait, what? No way! I'm definitely not the Werewolf. I think we should vote for Judy. She's been acting nervous and fidgety, and she's trying to deflect attention from herself."
+Charlie talks: "Hmm, I see what you mean, David. But Judy, you've been acting suspicious too. I think we should all vote for Judy."
+Judy talks: "Wait, what? No way! I'm definitely not the Werewolf. I think we should vote for Charlie. He's been acting suspicious and avoiding eye contact."
+David talks: "Okay, guys, let's take a moment to think. We know that the Werewolf is trying to blend in and avoid suspicion. So, whoever is acting the most suspicious might actually be the Werewolf. Charlie, you've been acting suspicious, but you also swapped our cards last night. Judy, you've been acting suspicious too, and you're trying to deflect attention from yourself. I think we
+Charlie talks: "Okay, I think we should all vote for David. He's been acting strange, and he's trying to throw us off."
+Judy talks: "Wait, what? No way! I'm definitely not the Werewolf. I think we should all vote for Charlie. He's been acting suspicious and avoiding eye contact."
+David talks: "Okay, guys, let's take a moment to think. We know that the Werewolf is trying to blend in and avoid suspicion. So, whoever is acting the most suspicious might actually be the Werewolf. Charlie, you've been acting suspicious, but you also swapped our cards last night. Judy, you've been acting suspicious too, and you're trying to deflect attention from yourself. I think we

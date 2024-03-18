@@ -1,0 +1,4 @@
+Name,Role,Final Role,Own Vote,Other Votes
+Alice,Troublemaker,Troublemaker,Alice,{'Eve': 'Alice', 'David': 'Eve'}
+Eve,Villager,Werewolf,Eve,{'Alice': 'Eve', 'David': 'Alice'}
+David,Werewolf,Villager,David,{'Alice': 'David', 'Eve': 'Alice'}

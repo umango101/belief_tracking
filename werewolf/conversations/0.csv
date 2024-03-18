@@ -1,4 +1,4 @@
-Name,Role,Own Vote,Other Votes
-Judy,Villager,I would vote for Alice,["Judy:I don't know", 'Alice:Based on the']
-Alice,Werewolf,I would vote for Alice,["Judy:I don't know", 'Alice:Based on the']
-Grace,Troublemaker,I would vote for Alice,["Judy:I don't know", 'Alice:Based on the']
+Name,Role,Final Role,Own Vote,Other Votes
+Alice,Werewolf,Villager,Alice,{'Charlie': 'Alice', 'Judy': 'Charlie'}
+Charlie,Troublemaker,Troublemaker,Charlie,{'Alice': 'Charlie', 'Judy': 'Alice'}
+Judy,Villager,Werewolf,Alice,{'Alice': 'Alice', 'Charlie': 'Alice'}

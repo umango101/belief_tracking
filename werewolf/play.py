@@ -32,13 +32,13 @@ player_names = [
 ]
 player_roles = ["Villager", "Werewolf", "Troublemaker"]
 
-with open("game_description.txt", "r") as f:
+with open("/data/nikhil_prakash/mind/werewolf/game_description.txt", "r") as f:
     game_description = f.read()
 
 # Delete all .txt and .cdv files in the conversations folder
-for file in os.listdir("./conversations"):
+for file in os.listdir("/data/nikhil_prakash/mind/werewolf/conversations"):
     if file.endswith(".txt") or file.endswith(".csv"):
-        os.remove(os.path.join("./conversations", file))
+        os.remove(os.path.join("/data/nikhil_prakash/mind/werewolf/conversations", file))
 
 
 def play_werewolf(
@@ -50,7 +50,7 @@ def play_werewolf(
 ):
     model, tokenizer = load_model_tokenzier(model_name, precision, device)
 
-    for game_idx in range(n_games):
+    for game_idx in range(1):
         players = [
             {"name": name, "role": role}
             for name, role in zip(random.sample(player_names, n_players), player_roles * n_players)
@@ -66,13 +66,18 @@ def play_werewolf(
                     player = players[player_idx]
                     prompt = f"{game_description}\n\n{player['role_description']}\n\n"
 
-                    if os.path.exists(f"/conversations/{game_idx}.txt"):
-                        with open(f"/conversations/{game_idx}.txt", "r") as f:
+                    if os.path.exists(
+                        f"/data/nikhil_prakash/mind/werewolf/conversations/{game_idx}.txt"
+                    ):
+                        with open(
+                            f"/data/nikhil_prakash/mind/werewolf/conversations/{game_idx}.txt", "r"
+                        ) as f:
                             conversation = f.read()
                     else:
                         conversation = ""
 
                     prompt += f"DAY PHASE:\n{conversation}\n{player['name']} says:"
+                    print(prompt)
 
                     inputs = tokenizer(prompt, return_tensors="pt").to(device)
                     outputs = model.generate(
@@ -87,7 +92,9 @@ def play_werewolf(
                     )
                     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-                    with open(f"./conversations/{game_idx}.txt", "a+") as f:
+                    with open(
+                        f"/data/nikhil_prakash/mind/werewolf/conversations/{game_idx}.txt", "a+"
+                    ) as f:
                         f.write(f"{player['name']} says: {response[len(prompt) :]}\n")
 
             own_vote, other_votes = ask_mental_state_questions(
@@ -97,7 +104,7 @@ def play_werewolf(
             other_votes = [f"{player['name']}:{vote}" for player, vote in zip(players, other_votes)]
 
             # Create a csv to store the game results
-            with open(f"./conversations/{game_idx}.csv", "w") as f:
+            with open(f"/data/nikhil_prakash/mind/werewolf/conversations/{game_idx}.csv", "w") as f:
                 f.write("Name,Role,Own Vote,Other Votes\n")
                 for player in players:
                     f.write(f"{player['name']},{player['role']},{own_vote},{other_votes}\n")

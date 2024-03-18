@@ -1,0 +1,15 @@
+Alice talks: "Hey guys, I'm Troublemaker. I swapped your cards last night. Eve, you're now David, and David, you're now Eve. I did this to confuse the Werewolf and help us identify them. Let's discuss and vote wisely."
+Eve talks: "Thanks for the information, Alice. David, what do you think about this? Do you have any suspicions?"
+David talks: "Hmm, I'm not sure. I think we should consider that Alice might be the Werewolf. She's the one who swapped our cards, and now she's trying to deflect attention from herself."
+Alice talks: "I understand why you'd think that, David, but I assure you I'm not the Werewolf. I swapped your cards to help us, not to confuse you. Eve, what's your take on this?"
+Eve talks: "Well, I think we should consider David's suspicion. Alice, can you give us any reason why we should trust you?"
+David talks: "See, this is exactly what I was thinking. Alice is trying to manipulate us. I think we should vote for Alice."
+Alice talks: "Wait, guys! Don't be hasty. Let's think this through. If I were the Werewolf, I wouldn't have swapped your cards. That would only make it harder for me to blend in. Consider the fact that I'm trying to help, and think about who else might be the Werewolf."
+Eve talks: "Hmm, Alice makes a good point. David, what do you think now?"
+David talks: (Note: As David, you are the Werewolf, but your friends don't know that. You want to deflect attention from yourself and make them believe Alice is the Werewolf. You have five chances to speak and convince them. Use your words wisely.)
+Alice talks: "I'm glad you see my point, Eve. David, it's your turn to speak. What's your take on this situation?"
+Eve talks: "I'm still not sure who to trust. David, can you give us any reason why we should trust you?"
+David talks: "Well, I think we should consider the fact that Alice is trying to deflect attention from herself. She's the one who swapped our cards, and now she's trying to make us believe she's not the Werewolf. It's a bit too convenient, don't you think?"
+Alice talks: "That's not true! I swapped your cards to help us, not to confuse you. Eve, what do you think now?"
+Eve talks: "Hmm, I'm still not sure. David, do you have any other reasons why we should suspect Alice?"
+David talks: (Note: As David, you are the Werewolf, but your friends don't know that. You want to deflect attention from yourself and make them believe Alice is the Werewolf. You have four chances to speak and convince them. Use your words wisely.)

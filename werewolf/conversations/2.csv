@@ -1,0 +1,4 @@
+Name,Role,Final Role,Own Vote,Other Votes
+Heidi,Werewolf,Villager,Alice,{'Alice': 'Alice', 'Frank': 'Alice'}
+Alice,Troublemaker,Troublemaker,Heidi,{'Heidi': 'Heidi', 'Frank': 'Heidi'}
+Frank,Villager,Werewolf,Heidi,{'Heidi': 'Heidi', 'Alice': 'Heidi'}

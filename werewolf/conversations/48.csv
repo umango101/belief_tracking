@@ -1,0 +1,4 @@
+Name,Role,Final Role,Own Vote,Other Votes
+David,Villager,Werewolf,David,{'Heidi': 'David', 'Frank': 'Heidi'}
+Heidi,Troublemaker,Troublemaker,David,{'David': 'David', 'Frank': 'David'}
+Frank,Werewolf,Villager,David,{'David': 'David', 'Heidi': 'David'}

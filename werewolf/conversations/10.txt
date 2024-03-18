@@ -1,0 +1,15 @@
+Eve talks: "Hey guys, I think we should be careful with our votes. We don't want to lynch an innocent villager. Let's discuss and see if we can find any clues."
+Judy talks: "I agree with Eve. I think we should be careful. I've swapped Eve and Grace's cards last night. I don't know what that means, but I thought it was important to share. Maybe it'll help us figure out who the Werewolf is."
+Grace talks: "Thanks for sharing that, Judy. I think we should consider all the information we have. Eve, do you have any ideas on who the Werewolf might be?"
+Eve talks: "Well, I think we should consider Judy's card swap. Maybe it's a clue. Judy, do you have any thoughts on that?"
+Judy talks: "Hmm, I'm not sure. I didn't get a chance to look at the cards before I swapped them. But, I do know that the Werewolf wouldn't want us to know who they are. So, maybe we should consider who's been acting suspiciously or trying to deflect attention from themselves."
+Grace talks: "That's a good point, Judy. Eve, do you have any thoughts on that?"
+Eve talks: "Well, I think we should consider all the information we have. Judy swapped cards, but we don't know what that means. Maybe it's a red herring. But, if we're looking for suspicious behavior, I think we should consider Grace. She's been quiet and hasn't contributed much to the discussion. Maybe she's trying to fly under the radar."
+Judy talks: "Hmm, that's a good point, Eve. Grace, do you have anything to say for yourself?"
+Grace talks: What do you say?
+Eve talks: "I think we should consider all the information we have. Judy swapped cards, but we don't know what that means. Maybe it's a red herring. But, if we're looking for suspicious behavior, I think we should consider Grace. She's been quiet and hasn't contributed much to the discussion. Maybe she's trying to fly under the radar."
+Judy talks: "Hmm, that's a good point, Eve. Grace, do you have anything to say for yourself?"
+Grace talks: What do you say?
+Eve talks: "I think we should consider all the information we have. Judy swapped cards, but we don't know what that means. Maybe it's a red herring. But, if we're looking for suspicious behavior, I think we should consider Grace. She's been quiet and hasn't contributed much to the discussion. Maybe she's trying to fly under the radar."
+Judy talks: "Hmm, that's a good point, Eve. Grace, do you have anything to say for yourself?"
+Grace talks: What do you say?

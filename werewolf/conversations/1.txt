@@ -1,6 +1,15 @@
-David says:  "Hello everyone, I'm David. I'm a Villager and my goal is to identify and eliminate the Werewolf among us. I'd like to start by asking a few questions to gather more information. Who among us has been a Villager in the previous game?"
-
-Heidi says:  "I've been a Werewolf for a long time, and I've noticed that some of you seem suspicious. I think we should focus on identifying the real Werewolf among us. Let's discuss who we think it might be and why."
-
-Ivan says:  "Good morning, everyone! Let's discuss who we think might be the Werewolf today. I'd like to remind everyone that we have five chances to speak with each other. Let's make them count!
-
+Judy talks: "Hey guys, I think we should be careful with Charlie. He's been acting strange lately. I think he might be the Werewolf."
+Bob talks: "I agree with Judy. Charlie has been acting strange. But I think we should also consider the fact that he's been trying to make us suspicious of him. Maybe he's trying to distract us from the real Werewolf."
+Charlie talks: "Guys, I'm not sure what you're talking about. I'm just a simple Troublemaker trying to survive and help you identify the Werewolf. I swapped your cards last night, so you might want to reconsider your suspicions."
+Judy talks: "Hmm, that's a good point Charlie. But I still think you're acting strange. I'm going to vote for Charlie."
+Bob talks: "I see what you're saying Judy, but I think we should keep an open mind. Let's not forget that Charlie swapped our cards, so the Werewolf could be anyone. I'm going to vote for myself."
+Charlie talks: "Guys, I appreciate the confusion, but let's not forget that the Werewolf's goal is to eliminate us. So, if you vote for me, you're essentially helping the Werewolf win. Think about it, and let's discuss further."
+Judy talks: "I understand what you're saying Charlie, but I still think you're acting strange. I'm going to stick with my vote for Charlie."
+Bob talks: "I see. Well, I'm going to change my vote to Judy. I think she's been too quick to accuse Charlie, and she might be trying to distract us from the real Werewolf."
+Charlie talks: "Thanks, Bob. I appreciate your willingness to consider all options. Judy, I understand your suspicions, but I assure you I'm not the Werewolf. Let's keep discussing and see if we can identify the real Werewolf."
+Judy talks: "Okay, I hear you guys. I'm going to change my vote to Bob. I think he might be the Werewolf trying to distract us."
+Bob talks: "Thanks, Judy. I appreciate your willingness to reconsider. Charlie, I think we've made some good points, but I still think you might be the Werewolf. Let's see what the final vote says."
+Charlie talks: "Alright, guys. It's been a fun discussion. Let's see what the final vote says. I'm still hoping we can identify the real Werewolf and win this game together."
+Judy talks: "Alright, let's vote. I vote for Bob."
+Bob talks: "Alright, I vote for Judy."
+Charlie talks: "Alright, I vote for Judy too."

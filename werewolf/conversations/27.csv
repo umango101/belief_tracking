@@ -1,0 +1,4 @@
+Name,Role,Final Role,Own Vote,Other Votes
+Charlie,Troublemaker,Troublemaker,Charlie,{'Alice': 'Charlie', 'Grace': 'Alice'}
+Alice,Villager,Werewolf,Charlie,{'Charlie': 'Charlie', 'Grace': 'Charlie'}
+Grace,Werewolf,Villager,Grace,{'Charlie': 'Grace', 'Alice': 'Charlie'}

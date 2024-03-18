@@ -1,0 +1,4 @@
+Name,Role,Final Role,Own Vote,Other Votes
+Ivan,Troublemaker,Troublemaker,Grace,{'Grace': 'Grace', 'David': 'Grace'}
+Grace,Villager,Werewolf,Grace,{'Ivan': 'Grace', 'David': 'Ivan'}
+David,Werewolf,Villager,Grace,{'Ivan': 'Grace', 'Grace': 'Grace'}

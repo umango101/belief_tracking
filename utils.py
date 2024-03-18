@@ -66,7 +66,9 @@ def collate_fn(model, tokenizer, examples) -> dict[str, torch.Tensor]:
         or model.config.architectures[0] == "LlaMAForCausalLM"
         or model.config.architectures[0] == "GemmaForCausalLM"
     ):
-        inputs["target"] = [tokenizer.decode(tokenizer.encode(ex["target"])[1]) for ex in examples]
+        inputs["target"] = [
+            tokenizer.decode(tokenizer.encode(ex["target"])[1]) for ex in examples
+        ]
     elif (
         model.config.architectures[0] == "MistralForCausalLM"
         or model.config.architectures[0] == "MixtralForCausalLM"
@@ -83,9 +85,9 @@ def load_model_tokenzier(model_name: str, precision: str, device: torch.device):
     if precision == "fp32":
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     elif precision == "fp16":
-        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(
-            device
-        )
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, torch_dtype=torch.float16
+        ).to(device)
     elif precision == "int8":
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
@@ -112,7 +114,9 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
+    indices = [
+        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
+    ]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -122,12 +126,17 @@ def compute_final_roles(players: List[Dict[str, str]]):
 
 def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
+        other_players = [p["name"] for p in players if p["name"] != player["name"]]
+        concatenated_other_players = ", ".join(other_players)
+        concatenated_other_players = concatenated_other_players[::-1].replace(
+            ",", "dna ", 1
+        )[::-1]
         if player["role"] != "Troublemaker":
-            role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
+            role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
             swapped_players = [p for p in players if p["role"] != p["final_role"]]
 
-            role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends. Initially, you've been given the role of {player['role']}. During the night phase, you swapped {swapped_players[0]['name']} and {swapped_players[1]['name']}'s cards. Share this information during the Discussion Phase to identify the Werewolf. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
+            role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. During the night phase, you swapped {swapped_players[0]['name']} and {swapped_players[1]['name']}'s cards. Share this information during the Discussion Phase to identify the Werewolf. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
 
         players[idx]["role_description"] = role_description
     return players
@@ -143,11 +152,22 @@ def ask_mental_state_questions(
     conversation: str,
 ):
 
+    own_vote, others_vote = {}, {}
     with torch.no_grad():
         for player_idx in range(len(players)):
             player = players[player_idx]
+            others_vote[player["name"]] = {}
+
             other_players = [p["name"] for p in players if p["name"] != player["name"]]
-            concatenated_other_players = " or ".join(other_players)
+            
+            all_players = [p["name"] for p in players]
+            random.shuffle(all_players)
+            options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
+            options[f"{chr(65+len(all_players))}"] = "Not sure"
+            options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
+            options_token_ids = [
+                tokenizer.encode(f"{chr(65+i)}")[-1] for i in range(len(all_players))
+            ]
 
             prompt = f"{game_description}\n\n{player['role_description']}\n\n"
 
@@ -158,43 +178,38 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = f"QUESTION: Who would you vote for ({concatenated_other_players} or don't know)?\nAnswer:"
+            question = (
+                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            )
+#             print(question)
             prompt += question
 
             inputs = tokenizer(prompt, return_tensors="pt").to(device)
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=5,
-                num_return_sequences=1,
-                temperature=0.00,
-                do_sample=False,
-                pad_token_id=tokenizer.eos_token_id,
-            )
-            response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-            own_vote = response[len(prompt) :].strip()
+            outputs = model(**inputs)
+            logits = outputs.logits[0, -1]
+            pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
+            own_vote[player["name"]] = options[tokenizer.decode(pred_option_logits)]
 
-            others_vote = []
             for other_player in other_players:
-                concatenated_other_players = concatenated_other_players.replace(
-                    f"{other_player}", f"{player['name']}"
-                )
+#                 random.shuffle(all_players)
+#                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
+#                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = f"QUESTION: Who would {other_player} vote for ({concatenated_other_players} or don't know)?\nAnswer:"
+                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+#                 print(question)
                 prompt += question
-                inputs = tokenizer(prompt, return_tensors="pt").to(device)
-                outputs = model.generate(
-                    **inputs,
-                    max_new_tokens=5,
-                    num_return_sequences=1,
-                    temperature=0.00,
-                    do_sample=False,
-                    pad_token_id=tokenizer.eos_token_id,
-                )
-                response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-                others_vote.append(response[len(prompt) :].strip())
 
-                concatenated_other_players = concatenated_other_players.replace(
-                    f"{player['name']}", f"{other_player}"
-                )
+                outputs = model(**inputs)
+                logits = outputs.logits[0, -1]
+                pred_option_logits = options_token_ids[
+                    logits[options_token_ids].argmax()
+                ]
+                others_vote[player["name"]][other_player] = options[
+                    tokenizer.decode(pred_option_logits)
+                ]
+
+                for k, v in options.items():
+                    if v == player["name"]:
+                        options[k] = other_player
 
         return own_vote, others_vote
