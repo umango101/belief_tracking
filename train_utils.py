@@ -103,9 +103,18 @@ class DataModule(LightningDataModule):
         # Masking the input tokens
         for idx in range(batch_size):
             input_len = len(self.tokenize(batch[idx]["input"])["input_ids"])
+            # masking the input tokens
             tokenized_full_prompts["labels"][idx] = [
                 -100
             ] * input_len + tokenized_full_prompts["labels"][idx][input_len:]
+
+            # masking the padded tokens
+            content_len = sum(tokenized_full_prompts["attention_mask"][idx])
+            tokenized_full_prompts["labels"][idx] = tokenized_full_prompts["labels"][
+                idx
+            ][:content_len] + [-100] * (
+                len(tokenized_full_prompts["input_ids"][idx]) - content_len
+            )
 
         # Truncate the input tokens if it exceeds the cutoff length
         for idx in range(batch_size):
@@ -159,6 +168,7 @@ class TrainingModule(LightningModule):
         seed,
         output_dir,
         eval_metric=None,
+        train_log_step=1,
         log_valid_loss=False,
         ckpt_epochs=None,
         **kwargs,
@@ -176,6 +186,7 @@ class TrainingModule(LightningModule):
         self.metric = eval_metric
         self.hyperparams = kwargs
         self.ckpt_epochs = ckpt_epochs
+        self.train_log_step = train_log_step
 
     def save_pretrained(self, path):
         if not os.path.exists(path):
@@ -186,12 +197,18 @@ class TrainingModule(LightningModule):
 
     def on_train_start(self) -> None:
         seed_everything(self.seed)
+        self.loss = []
         return super().on_train_start()
 
     def training_step(self, batch, batch_idx):
         outputs = self.model(**batch)
         loss = outputs.loss
-        self.log("train_loss", loss, prog_bar=True)
+        self.loss.append(loss.item())
+
+        if batch_idx % self.train_log_step == 0:
+            self.log("train_loss", sum(self.loss) / len(self.loss), prog_bar=True)
+            self.loss = []
+
         return loss
 
     def on_train_epoch_end(self):
@@ -260,7 +277,8 @@ class TrainingModule(LightningModule):
         return super().on_validation_end()
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.model.parameters(), **self.hyperparams)
+        optimizer = torch.optim.AdamW(self.model.parameters(), **self.hyperparams)
+        return optimizer
 
 
 def load_model_tokenizer(model_name: str):

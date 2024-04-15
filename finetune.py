@@ -28,6 +28,7 @@ def train(args):
         tokenizer,
         seed=args.seed,
         output_dir=args.output_dir,
+        train_log_step=args.train_log_step,
         lr=args.lr,
         eval_metric=datamodule.eval_metric(),
     )
@@ -44,7 +45,6 @@ def train(args):
         enable_checkpointing=False,
         val_check_interval=0.01,
         strategy="ddp",
-        log_every_n_steps=1,
         logger=wandb_logger,
     )
 
@@ -63,13 +63,14 @@ def main():
         default="training_data.jsonl",
     )
 
-    parser.add_argument("--batch_size", type=int, default=16)
+    parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--output_dir", type=str, default="./weights")
     parser.add_argument("--devices", type=list, default=[0])
     parser.add_argument("--accumulate_grad_batches", type=int, default=1)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--seed", type=int, default=10)
+    parser.add_argument("--train_log_step", type=int, default=5)
 
     args = parser.parse_args()
     args.output_dir = os.path.join(args.output_dir, args.model_name)
