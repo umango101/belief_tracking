@@ -7,6 +7,10 @@ from torchmetrics import Metric
 import json
 from datasets import load_dataset, Dataset
 from torch.utils.data import random_split
+from accelerate import Accelerator
+
+device_index = Accelerator().process_index
+device_map = {"": device_index}
 
 
 class LabelClassification(Metric):
@@ -288,35 +292,10 @@ def load_model_tokenizer(model_name: str):
     Args:
         model_name (str): Name of the Transformer model.
     """
-    model = AutoModelForCausalLM.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name, load_in_8bit=True, torch_dtype=torch.float16, device_map=device_map
+    )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    # if "llama" in model_name:
-    #     hf_name = "baffo32/decapoda-research-llama-7B-hf"
-    #     model = AutoModelForCausalLM.from_pretrained(hf_name)
-    #     tokenizer = AutoTokenizer.from_pretrained(
-    #         "hf-internal-testing/llama-tokenizer", padding_side="left"
-    #     )
-
-    # elif "gpt" in model_name:
-    #     model = AutoModelForCausalLM.from_pretrained(model_name)
-    #     tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
-
-    # if "pythia" in model_name:
-    #     assert model_name in [
-    #         "pythia-2.8b",
-    #         "pythia-1.4b",
-    #         "pythia-1b",
-    #         "pythia-410m",
-    #         "pythia-160m",
-    #         "pythia-70m",
-    #     ], "Invalid model name."
-    #     hf_name = f"EleutherAI/{model_name}"
-    #     model = AutoModelForCausalLM.from_pretrained(hf_name)
-    #     tokenizer = AutoTokenizer.from_pretrained(hf_name, padding_side="left")
-
-    # else:
-    #     raise ValueError(f"Model {model_name} not found.")
 
     tokenizer.pad_token_id = tokenizer.eos_token_id
     return model, tokenizer
