@@ -38,6 +38,7 @@ class DataModule(LightningDataModule):
         batch_size=None,
         cutoff_len=None,
         seed=None,
+        config=None,
         val_size=0,
         test_size=0,
     ):
@@ -49,13 +50,14 @@ class DataModule(LightningDataModule):
         self.test_size = test_size
         self.seed = seed
         self.cutoff_len = cutoff_len
+        self.config = config
         self.prepare_data_per_node = False
 
         self.train_set = load_dataset("json", data_files=self.data_path)["train"]
 
-        with open("data/unexpected_contents.jsonl") as f:
+        with open("./data/unexpected_contents.jsonl") as f:
             unexpected_contents = [json.loads(line) for line in f]
-        with open("data/unexpected_transfer.jsonl") as f:
+        with open("./data/unexpected_transfer.jsonl") as f:
             unexpected_transfer = [json.loads(line) for line in f]
 
         tom_data = []
@@ -85,9 +87,14 @@ class DataModule(LightningDataModule):
         tokenized_prompts["label"] = []
 
         for idx in range(batch_size):
+            # if self.config.architectures[0] == "MistralForCausalLM":
             tokenized_prompts["label"].append(
-                self.tokenizer.encode(" " + batch[idx]["label"])[0]
+                self.tokenizer.encode(" " + batch[idx]["label"])[2]
             )
+            # elif self.config.architectures[0] == "LlamaForCausalLM":
+            #     tokenized_prompts["label"].append(
+            #         self.tokenizer.encode(" " + batch[idx]["label"])[1]
+            #     )
 
         for key in tokenized_prompts.keys():
             tokenized_prompts[key] = torch.tensor(tokenized_prompts[key])
@@ -172,7 +179,6 @@ class TrainingModule(LightningModule):
         seed,
         output_dir,
         eval_metric=None,
-        train_log_step=1,
         log_valid_loss=False,
         ckpt_epochs=None,
         **kwargs,
@@ -190,7 +196,6 @@ class TrainingModule(LightningModule):
         self.metric = eval_metric
         self.hyperparams = kwargs
         self.ckpt_epochs = ckpt_epochs
-        self.train_log_step = train_log_step
 
     def save_pretrained(self, path):
         if not os.path.exists(path):
@@ -201,18 +206,12 @@ class TrainingModule(LightningModule):
 
     def on_train_start(self) -> None:
         seed_everything(self.seed)
-        self.loss = []
         return super().on_train_start()
 
     def training_step(self, batch, batch_idx):
         outputs = self.model(**batch)
         loss = outputs.loss
-        self.loss.append(loss.item())
-
-        if batch_idx % self.train_log_step == 0:
-            self.log("train_loss", sum(self.loss) / len(self.loss), prog_bar=True)
-            self.loss = []
-
+        self.log("train_loss", loss, logger=True, prog_bar=True, on_step=True)
         return loss
 
     def on_train_epoch_end(self):
@@ -293,7 +292,11 @@ def load_model_tokenizer(model_name: str):
         model_name (str): Name of the Transformer model.
     """
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, load_in_8bit=True, torch_dtype=torch.float16, device_map=device_map
+        model_name,
+        load_in_8bit=True,
+        torch_dtype=torch.float16,
+        device_map=device_map,
+        attn_implementation="eager",
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 

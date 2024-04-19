@@ -1,3 +1,4 @@
+import sys
 from numpy import dtype
 import torch
 import argparse
@@ -5,6 +6,12 @@ from pytorch_lightning import Trainer
 from lightning.pytorch.loggers import WandbLogger
 import os
 from train_utils import load_model_tokenizer, DataModule, TrainingModule
+import warnings
+
+# import torch._dynamo
+
+warnings.filterwarnings("ignore")
+# torch._dynamo.config.suppress_errors = True
 
 from peft import (
     LoraConfig,
@@ -16,6 +23,7 @@ from peft import (
 
 
 def train(args):
+    torch.set_float32_matmul_precision("medium")
     model, tokenizer = load_model_tokenizer(args.model_name)
     wandb_logger = WandbLogger(
         log_model="all",
@@ -28,6 +36,7 @@ def train(args):
         args.batch_size,
         args.max_context_len,
         args.seed,
+        model.config,
     )
 
     # For LoRA training
@@ -41,7 +50,6 @@ def train(args):
         task_type="CAUSAL_LM",
     )
     model = get_peft_model(model, config)
-    print("\nPreparing model for LoRA training\n")
 
     model.print_trainable_parameters()
 
@@ -50,7 +58,6 @@ def train(args):
         tokenizer,
         seed=args.seed,
         output_dir=args.output_dir,
-        train_log_step=args.train_log_step,
         lr=args.lr,
         eval_metric=datamodule.eval_metric(),
     )
@@ -65,8 +72,10 @@ def train(args):
         accumulate_grad_batches=args.accumulate_grad_batches,
         accelerator="gpu",
         enable_checkpointing=False,
-        val_check_interval=25,
+        val_check_interval=100,
         strategy="ddp",
+        logger=wandb_logger,
+        log_every_n_steps=args.train_log_step,
     )
 
     model.model.config.use_cache = False
@@ -77,7 +86,7 @@ def train(args):
     ).__get__(model, type(model))
 
     if torch.__version__ >= "2" and sys.platform != "win32":
-        model = torch.compile(model.model)
+        model = torch.compile(model)
 
     trainer.fit(model, datamodule)
     # trainer.test(model, datamodule.test_dataloader())
@@ -98,7 +107,7 @@ def main():
     parser.add_argument("--output_dir", type=str, default="./weights")
     parser.add_argument("--devices", type=list, default=[0])
     parser.add_argument("--accumulate_grad_batches", type=int, default=1)
-    parser.add_argument("--lr", type=float, default=1e-3)
+    parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--seed", type=int, default=10)
     parser.add_argument("--train_log_step", type=int, default=5)
@@ -110,7 +119,15 @@ def main():
     parser.add_argument(
         "--lora_target_modules",
         type=list,
-        default=["q_proj", "k_proj", "v_proj", "o_proj"],
+        default=[
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+        ],
     )
 
     args = parser.parse_args()
