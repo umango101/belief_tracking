@@ -87,14 +87,15 @@ class DataModule(LightningDataModule):
         tokenized_prompts["label"] = []
 
         for idx in range(batch_size):
-            # if self.config.architectures[0] == "MistralForCausalLM":
+            # if "Llama-3" in self.config._name_or_path:
+            #     tokenized_prompts["label"].append(
+            #         self.tokenizer.encode(" " + batch[idx]["label"])[0]
+            #     )
+
+            # elif self.config.architectures[0] == "MistralForCausalLM":
             tokenized_prompts["label"].append(
                 self.tokenizer.encode(" " + batch[idx]["label"])[2]
             )
-            # elif self.config.architectures[0] == "LlamaForCausalLM":
-            #     tokenized_prompts["label"].append(
-            #         self.tokenizer.encode(" " + batch[idx]["label"])[1]
-            #     )
 
         for key in tokenized_prompts.keys():
             tokenized_prompts[key] = torch.tensor(tokenized_prompts[key])
@@ -178,6 +179,7 @@ class TrainingModule(LightningModule):
         tokenizer,
         seed,
         output_dir,
+        train_log_step=10,
         eval_metric=None,
         log_valid_loss=False,
         ckpt_epochs=None,
@@ -196,6 +198,7 @@ class TrainingModule(LightningModule):
         self.metric = eval_metric
         self.hyperparams = kwargs
         self.ckpt_epochs = ckpt_epochs
+        self.train_log_step = train_log_step
 
     def save_pretrained(self, path):
         if not os.path.exists(path):
@@ -206,12 +209,25 @@ class TrainingModule(LightningModule):
 
     def on_train_start(self) -> None:
         seed_everything(self.seed)
+        self.losses = []
         return super().on_train_start()
 
     def training_step(self, batch, batch_idx):
         outputs = self.model(**batch)
         loss = outputs.loss
-        self.log("train_loss", loss, logger=True, prog_bar=True, on_step=True)
+        self.losses.append(loss.item())
+
+        if batch_idx % self.train_log_step == 0:
+            self.log(
+                "train_loss",
+                sum(self.losses) / len(self.losses),
+                logger=True,
+                prog_bar=True,
+                on_step=True,
+            )
+            self.losses = []
+
+        # self.log("train_loss", loss, logger=True, prog_bar=True, on_step=True)
         return loss
 
     def on_train_epoch_end(self):
@@ -297,6 +313,7 @@ def load_model_tokenizer(model_name: str):
         torch_dtype=torch.float16,
         device_map=device_map,
         attn_implementation="eager",
+        token="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",
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 

@@ -1,3 +1,4 @@
 wandb
 weights
 *.jsonl
+git_pat.txt

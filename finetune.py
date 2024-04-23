@@ -60,6 +60,7 @@ def train(args):
         output_dir=args.output_dir,
         lr=args.lr,
         eval_metric=datamodule.eval_metric(),
+        train_log_step=args.accumulate_grad_batches,
     )
 
     trainer = Trainer(
@@ -72,10 +73,10 @@ def train(args):
         accumulate_grad_batches=args.accumulate_grad_batches,
         accelerator="gpu",
         enable_checkpointing=False,
-        val_check_interval=100,
+        val_check_interval=10 * args.accumulate_grad_batches,
         strategy="ddp",
-        logger=wandb_logger,
         log_every_n_steps=args.train_log_step,
+        logger=wandb_logger,
     )
 
     model.model.config.use_cache = False
@@ -106,11 +107,11 @@ def main():
     parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--output_dir", type=str, default="./weights")
     parser.add_argument("--devices", type=list, default=[0])
-    parser.add_argument("--accumulate_grad_batches", type=int, default=1)
+    parser.add_argument("--accumulate_grad_batches", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--seed", type=int, default=10)
-    parser.add_argument("--train_log_step", type=int, default=5)
+    parser.add_argument("--train_log_step", type=int, default=1)
     parser.add_argument("--max_context_len", type=int, default=1024)
 
     parser.add_argument("--lora_r", type=int, default=4)

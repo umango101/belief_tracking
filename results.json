@@ -15,5 +15,14 @@
     "vicuna-7b": 0.51,
     "Mistral-7B-v0.1": 0.55,
     "Mixtral-8x7B-v0.1": 0.61,
-    "Mistral-7B-Instruct-v0.2": 0.44
+    "Mistral-7B-Instruct-v0.2": 0.44,
+    "Llama-2-7b-hf": 0.54,
+    "Llama-2-7b-chat-hf": 0.55,
+    "Llama-2-13b-hf": 0.52,
+    "Llama-2-13b-chat-hf": 0.57,
+    "Llama-2-70b-hf": 0.58,
+    "Llama-2-70b-chat-hf": 0.55,
+    "Meta-Llama-3-8B": 0.56,
+    "Meta-Llama-3-8B-Instruct": 0.44,
+    "Meta-Llama-3-70B": 0.54
 }

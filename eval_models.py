@@ -21,6 +21,13 @@ print(f"Current directory: {current_dir}")
 with open(f"{current_dir}/models.json", "r") as f:
     models = json.load(f)
 
+with open(f"{current_dir}/results.json", "r") as f:
+    evaluated_models = json.load(f)
+
+# Remove already evaluated models from models list using evaluated_models dict
+for model_name in evaluated_models.keys():
+    models = [model for model in models if model_name not in model["model_name"]]
+
 
 def main():
     results = {}
@@ -34,14 +41,20 @@ def main():
         model_name = model_details["model_name"]
         precision = model_details["precision"]
 
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name, token="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"
+        )
         tokenizer.pad_token = tokenizer.eos_token
 
         if precision == "fp32":
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name, token="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"
+            ).to(device)
         elif precision == "fp16":
             model = AutoModelForCausalLM.from_pretrained(
-                model_name, torch_dtype=torch.float16
+                model_name,
+                torch_dtype=torch.float16,
+                token="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",
             ).to(device)
         elif precision == "int8":
             model = AutoModelForCausalLM.from_pretrained(
@@ -49,6 +62,7 @@ def main():
                 device_map="auto",
                 load_in_8bit=True,
                 torch_dtype=torch.float16,
+                token="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",
             )
         elif precision == "int4":
             model = AutoModelForCausalLM.from_pretrained(
@@ -56,6 +70,7 @@ def main():
                 device_map="auto",
                 load_in_4bit=True,
                 torch_dtype=torch.float16,
+                token="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",
             )
 
         dataset = get_dataset(

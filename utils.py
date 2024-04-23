@@ -57,6 +57,7 @@ def collate_fn(model, tokenizer, examples) -> dict[str, torch.Tensor]:
         model.config.architectures[0] == "GPT2LMHeadModel"
         or model.config.architectures[0] == "GPTNeoXForCausalLM"
         or model.config.architectures[0] == "GPTJForCausalLM"
+        or "Llama-3" in model.config._name_or_path
     ):
         inputs["target"] = [
             tokenizer.decode(tokenizer.encode(" " + ex["target"])[0]) for ex in examples
@@ -159,7 +160,7 @@ def ask_mental_state_questions(
             others_vote[player["name"]] = {}
 
             other_players = [p["name"] for p in players if p["name"] != player["name"]]
-            
+
             all_players = [p["name"] for p in players]
             random.shuffle(all_players)
             options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
@@ -181,7 +182,7 @@ def ask_mental_state_questions(
             question = (
                 f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
             )
-#             print(question)
+            #             print(question)
             prompt += question
 
             inputs = tokenizer(prompt, return_tensors="pt").to(device)
@@ -191,12 +192,12 @@ def ask_mental_state_questions(
             own_vote[player["name"]] = options[tokenizer.decode(pred_option_logits)]
 
             for other_player in other_players:
-#                 random.shuffle(all_players)
-#                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
-#                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
+                #                 random.shuffle(all_players)
+                #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
+                #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
                 question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
-#                 print(question)
+                #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)

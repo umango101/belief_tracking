@@ -66,5 +66,45 @@
     {
         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
         "precision": "fp32"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-7b-hf",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-7b-chat-hf",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-13b-hf",
+        "precision": "fp16"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-13b-chat-hf",
+        "precision": "fp16"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-70b-hf",
+        "precision": "int4"
+    },
+    {
+        "model_name": "meta-llama/Llama-2-70b-chat-hf",
+        "precision": "int4"
+    },
+    {
+        "model_name": "NousResearch/Meta-Llama-3-8B",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "NousResearch/Meta-Llama-3-8B-Instruct",
+        "precision": "fp32"
+    },
+    {
+        "model_name": "NousResearch/Meta-Llama-3-70B",
+        "precision": "int4"
+    },
+    {
+        "model_name": "NousResearch/Meta-Llama-3-70B-Instruct",
+        "precision": "int4"
     }
 ]

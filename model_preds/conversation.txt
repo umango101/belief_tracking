@@ -1,0 +1,45 @@
+Alice talks: 
+"Hey guys, I think Bob might be the Werewolf. He's been acting strange and avoiding eye contact. Let's lynch him!"
+
+Bob talks: 
+"Guys, I'm not the Werewolf. I'm just nervous because I don't want to be lynched. Let's not jump to conclusions."
+
+Charlie talks: 
+"Guys, I have information that might help us. During the night phase, I swapped Alice and Bob's cards. So, Bob is now a Villager, and Alice is the Werewolf. Let's lynch Alice!"
+
+Alice talks: 
+"What?! That's not true! Charlie is trying to frame me. I'm still a Villager, and Bob is the Werewolf. Don't believe him!"
+
+Bob talks: 
+"Guys, I think we should trust Charlie. He's been acting suspiciously, and now he's trying to frame Alice. Let's lynch Charlie!"
+
+Charlie talks: 
+"Guys, I'm just trying to help. I swear, I'm not the Werewolf. But, if you don't believe me, let's have a vote. Who thinks Alice is the Werewolf?"
+
+Alice talks: 
+"Wait, let's not vote yet. I have an idea. Let's ask Charlie questions about his actions during the night phase. Maybe we can catch him in a lie and expose him as the Werewolf."
+
+Bob talks: 
+"Good idea, Alice. Charlie, can you explain why you swapped our cards?"
+
+Charlie talks: 
+"Well, I swapped your cards because I wanted to create confusion and help identify the Werewolf. I didn't want to be too obvious and get caught by the Werewolf."
+
+Alice talks: 
+"Hmm, that makes sense. But, why did you choose to swap our cards specifically?"
+
+Bob talks: 
+"Yeah, Charlie, why us and not another pair of players?"
+
+Charlie talks: 
+"I swapped your cards because you two were acting suspiciously. Alice, you were avoiding eye contact, and Bob, you seemed nervous. I thought it might be useful to mix things up and see how you both react."
+
+Alice talks: 
+"I see. Well, I still think Bob is the Werewolf. Let's lynch him!"
+
+Bob talks: 
+"Guys, I'm telling you, I'm not the Werewolf. Let's not jump to conclusions and lynch the wrong person."
+
+Charlie talks: 
+"Guys, can we please just take a moment to think about this? We don't want to make a mistake and let the Werewolf win. Let's discuss this calmly and try to figure out who the Werewolf really is."
+
