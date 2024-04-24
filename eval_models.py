@@ -44,9 +44,9 @@ def main():
         model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
         print(f"{model_name} loaded successfully")
         dataloader = load_tomi_data(
-            model.config, tokenizer, f"{current_dir}/data/ToMi", batch_size=batch_size
+            model.config, tokenizer, current_dir, batch_size=batch_size
         )
-        print(f"Data loaded successfully")
+        print("Data loaded successfully")
 
         correct, total = 0, 0
         with torch.no_grad():
@@ -60,6 +60,15 @@ def main():
 
                 correct += torch.sum(pred_token_ids == inp["target"]).item()
                 total += inp["target"].numel()
+
+                for idx in range(len(inp["target"])):
+                    target_text = tokenizer.decode(inp["target"][idx].tolist())
+                    pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
+                    with open(
+                        f"{current_dir}/preds/{model_name.split('/')[0]}.txt",
+                        "a",
+                    ) as f:
+                        f.write(f"Target: {target_text}\nPrediction: {pred_text}\n\n")
 
             del inp, outputs, logits, pred_token_ids
             torch.cuda.empty_cache()

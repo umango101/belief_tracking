@@ -191,12 +191,12 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
-def preprocess_data(data):
+def preprocess_data(current_dir, data):
     prev_sent_idx = 0
     processed_data = []
     example = []
 
-    with open("priming_examples.txt", "r") as f:
+    with open(f"{current_dir}/priming_examples.txt", "r") as f:
         priming_exps = f.read()
 
     for sentence in data:
@@ -252,17 +252,17 @@ class Collator(object):
         return inputs
 
 
-def load_tomi_data(config, tokenizer, dataset_path, batch_size):
-    with open(f"{dataset_path}/train.txt", "r") as f:
+def load_tomi_data(config, tokenizer, current_dir, batch_size):
+    with open(f"{current_dir}/data/ToMi/train.txt", "r") as f:
         train_data = f.readlines()
 
-    with open(f"{dataset_path}/val.txt", "r") as f:
+    with open(f"{current_dir}/data/ToMi/val.txt", "r") as f:
         valid_data = f.readlines()
 
-    with open(f"{dataset_path}/test.txt", "r") as f:
+    with open(f"{current_dir}/data/ToMi/test.txt", "r") as f:
         test_data = f.readlines()
 
-    processed_data = preprocess_data(test_data)
+    processed_data = preprocess_data(current_dir, test_data)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
