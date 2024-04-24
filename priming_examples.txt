@@ -1,0 +1,37 @@
+Context: Logan loves the beans
+Ethan entered the office.
+Jayden entered the pantry.
+Logan entered the pantry.
+The pineapple is in the drawer.
+Jayden moved the pineapple to the bathtub.
+Logan exited the pantry.
+Ethan dislikes the tangerine
+Jayden exited the pantry.
+ Logan entered the pantry.
+Question:  Where does Jayden think that Logan searches for the pineapple?
+Answer: bathtub
+
+Context: Logan loves the beans
+Ethan entered the office.
+Jayden entered the pantry.
+Logan entered the pantry.
+The pineapple is in the drawer.
+Jayden moved the pineapple to the bathtub.
+Logan exited the pantry.
+Ethan dislikes the tangerine
+Jayden exited the pantry.
+ Logan entered the pantry.
+Question:  Where will Jayden look for the pineapple?
+Answer: bathtub
+
+Context: Oliver entered the porch.
+Owen entered the porch.
+Abigail entered the porch.
+The broccoli is in the bucket.
+Abigail exited the porch.
+Owen exited the porch.
+Owen hates the peach
+Oliver moved the broccoli to the pantry.
+Question: Where will Abigail look for the broccoli?
+Answer: bucket
+

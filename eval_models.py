@@ -8,7 +8,7 @@ from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
 
-from utils import get_dataset, collate_fn
+from utils import load_model_and_tokenizer, load_tomi_data
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -21,16 +21,15 @@ print(f"Current directory: {current_dir}")
 with open(f"{current_dir}/models.json", "r") as f:
     models = json.load(f)
 
-with open(f"{current_dir}/results.json", "r") as f:
-    evaluated_models = json.load(f)
+# with open(f"{current_dir}/tomi_results.txt", "r") as f:
+#     evaluated_models = f.read().split("\n")
 
-# Remove already evaluated models from models list using evaluated_models dict
-for model_name in evaluated_models.keys():
-    models = [model for model in models if model_name not in model["model_name"]]
+# # Remove already evaluated models from models list using evaluated_models dict
+# for model_name in evaluated_models:
+#     models = [model for model in models if model_name not in model["model_name"]]
 
 
 def main():
-    results = {}
     for model_details in models:
         if "model" in locals():
             del model
@@ -41,84 +40,34 @@ def main():
         model_name = model_details["model_name"]
         precision = model_details["precision"]
 
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_name, token="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"
+        model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
+        print(f"{model_name} loaded successfully")
+        dataloader = load_tomi_data(
+            model.config, tokenizer, f"{current_dir}/data/ToMi", batch_size=32
         )
-        tokenizer.pad_token = tokenizer.eos_token
-
-        if precision == "fp32":
-            model = AutoModelForCausalLM.from_pretrained(
-                model_name, token="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"
-            ).to(device)
-        elif precision == "fp16":
-            model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.float16,
-                token="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",
-            ).to(device)
-        elif precision == "int8":
-            model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                device_map="auto",
-                load_in_8bit=True,
-                torch_dtype=torch.float16,
-                token="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",
-            )
-        elif precision == "int4":
-            model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                device_map="auto",
-                load_in_4bit=True,
-                torch_dtype=torch.float16,
-                token="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",
-            )
-
-        dataset = get_dataset(
-            datafiles=[
-                f"{current_dir}/data/unexpected_contents.jsonl",
-                f"{current_dir}/data/unexpected_transfer.jsonl",
-            ]
-        )
-        dataloader = DataLoader(
-            dataset,
-            batch_size=1,
-            collate_fn=lambda x: collate_fn(model, tokenizer, x),
-        )
+        print(f"Data loaded successfully")
 
         correct, total = 0, 0
         with torch.no_grad():
             for inp in tqdm(dataloader, total=len(dataloader)):
                 inp["input_ids"] = inp["input_ids"].to(device)
-                inp["attention_mask"] = inp["attention_mask"].to(device)
+                inp["target"] = inp["target"].to(device)
 
                 outputs = model(inp["input_ids"])
-                logits = outputs.logits
-                predicted_ids = torch.argmax(logits[:, -1], dim=-1)
-                predicted_token = tokenizer.decode(predicted_ids)
+                logits = outputs.logits[:, -1]
+                pred_token_ids = torch.argmax(logits, dim=-1)
 
-                if predicted_token.strip() == inp["target"][0].strip():
-                    with open(
-                        f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
-                    ) as f:
-                        f.write(f"{predicted_token} == {inp['target'][0].strip()}\n")
-                    correct += 1
-                else:
-                    with open(
-                        f"{current_dir}/{model_name.split('/')[-1]}_log.txt", "a"
-                    ) as f:
-                        f.write(f"{predicted_token} != {inp['target'][0].strip()}\n")
-                total += 1
+                correct += torch.sum(pred_token_ids == inp["target"]).item()
+                total += inp["target"].numel()
 
-                del inp, outputs, logits, predicted_ids
-                torch.cuda.empty_cache()
+            del inp, outputs, logits, pred_token_ids
+            torch.cuda.empty_cache()
 
-        print(
-            f"Model Name: {model_name.split('/')[-1]} | Accuracy: {correct/total:.2f}"
-        )
-        results[model_name.split("/")[-1]] = round(correct / total, 2)
+        accuracy = round(correct / total, 2)
+        print(f"Model Name: {model_name.split('/')[-1]} | Accuracy: {accuracy}")
 
-        with open(f"{current_dir}/results.json", "a") as f:
-            json.dump(results, f, indent=4)
+        with open(f"{current_dir}/tom_results.txt", "a") as f:
+            f.write(f"Model Name: {model_name} | Accuracy: {accuracy}\n")
 
         home_dir = str(Path.home())
         shutil.rmtree(

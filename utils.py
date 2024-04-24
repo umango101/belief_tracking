@@ -6,6 +6,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from typing import List, Dict, Any
 from transformers import StoppingCriteria
 from datasets import Dataset
+from torch.utils.data import DataLoader
 
 
 class NewLineStoppingCriteria(StoppingCriteria):
@@ -44,70 +45,6 @@ def get_dataset(datafiles: list[str]) -> Dataset:
             tasks.append(inp)
 
     return Dataset.from_list(tasks).with_format("torch")
-
-
-def collate_fn(model, tokenizer, examples) -> dict[str, torch.Tensor]:
-    inputs = tokenizer(
-        [ex["input"] for ex in examples],
-        return_tensors="pt",
-        padding=True,
-        truncation=True,
-    )
-    if (
-        model.config.architectures[0] == "GPT2LMHeadModel"
-        or model.config.architectures[0] == "GPTNeoXForCausalLM"
-        or model.config.architectures[0] == "GPTJForCausalLM"
-        or "Llama-3" in model.config._name_or_path
-    ):
-        inputs["target"] = [
-            tokenizer.decode(tokenizer.encode(" " + ex["target"])[0]) for ex in examples
-        ]
-    elif (
-        model.config.architectures[0] == "LlamaForCausalLM"
-        or model.config.architectures[0] == "LlaMAForCausalLM"
-        or model.config.architectures[0] == "GemmaForCausalLM"
-    ):
-        inputs["target"] = [
-            tokenizer.decode(tokenizer.encode(ex["target"])[1]) for ex in examples
-        ]
-    elif (
-        model.config.architectures[0] == "MistralForCausalLM"
-        or model.config.architectures[0] == "MixtralForCausalLM"
-    ):
-        inputs["target"] = [
-            tokenizer.decode(tokenizer.encode(" " + ex["target"])[2]) for ex in examples
-        ]
-    else:
-        raise NotImplementedError
-    return inputs
-
-
-def load_model_tokenzier(model_name: str, precision: str, device: torch.device):
-    if precision == "fp32":
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    elif precision == "fp16":
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name, torch_dtype=torch.float16
-        ).to(device)
-    elif precision == "int8":
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            load_in_8bit=True,
-            torch_dtype=torch.float16,
-        )
-    elif precision == "int4":
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            load_in_4bit=True,
-            torch_dtype=torch.float16,
-        )
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    tokenizer.pad_token = tokenizer.eos_token
-
-    return model, tokenizer
 
 
 def compute_final_roles(players: List[Dict[str, str]]):
@@ -214,3 +151,124 @@ def ask_mental_state_questions(
                         options[k] = other_player
 
         return own_vote, others_vote
+
+
+def load_model_and_tokenizer(model_name, precision, device):
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name,
+        padding_side="left",
+        token="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",
+    )
+    tokenizer.pad_token = tokenizer.eos_token
+
+    if precision == "fp32":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, token="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"
+        ).to(device)
+    elif precision == "fp16":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,
+            token="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",
+        ).to(device)
+    elif precision == "int8":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="auto",
+            load_in_8bit=True,
+            torch_dtype=torch.float16,
+            token="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",
+        )
+    elif precision == "int4":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="auto",
+            load_in_4bit=True,
+            torch_dtype=torch.float16,
+            token="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",
+        )
+
+    return model, tokenizer
+
+
+def preprocess_data(data):
+    prev_sent_idx = 0
+    processed_data = []
+    example = []
+
+    with open("priming_examples.txt", "r") as f:
+        priming_exps = f.read()
+
+    for sentence in data:
+        sent_idx = int(sentence.split(" ")[0])
+        sentence = sentence[2:]
+
+        if sent_idx > prev_sent_idx:
+            example.append(sentence)
+        else:
+            context = "".join(example[:-1])
+            question = example[-1].split("\t")[0]
+            answer = example[-1].split("\t")[1]
+            processed_data.append(
+                {
+                    "input": f"{priming_exps}Context: {context}Question: {question}\nAnswer:",
+                    "target": " " + answer,
+                }
+            )
+
+            example = [sentence]
+
+        prev_sent_idx = sent_idx
+
+    return processed_data
+
+
+class Collator(object):
+    def __init__(self, config, tokenizer):
+        self.config = config
+        self.tokenizer = tokenizer
+
+    def __call__(self, examples):
+        inputs = self.tokenizer(
+            [ex["input"] for ex in examples],
+            return_tensors="pt",
+            padding=True,
+        )
+
+        if (
+            self.config.architectures[0] == "LlamaForCausalLM"
+            or self.config.architectures[0] == "LlaMAForCausalLM"
+            or self.config.architectures[0] == "GemmaForCausalLM"
+            or self.config.architectures[0] == "MistralForCausalLM"
+        ):
+            inputs["target"] = torch.tensor(
+                [self.tokenizer.encode(ex["target"])[2] for ex in examples]
+            )
+
+        else:
+            inputs["target"] = torch.tensor(
+                [self.tokenizer.encode(ex["target"])[0] for ex in examples]
+            )
+        return inputs
+
+
+def load_tomi_data(config, tokenizer, dataset_path, batch_size):
+    with open(f"{dataset_path}/train.txt", "r") as f:
+        train_data = f.readlines()
+
+    with open(f"{dataset_path}/val.txt", "r") as f:
+        valid_data = f.readlines()
+
+    with open(f"{dataset_path}/test.txt", "r") as f:
+        test_data = f.readlines()
+
+    processed_data = preprocess_data(test_data)
+    print("Total dataset size: ", len(processed_data))
+
+    dataset = Dataset.from_list(processed_data).with_format("torch")
+    collator = Collator(config, tokenizer)
+    dataloader = DataLoader(
+        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
+
+    return dataloader
