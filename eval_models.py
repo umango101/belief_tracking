@@ -39,11 +39,12 @@ def main():
 
         model_name = model_details["model_name"]
         precision = model_details["precision"]
+        batch_size = model_details["batch_size"]
 
         model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
         print(f"{model_name} loaded successfully")
         dataloader = load_tomi_data(
-            model.config, tokenizer, f"{current_dir}/data/ToMi", batch_size=32
+            model.config, tokenizer, f"{current_dir}/data/ToMi", batch_size=batch_size
         )
         print(f"Data loaded successfully")
 
