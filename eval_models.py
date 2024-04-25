@@ -68,7 +68,7 @@ def main():
                         f"{current_dir}/preds/{model_name.split('/')[0]}.txt",
                         "a",
                     ) as f:
-                        f.write(f"Target: {target_text}\nPrediction: {pred_text}\n\n")
+                        f.write(f"Target: {target_text}\tPrediction: {pred_text}\n")
 
             del inp, outputs, logits, pred_token_ids
             torch.cuda.empty_cache()

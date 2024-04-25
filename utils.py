@@ -163,13 +163,12 @@ def load_model_and_tokenizer(model_name, precision, device):
 
     if precision == "fp32":
         model = AutoModelForCausalLM.from_pretrained(
-            model_name, token="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"
+            model_name,
         ).to(device)
     elif precision == "fp16":
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
             torch_dtype=torch.float16,
-            token="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",
         ).to(device)
     elif precision == "int8":
         model = AutoModelForCausalLM.from_pretrained(
@@ -177,7 +176,6 @@ def load_model_and_tokenizer(model_name, precision, device):
             device_map="auto",
             load_in_8bit=True,
             torch_dtype=torch.float16,
-            token="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",
         )
     elif precision == "int4":
         model = AutoModelForCausalLM.from_pretrained(
@@ -185,7 +183,6 @@ def load_model_and_tokenizer(model_name, precision, device):
             device_map="auto",
             load_in_4bit=True,
             torch_dtype=torch.float16,
-            token="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",
         )
 
     return model, tokenizer
