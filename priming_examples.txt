@@ -1,37 +1,39 @@
-Context: Logan loves the beans
-Ethan entered the office.
-Jayden entered the pantry.
-Logan entered the pantry.
-The pineapple is in the drawer.
-Jayden moved the pineapple to the bathtub.
-Logan exited the pantry.
-Ethan dislikes the tangerine
-Jayden exited the pantry.
- Logan entered the pantry.
-Question:  Where does Jayden think that Logan searches for the pineapple?
-Answer: bathtub
+Context: Elizabeth stepped into the hallway.
+Benjamin arrived at the hallway.
+The box has the persimmon.
+The box is positioned in the hallway.
+Elizabeth conveyed the persimmon to the treasure_chest.
+The treasure_chest is stored in the hallway.
+Benjamin exited the hallway.
+Elizabeth walked out of the hallway.
+Benjamin tiptoed into the office.
+ Benjamin is annoyed by the turnip.
 
-Context: Logan loves the beans
-Ethan entered the office.
-Jayden entered the pantry.
-Logan entered the pantry.
-The pineapple is in the drawer.
-Jayden moved the pineapple to the bathtub.
-Logan exited the pantry.
-Ethan dislikes the tangerine
-Jayden exited the pantry.
- Logan entered the pantry.
-Question:  Where will Jayden look for the pineapple?
-Answer: bathtub
+Question: Where does Elizabeth think that Benjamin searches for the persimmon?
+Answer: treasure_chest
 
-Context: Oliver entered the porch.
-Owen entered the porch.
-Abigail entered the porch.
-The broccoli is in the bucket.
-Abigail exited the porch.
-Owen exited the porch.
-Owen hates the peach
-Oliver moved the broccoli to the pantry.
-Question: Where will Abigail look for the broccoli?
-Answer: bucket
+Context: James showed up at the TV_room.
+Lily tiptoed into the TV_room.
+The skirt is set aside in the suitcase.
+The TV_room is keeping the suitcase inside of it.
+Lily set the skirt in the envelope.
+The envelope is deposited in the TV_room.
+Olivia is enthusiastic about the skirt.
+James tiptoed from the TV_room.
+
+Question: Where will Lily look for the skirt?
+Answer: envelope
+
+Context: Noah is nuts about the strawberry.
+Emily is contained in the playroom.
+Noah showed up at the playroom.
+The bathtub is safeguarding the socks.
+The playroom has the bathtub within it.
+Emily left the playroom.
+Noah transferred the socks to the cupboard.
+The cupboard is stored in the playroom.
+Mason arrived in the garden.
+
+Question: Where is the socks really?
+Answer: cupboard
 

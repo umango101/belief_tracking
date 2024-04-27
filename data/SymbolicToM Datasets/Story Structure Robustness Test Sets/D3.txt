@@ -1,0 +1,4800 @@
+1 Oliver is in the attic.
+2 The belt is in the box.
+3 The box is in the attic.
+4 Oliver moved the belt to the pantry.
+5 The pantry is in the attic.
+6 Ethan entered the attic.
+7 Oliver exited the attic.
+8 Ethan moved the belt to the bathtub.
+9 The bathtub is in the attic.
+10 Ethan moved the belt to the envelope.
+11 The envelope is in the attic.
+12 Where does Oliver think that Ethan searches for the belt?	pantry	1
+1 Oliver is in the attic.
+2 The belt is in the box.
+3 The box is in the attic.
+4 Oliver moved the belt to the pantry.
+5 The pantry is in the attic.
+6 Ethan entered the attic.
+7 Oliver exited the attic.
+8 Ethan moved the belt to the bathtub.
+9 The bathtub is in the attic.
+10 Ethan moved the belt to the envelope.
+11 The envelope is in the attic.
+12 Where does Ethan think that Oliver searches for the belt?	pantry	1
+1 Oliver is in the attic.
+2 The belt is in the box.
+3 The box is in the attic.
+4 Oliver moved the belt to the pantry.
+5 The pantry is in the attic.
+6 Ethan entered the attic.
+7 Oliver exited the attic.
+8 Ethan moved the belt to the bathtub.
+9 The bathtub is in the attic.
+10 Ethan moved the belt to the envelope.
+11 The envelope is in the attic.
+12 Where will Oliver look for the belt?	pantry	1
+1 Oliver is in the attic.
+2 The belt is in the box.
+3 The box is in the attic.
+4 Oliver moved the belt to the pantry.
+5 The pantry is in the attic.
+6 Ethan entered the attic.
+7 Oliver exited the attic.
+8 Ethan moved the belt to the bathtub.
+9 The bathtub is in the attic.
+10 Ethan moved the belt to the envelope.
+11 The envelope is in the attic.
+12 Where will Ethan look for the belt?	envelope	1
+1 Liam is in the basement.
+2 The boots is in the drawer.
+3 The drawer is in the basement.
+4 Liam moved the boots to the bottle.
+5 The bottle is in the basement.
+6 Benjamin entered the basement.
+7 Liam exited the basement.
+8 Benjamin moved the boots to the cupboard.
+9 The cupboard is in the basement.
+10 Benjamin moved the boots to the basket.
+11 The basket is in the basement.
+12 Where does Liam think that Benjamin searches for the boots?	bottle	1
+1 Liam is in the basement.
+2 The boots is in the drawer.
+3 The drawer is in the basement.
+4 Liam moved the boots to the bottle.
+5 The bottle is in the basement.
+6 Benjamin entered the basement.
+7 Liam exited the basement.
+8 Benjamin moved the boots to the cupboard.
+9 The cupboard is in the basement.
+10 Benjamin moved the boots to the basket.
+11 The basket is in the basement.
+12 Where does Benjamin think that Liam searches for the boots?	bottle	1
+1 Liam is in the basement.
+2 The boots is in the drawer.
+3 The drawer is in the basement.
+4 Liam moved the boots to the bottle.
+5 The bottle is in the basement.
+6 Benjamin entered the basement.
+7 Liam exited the basement.
+8 Benjamin moved the boots to the cupboard.
+9 The cupboard is in the basement.
+10 Benjamin moved the boots to the basket.
+11 The basket is in the basement.
+12 Where will Liam look for the boots?	bottle	1
+1 Liam is in the basement.
+2 The boots is in the drawer.
+3 The drawer is in the basement.
+4 Liam moved the boots to the bottle.
+5 The bottle is in the basement.
+6 Benjamin entered the basement.
+7 Liam exited the basement.
+8 Benjamin moved the boots to the cupboard.
+9 The cupboard is in the basement.
+10 Benjamin moved the boots to the basket.
+11 The basket is in the basement.
+12 Where will Benjamin look for the boots?	basket	1
+1 Lucas is in the bathroom.
+2 The cap is in the crate.
+3 The crate is in the bathroom.
+4 Lucas moved the cap to the suitcase.
+5 The suitcase is in the bathroom.
+6 Alexander entered the bathroom.
+7 Lucas exited the bathroom.
+8 Alexander moved the cap to the bucket.
+9 The bucket is in the bathroom.
+10 Alexander moved the cap to the container.
+11 The container is in the bathroom.
+12 Where does Lucas think that Alexander searches for the cap?	suitcase	1
+1 Lucas is in the bathroom.
+2 The cap is in the crate.
+3 The crate is in the bathroom.
+4 Lucas moved the cap to the suitcase.
+5 The suitcase is in the bathroom.
+6 Alexander entered the bathroom.
+7 Lucas exited the bathroom.
+8 Alexander moved the cap to the bucket.
+9 The bucket is in the bathroom.
+10 Alexander moved the cap to the container.
+11 The container is in the bathroom.
+12 Where does Alexander think that Lucas searches for the cap?	suitcase	1
+1 Lucas is in the bathroom.
+2 The cap is in the crate.
+3 The crate is in the bathroom.
+4 Lucas moved the cap to the suitcase.
+5 The suitcase is in the bathroom.
+6 Alexander entered the bathroom.
+7 Lucas exited the bathroom.
+8 Alexander moved the cap to the bucket.
+9 The bucket is in the bathroom.
+10 Alexander moved the cap to the container.
+11 The container is in the bathroom.
+12 Where will Lucas look for the cap?	suitcase	1
+1 Lucas is in the bathroom.
+2 The cap is in the crate.
+3 The crate is in the bathroom.
+4 Lucas moved the cap to the suitcase.
+5 The suitcase is in the bathroom.
+6 Alexander entered the bathroom.
+7 Lucas exited the bathroom.
+8 Alexander moved the cap to the bucket.
+9 The bucket is in the bathroom.
+10 Alexander moved the cap to the container.
+11 The container is in the bathroom.
+12 Where will Alexander look for the cap?	container	1
+1 Jacob is in the bedroom.
+2 The coat is in the box.
+3 The box is in the bedroom.
+4 Jacob moved the coat to the pantry.
+5 The pantry is in the bedroom.
+6 Mason entered the bedroom.
+7 Jacob exited the bedroom.
+8 Mason moved the coat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Mason moved the coat to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Jacob think that Mason searches for the coat?	pantry	1
+1 Jacob is in the bedroom.
+2 The coat is in the box.
+3 The box is in the bedroom.
+4 Jacob moved the coat to the pantry.
+5 The pantry is in the bedroom.
+6 Mason entered the bedroom.
+7 Jacob exited the bedroom.
+8 Mason moved the coat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Mason moved the coat to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Mason think that Jacob searches for the coat?	pantry	1
+1 Jacob is in the bedroom.
+2 The coat is in the box.
+3 The box is in the bedroom.
+4 Jacob moved the coat to the pantry.
+5 The pantry is in the bedroom.
+6 Mason entered the bedroom.
+7 Jacob exited the bedroom.
+8 Mason moved the coat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Mason moved the coat to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Jacob look for the coat?	pantry	1
+1 Jacob is in the bedroom.
+2 The coat is in the box.
+3 The box is in the bedroom.
+4 Jacob moved the coat to the pantry.
+5 The pantry is in the bedroom.
+6 Mason entered the bedroom.
+7 Jacob exited the bedroom.
+8 Mason moved the coat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Mason moved the coat to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Mason look for the coat?	envelope	1
+1 William is in the cellar.
+2 The dress is in the drawer.
+3 The drawer is in the cellar.
+4 William moved the dress to the bottle.
+5 The bottle is in the cellar.
+6 Hunter entered the cellar.
+7 William exited the cellar.
+8 Hunter moved the dress to the cupboard.
+9 The cupboard is in the cellar.
+10 Hunter moved the dress to the basket.
+11 The basket is in the cellar.
+12 Where does William think that Hunter searches for the dress?	bottle	1
+1 William is in the cellar.
+2 The dress is in the drawer.
+3 The drawer is in the cellar.
+4 William moved the dress to the bottle.
+5 The bottle is in the cellar.
+6 Hunter entered the cellar.
+7 William exited the cellar.
+8 Hunter moved the dress to the cupboard.
+9 The cupboard is in the cellar.
+10 Hunter moved the dress to the basket.
+11 The basket is in the cellar.
+12 Where does Hunter think that William searches for the dress?	bottle	1
+1 William is in the cellar.
+2 The dress is in the drawer.
+3 The drawer is in the cellar.
+4 William moved the dress to the bottle.
+5 The bottle is in the cellar.
+6 Hunter entered the cellar.
+7 William exited the cellar.
+8 Hunter moved the dress to the cupboard.
+9 The cupboard is in the cellar.
+10 Hunter moved the dress to the basket.
+11 The basket is in the cellar.
+12 Where will William look for the dress?	bottle	1
+1 William is in the cellar.
+2 The dress is in the drawer.
+3 The drawer is in the cellar.
+4 William moved the dress to the bottle.
+5 The bottle is in the cellar.
+6 Hunter entered the cellar.
+7 William exited the cellar.
+8 Hunter moved the dress to the cupboard.
+9 The cupboard is in the cellar.
+10 Hunter moved the dress to the basket.
+11 The basket is in the cellar.
+12 Where will Hunter look for the dress?	basket	1
+1 James is in the closet.
+2 The gloves is in the crate.
+3 The crate is in the closet.
+4 James moved the gloves to the suitcase.
+5 The suitcase is in the closet.
+6 Logan entered the closet.
+7 James exited the closet.
+8 Logan moved the gloves to the bucket.
+9 The bucket is in the closet.
+10 Logan moved the gloves to the container.
+11 The container is in the closet.
+12 Where does James think that Logan searches for the gloves?	suitcase	1
+1 James is in the closet.
+2 The gloves is in the crate.
+3 The crate is in the closet.
+4 James moved the gloves to the suitcase.
+5 The suitcase is in the closet.
+6 Logan entered the closet.
+7 James exited the closet.
+8 Logan moved the gloves to the bucket.
+9 The bucket is in the closet.
+10 Logan moved the gloves to the container.
+11 The container is in the closet.
+12 Where does Logan think that James searches for the gloves?	suitcase	1
+1 James is in the closet.
+2 The gloves is in the crate.
+3 The crate is in the closet.
+4 James moved the gloves to the suitcase.
+5 The suitcase is in the closet.
+6 Logan entered the closet.
+7 James exited the closet.
+8 Logan moved the gloves to the bucket.
+9 The bucket is in the closet.
+10 Logan moved the gloves to the container.
+11 The container is in the closet.
+12 Where will James look for the gloves?	suitcase	1
+1 James is in the closet.
+2 The gloves is in the crate.
+3 The crate is in the closet.
+4 James moved the gloves to the suitcase.
+5 The suitcase is in the closet.
+6 Logan entered the closet.
+7 James exited the closet.
+8 Logan moved the gloves to the bucket.
+9 The bucket is in the closet.
+10 Logan moved the gloves to the container.
+11 The container is in the closet.
+12 Where will Logan look for the gloves?	container	1
+1 Owen is in the crawlspace.
+2 The hat is in the box.
+3 The box is in the crawlspace.
+4 Owen moved the hat to the pantry.
+5 The pantry is in the crawlspace.
+6 Noah entered the crawlspace.
+7 Owen exited the crawlspace.
+8 Noah moved the hat to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Noah moved the hat to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Owen think that Noah searches for the hat?	pantry	1
+1 Owen is in the crawlspace.
+2 The hat is in the box.
+3 The box is in the crawlspace.
+4 Owen moved the hat to the pantry.
+5 The pantry is in the crawlspace.
+6 Noah entered the crawlspace.
+7 Owen exited the crawlspace.
+8 Noah moved the hat to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Noah moved the hat to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Noah think that Owen searches for the hat?	pantry	1
+1 Owen is in the crawlspace.
+2 The hat is in the box.
+3 The box is in the crawlspace.
+4 Owen moved the hat to the pantry.
+5 The pantry is in the crawlspace.
+6 Noah entered the crawlspace.
+7 Owen exited the crawlspace.
+8 Noah moved the hat to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Noah moved the hat to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Owen look for the hat?	pantry	1
+1 Owen is in the crawlspace.
+2 The hat is in the box.
+3 The box is in the crawlspace.
+4 Owen moved the hat to the pantry.
+5 The pantry is in the crawlspace.
+6 Noah entered the crawlspace.
+7 Owen exited the crawlspace.
+8 Noah moved the hat to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Noah moved the hat to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Noah look for the hat?	envelope	1
+1 Carter is in the den.
+2 The jacket is in the drawer.
+3 The drawer is in the den.
+4 Carter moved the jacket to the bottle.
+5 The bottle is in the den.
+6 Nathan entered the den.
+7 Carter exited the den.
+8 Nathan moved the jacket to the cupboard.
+9 The cupboard is in the den.
+10 Nathan moved the jacket to the basket.
+11 The basket is in the den.
+12 Where does Carter think that Nathan searches for the jacket?	bottle	1
+1 Carter is in the den.
+2 The jacket is in the drawer.
+3 The drawer is in the den.
+4 Carter moved the jacket to the bottle.
+5 The bottle is in the den.
+6 Nathan entered the den.
+7 Carter exited the den.
+8 Nathan moved the jacket to the cupboard.
+9 The cupboard is in the den.
+10 Nathan moved the jacket to the basket.
+11 The basket is in the den.
+12 Where does Nathan think that Carter searches for the jacket?	bottle	1
+1 Carter is in the den.
+2 The jacket is in the drawer.
+3 The drawer is in the den.
+4 Carter moved the jacket to the bottle.
+5 The bottle is in the den.
+6 Nathan entered the den.
+7 Carter exited the den.
+8 Nathan moved the jacket to the cupboard.
+9 The cupboard is in the den.
+10 Nathan moved the jacket to the basket.
+11 The basket is in the den.
+12 Where will Carter look for the jacket?	bottle	1
+1 Carter is in the den.
+2 The jacket is in the drawer.
+3 The drawer is in the den.
+4 Carter moved the jacket to the bottle.
+5 The bottle is in the den.
+6 Nathan entered the den.
+7 Carter exited the den.
+8 Nathan moved the jacket to the cupboard.
+9 The cupboard is in the den.
+10 Nathan moved the jacket to the basket.
+11 The basket is in the den.
+12 Where will Nathan look for the jacket?	basket	1
+1 Jack is in the garage.
+2 The jeans is in the crate.
+3 The crate is in the garage.
+4 Jack moved the jeans to the suitcase.
+5 The suitcase is in the garage.
+6 Aiden entered the garage.
+7 Jack exited the garage.
+8 Aiden moved the jeans to the bucket.
+9 The bucket is in the garage.
+10 Aiden moved the jeans to the container.
+11 The container is in the garage.
+12 Where does Jack think that Aiden searches for the jeans?	suitcase	1
+1 Jack is in the garage.
+2 The jeans is in the crate.
+3 The crate is in the garage.
+4 Jack moved the jeans to the suitcase.
+5 The suitcase is in the garage.
+6 Aiden entered the garage.
+7 Jack exited the garage.
+8 Aiden moved the jeans to the bucket.
+9 The bucket is in the garage.
+10 Aiden moved the jeans to the container.
+11 The container is in the garage.
+12 Where does Aiden think that Jack searches for the jeans?	suitcase	1
+1 Jack is in the garage.
+2 The jeans is in the crate.
+3 The crate is in the garage.
+4 Jack moved the jeans to the suitcase.
+5 The suitcase is in the garage.
+6 Aiden entered the garage.
+7 Jack exited the garage.
+8 Aiden moved the jeans to the bucket.
+9 The bucket is in the garage.
+10 Aiden moved the jeans to the container.
+11 The container is in the garage.
+12 Where will Jack look for the jeans?	suitcase	1
+1 Jack is in the garage.
+2 The jeans is in the crate.
+3 The crate is in the garage.
+4 Jack moved the jeans to the suitcase.
+5 The suitcase is in the garage.
+6 Aiden entered the garage.
+7 Jack exited the garage.
+8 Aiden moved the jeans to the bucket.
+9 The bucket is in the garage.
+10 Aiden moved the jeans to the container.
+11 The container is in the garage.
+12 Where will Aiden look for the jeans?	container	1
+1 Jackson is in the garden.
+2 The pajamas is in the box.
+3 The box is in the garden.
+4 Jackson moved the pajamas to the pantry.
+5 The pantry is in the garden.
+6 Jayden entered the garden.
+7 Jackson exited the garden.
+8 Jayden moved the pajamas to the bathtub.
+9 The bathtub is in the garden.
+10 Jayden moved the pajamas to the envelope.
+11 The envelope is in the garden.
+12 Where does Jackson think that Jayden searches for the pajamas?	pantry	1
+1 Jackson is in the garden.
+2 The pajamas is in the box.
+3 The box is in the garden.
+4 Jackson moved the pajamas to the pantry.
+5 The pantry is in the garden.
+6 Jayden entered the garden.
+7 Jackson exited the garden.
+8 Jayden moved the pajamas to the bathtub.
+9 The bathtub is in the garden.
+10 Jayden moved the pajamas to the envelope.
+11 The envelope is in the garden.
+12 Where does Jayden think that Jackson searches for the pajamas?	pantry	1
+1 Jackson is in the garden.
+2 The pajamas is in the box.
+3 The box is in the garden.
+4 Jackson moved the pajamas to the pantry.
+5 The pantry is in the garden.
+6 Jayden entered the garden.
+7 Jackson exited the garden.
+8 Jayden moved the pajamas to the bathtub.
+9 The bathtub is in the garden.
+10 Jayden moved the pajamas to the envelope.
+11 The envelope is in the garden.
+12 Where will Jackson look for the pajamas?	pantry	1
+1 Jackson is in the garden.
+2 The pajamas is in the box.
+3 The box is in the garden.
+4 Jackson moved the pajamas to the pantry.
+5 The pantry is in the garden.
+6 Jayden entered the garden.
+7 Jackson exited the garden.
+8 Jayden moved the pajamas to the bathtub.
+9 The bathtub is in the garden.
+10 Jayden moved the pajamas to the envelope.
+11 The envelope is in the garden.
+12 Where will Jayden look for the pajamas?	envelope	1
+1 Emma is in the hall.
+2 The pants is in the drawer.
+3 The drawer is in the hall.
+4 Emma moved the pants to the bottle.
+5 The bottle is in the hall.
+6 Olivia entered the hall.
+7 Emma exited the hall.
+8 Olivia moved the pants to the cupboard.
+9 The cupboard is in the hall.
+10 Olivia moved the pants to the basket.
+11 The basket is in the hall.
+12 Where does Emma think that Olivia searches for the pants?	bottle	1
+1 Emma is in the hall.
+2 The pants is in the drawer.
+3 The drawer is in the hall.
+4 Emma moved the pants to the bottle.
+5 The bottle is in the hall.
+6 Olivia entered the hall.
+7 Emma exited the hall.
+8 Olivia moved the pants to the cupboard.
+9 The cupboard is in the hall.
+10 Olivia moved the pants to the basket.
+11 The basket is in the hall.
+12 Where does Olivia think that Emma searches for the pants?	bottle	1
+1 Emma is in the hall.
+2 The pants is in the drawer.
+3 The drawer is in the hall.
+4 Emma moved the pants to the bottle.
+5 The bottle is in the hall.
+6 Olivia entered the hall.
+7 Emma exited the hall.
+8 Olivia moved the pants to the cupboard.
+9 The cupboard is in the hall.
+10 Olivia moved the pants to the basket.
+11 The basket is in the hall.
+12 Where will Emma look for the pants?	bottle	1
+1 Emma is in the hall.
+2 The pants is in the drawer.
+3 The drawer is in the hall.
+4 Emma moved the pants to the bottle.
+5 The bottle is in the hall.
+6 Olivia entered the hall.
+7 Emma exited the hall.
+8 Olivia moved the pants to the cupboard.
+9 The cupboard is in the hall.
+10 Olivia moved the pants to the basket.
+11 The basket is in the hall.
+12 Where will Olivia look for the pants?	basket	1
+1 Emily is in the hallway.
+2 The raincoat is in the crate.
+3 The crate is in the hallway.
+4 Emily moved the raincoat to the suitcase.
+5 The suitcase is in the hallway.
+6 Sophia entered the hallway.
+7 Emily exited the hallway.
+8 Sophia moved the raincoat to the bucket.
+9 The bucket is in the hallway.
+10 Sophia moved the raincoat to the container.
+11 The container is in the hallway.
+12 Where does Emily think that Sophia searches for the raincoat?	suitcase	1
+1 Emily is in the hallway.
+2 The raincoat is in the crate.
+3 The crate is in the hallway.
+4 Emily moved the raincoat to the suitcase.
+5 The suitcase is in the hallway.
+6 Sophia entered the hallway.
+7 Emily exited the hallway.
+8 Sophia moved the raincoat to the bucket.
+9 The bucket is in the hallway.
+10 Sophia moved the raincoat to the container.
+11 The container is in the hallway.
+12 Where does Sophia think that Emily searches for the raincoat?	suitcase	1
+1 Emily is in the hallway.
+2 The raincoat is in the crate.
+3 The crate is in the hallway.
+4 Emily moved the raincoat to the suitcase.
+5 The suitcase is in the hallway.
+6 Sophia entered the hallway.
+7 Emily exited the hallway.
+8 Sophia moved the raincoat to the bucket.
+9 The bucket is in the hallway.
+10 Sophia moved the raincoat to the container.
+11 The container is in the hallway.
+12 Where will Emily look for the raincoat?	suitcase	1
+1 Emily is in the hallway.
+2 The raincoat is in the crate.
+3 The crate is in the hallway.
+4 Emily moved the raincoat to the suitcase.
+5 The suitcase is in the hallway.
+6 Sophia entered the hallway.
+7 Emily exited the hallway.
+8 Sophia moved the raincoat to the bucket.
+9 The bucket is in the hallway.
+10 Sophia moved the raincoat to the container.
+11 The container is in the hallway.
+12 Where will Sophia look for the raincoat?	container	1
+1 Ava is in the kitchen.
+2 The scarf is in the box.
+3 The box is in the kitchen.
+4 Ava moved the scarf to the pantry.
+5 The pantry is in the kitchen.
+6 Chloe entered the kitchen.
+7 Ava exited the kitchen.
+8 Chloe moved the scarf to the bathtub.
+9 The bathtub is in the kitchen.
+10 Chloe moved the scarf to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Ava think that Chloe searches for the scarf?	pantry	1
+1 Ava is in the kitchen.
+2 The scarf is in the box.
+3 The box is in the kitchen.
+4 Ava moved the scarf to the pantry.
+5 The pantry is in the kitchen.
+6 Chloe entered the kitchen.
+7 Ava exited the kitchen.
+8 Chloe moved the scarf to the bathtub.
+9 The bathtub is in the kitchen.
+10 Chloe moved the scarf to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Chloe think that Ava searches for the scarf?	pantry	1
+1 Ava is in the kitchen.
+2 The scarf is in the box.
+3 The box is in the kitchen.
+4 Ava moved the scarf to the pantry.
+5 The pantry is in the kitchen.
+6 Chloe entered the kitchen.
+7 Ava exited the kitchen.
+8 Chloe moved the scarf to the bathtub.
+9 The bathtub is in the kitchen.
+10 Chloe moved the scarf to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Ava look for the scarf?	pantry	1
+1 Ava is in the kitchen.
+2 The scarf is in the box.
+3 The box is in the kitchen.
+4 Ava moved the scarf to the pantry.
+5 The pantry is in the kitchen.
+6 Chloe entered the kitchen.
+7 Ava exited the kitchen.
+8 Chloe moved the scarf to the bathtub.
+9 The bathtub is in the kitchen.
+10 Chloe moved the scarf to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Chloe look for the scarf?	envelope	1
+1 Charlotte is in the laundry.
+2 The shirt is in the drawer.
+3 The drawer is in the laundry.
+4 Charlotte moved the shirt to the bottle.
+5 The bottle is in the laundry.
+6 Abigail entered the laundry.
+7 Charlotte exited the laundry.
+8 Abigail moved the shirt to the cupboard.
+9 The cupboard is in the laundry.
+10 Abigail moved the shirt to the basket.
+11 The basket is in the laundry.
+12 Where does Charlotte think that Abigail searches for the shirt?	bottle	1
+1 Charlotte is in the laundry.
+2 The shirt is in the drawer.
+3 The drawer is in the laundry.
+4 Charlotte moved the shirt to the bottle.
+5 The bottle is in the laundry.
+6 Abigail entered the laundry.
+7 Charlotte exited the laundry.
+8 Abigail moved the shirt to the cupboard.
+9 The cupboard is in the laundry.
+10 Abigail moved the shirt to the basket.
+11 The basket is in the laundry.
+12 Where does Abigail think that Charlotte searches for the shirt?	bottle	1
+1 Charlotte is in the laundry.
+2 The shirt is in the drawer.
+3 The drawer is in the laundry.
+4 Charlotte moved the shirt to the bottle.
+5 The bottle is in the laundry.
+6 Abigail entered the laundry.
+7 Charlotte exited the laundry.
+8 Abigail moved the shirt to the cupboard.
+9 The cupboard is in the laundry.
+10 Abigail moved the shirt to the basket.
+11 The basket is in the laundry.
+12 Where will Charlotte look for the shirt?	bottle	1
+1 Charlotte is in the laundry.
+2 The shirt is in the drawer.
+3 The drawer is in the laundry.
+4 Charlotte moved the shirt to the bottle.
+5 The bottle is in the laundry.
+6 Abigail entered the laundry.
+7 Charlotte exited the laundry.
+8 Abigail moved the shirt to the cupboard.
+9 The cupboard is in the laundry.
+10 Abigail moved the shirt to the basket.
+11 The basket is in the laundry.
+12 Where will Abigail look for the shirt?	basket	1
+1 Amelia is in the lounge.
+2 The shoes is in the crate.
+3 The crate is in the lounge.
+4 Amelia moved the shoes to the suitcase.
+5 The suitcase is in the lounge.
+6 Ella entered the lounge.
+7 Amelia exited the lounge.
+8 Ella moved the shoes to the bucket.
+9 The bucket is in the lounge.
+10 Ella moved the shoes to the container.
+11 The container is in the lounge.
+12 Where does Amelia think that Ella searches for the shoes?	suitcase	1
+1 Amelia is in the lounge.
+2 The shoes is in the crate.
+3 The crate is in the lounge.
+4 Amelia moved the shoes to the suitcase.
+5 The suitcase is in the lounge.
+6 Ella entered the lounge.
+7 Amelia exited the lounge.
+8 Ella moved the shoes to the bucket.
+9 The bucket is in the lounge.
+10 Ella moved the shoes to the container.
+11 The container is in the lounge.
+12 Where does Ella think that Amelia searches for the shoes?	suitcase	1
+1 Amelia is in the lounge.
+2 The shoes is in the crate.
+3 The crate is in the lounge.
+4 Amelia moved the shoes to the suitcase.
+5 The suitcase is in the lounge.
+6 Ella entered the lounge.
+7 Amelia exited the lounge.
+8 Ella moved the shoes to the bucket.
+9 The bucket is in the lounge.
+10 Ella moved the shoes to the container.
+11 The container is in the lounge.
+12 Where will Amelia look for the shoes?	suitcase	1
+1 Amelia is in the lounge.
+2 The shoes is in the crate.
+3 The crate is in the lounge.
+4 Amelia moved the shoes to the suitcase.
+5 The suitcase is in the lounge.
+6 Ella entered the lounge.
+7 Amelia exited the lounge.
+8 Ella moved the shoes to the bucket.
+9 The bucket is in the lounge.
+10 Ella moved the shoes to the container.
+11 The container is in the lounge.
+12 Where will Ella look for the shoes?	container	1
+1 Hannah is in the office.
+2 The skirt is in the box.
+3 The box is in the office.
+4 Hannah moved the skirt to the pantry.
+5 The pantry is in the office.
+6 Isabella entered the office.
+7 Hannah exited the office.
+8 Isabella moved the skirt to the bathtub.
+9 The bathtub is in the office.
+10 Isabella moved the skirt to the envelope.
+11 The envelope is in the office.
+12 Where does Hannah think that Isabella searches for the skirt?	pantry	1
+1 Hannah is in the office.
+2 The skirt is in the box.
+3 The box is in the office.
+4 Hannah moved the skirt to the pantry.
+5 The pantry is in the office.
+6 Isabella entered the office.
+7 Hannah exited the office.
+8 Isabella moved the skirt to the bathtub.
+9 The bathtub is in the office.
+10 Isabella moved the skirt to the envelope.
+11 The envelope is in the office.
+12 Where does Isabella think that Hannah searches for the skirt?	pantry	1
+1 Hannah is in the office.
+2 The skirt is in the box.
+3 The box is in the office.
+4 Hannah moved the skirt to the pantry.
+5 The pantry is in the office.
+6 Isabella entered the office.
+7 Hannah exited the office.
+8 Isabella moved the skirt to the bathtub.
+9 The bathtub is in the office.
+10 Isabella moved the skirt to the envelope.
+11 The envelope is in the office.
+12 Where will Hannah look for the skirt?	pantry	1
+1 Hannah is in the office.
+2 The skirt is in the box.
+3 The box is in the office.
+4 Hannah moved the skirt to the pantry.
+5 The pantry is in the office.
+6 Isabella entered the office.
+7 Hannah exited the office.
+8 Isabella moved the skirt to the bathtub.
+9 The bathtub is in the office.
+10 Isabella moved the skirt to the envelope.
+11 The envelope is in the office.
+12 Where will Isabella look for the skirt?	envelope	1
+1 Aria is in the pantry.
+2 The slacks is in the drawer.
+3 The drawer is in the pantry.
+4 Aria moved the slacks to the bottle.
+5 The bottle is in the pantry.
+6 Lily entered the pantry.
+7 Aria exited the pantry.
+8 Lily moved the slacks to the cupboard.
+9 The cupboard is in the pantry.
+10 Lily moved the slacks to the basket.
+11 The basket is in the pantry.
+12 Where does Aria think that Lily searches for the slacks?	bottle	1
+1 Aria is in the pantry.
+2 The slacks is in the drawer.
+3 The drawer is in the pantry.
+4 Aria moved the slacks to the bottle.
+5 The bottle is in the pantry.
+6 Lily entered the pantry.
+7 Aria exited the pantry.
+8 Lily moved the slacks to the cupboard.
+9 The cupboard is in the pantry.
+10 Lily moved the slacks to the basket.
+11 The basket is in the pantry.
+12 Where does Lily think that Aria searches for the slacks?	bottle	1
+1 Aria is in the pantry.
+2 The slacks is in the drawer.
+3 The drawer is in the pantry.
+4 Aria moved the slacks to the bottle.
+5 The bottle is in the pantry.
+6 Lily entered the pantry.
+7 Aria exited the pantry.
+8 Lily moved the slacks to the cupboard.
+9 The cupboard is in the pantry.
+10 Lily moved the slacks to the basket.
+11 The basket is in the pantry.
+12 Where will Aria look for the slacks?	bottle	1
+1 Aria is in the pantry.
+2 The slacks is in the drawer.
+3 The drawer is in the pantry.
+4 Aria moved the slacks to the bottle.
+5 The bottle is in the pantry.
+6 Lily entered the pantry.
+7 Aria exited the pantry.
+8 Lily moved the slacks to the cupboard.
+9 The cupboard is in the pantry.
+10 Lily moved the slacks to the basket.
+11 The basket is in the pantry.
+12 Where will Lily look for the slacks?	basket	1
+1 Mia is in the patio.
+2 The slippers is in the crate.
+3 The crate is in the patio.
+4 Mia moved the slippers to the suitcase.
+5 The suitcase is in the patio.
+6 Isla entered the patio.
+7 Mia exited the patio.
+8 Isla moved the slippers to the bucket.
+9 The bucket is in the patio.
+10 Isla moved the slippers to the container.
+11 The container is in the patio.
+12 Where does Mia think that Isla searches for the slippers?	suitcase	1
+1 Mia is in the patio.
+2 The slippers is in the crate.
+3 The crate is in the patio.
+4 Mia moved the slippers to the suitcase.
+5 The suitcase is in the patio.
+6 Isla entered the patio.
+7 Mia exited the patio.
+8 Isla moved the slippers to the bucket.
+9 The bucket is in the patio.
+10 Isla moved the slippers to the container.
+11 The container is in the patio.
+12 Where does Isla think that Mia searches for the slippers?	suitcase	1
+1 Mia is in the patio.
+2 The slippers is in the crate.
+3 The crate is in the patio.
+4 Mia moved the slippers to the suitcase.
+5 The suitcase is in the patio.
+6 Isla entered the patio.
+7 Mia exited the patio.
+8 Isla moved the slippers to the bucket.
+9 The bucket is in the patio.
+10 Isla moved the slippers to the container.
+11 The container is in the patio.
+12 Where will Mia look for the slippers?	suitcase	1
+1 Mia is in the patio.
+2 The slippers is in the crate.
+3 The crate is in the patio.
+4 Mia moved the slippers to the suitcase.
+5 The suitcase is in the patio.
+6 Isla entered the patio.
+7 Mia exited the patio.
+8 Isla moved the slippers to the bucket.
+9 The bucket is in the patio.
+10 Isla moved the slippers to the container.
+11 The container is in the patio.
+12 Where will Isla look for the slippers?	container	1
+1 Avery is in the playroom.
+2 The socks is in the box.
+3 The box is in the playroom.
+4 Avery moved the socks to the pantry.
+5 The pantry is in the playroom.
+6 Elizabeth entered the playroom.
+7 Avery exited the playroom.
+8 Elizabeth moved the socks to the bathtub.
+9 The bathtub is in the playroom.
+10 Elizabeth moved the socks to the envelope.
+11 The envelope is in the playroom.
+12 Where does Avery think that Elizabeth searches for the socks?	pantry	1
+1 Avery is in the playroom.
+2 The socks is in the box.
+3 The box is in the playroom.
+4 Avery moved the socks to the pantry.
+5 The pantry is in the playroom.
+6 Elizabeth entered the playroom.
+7 Avery exited the playroom.
+8 Elizabeth moved the socks to the bathtub.
+9 The bathtub is in the playroom.
+10 Elizabeth moved the socks to the envelope.
+11 The envelope is in the playroom.
+12 Where does Elizabeth think that Avery searches for the socks?	pantry	1
+1 Avery is in the playroom.
+2 The socks is in the box.
+3 The box is in the playroom.
+4 Avery moved the socks to the pantry.
+5 The pantry is in the playroom.
+6 Elizabeth entered the playroom.
+7 Avery exited the playroom.
+8 Elizabeth moved the socks to the bathtub.
+9 The bathtub is in the playroom.
+10 Elizabeth moved the socks to the envelope.
+11 The envelope is in the playroom.
+12 Where will Avery look for the socks?	pantry	1
+1 Avery is in the playroom.
+2 The socks is in the box.
+3 The box is in the playroom.
+4 Avery moved the socks to the pantry.
+5 The pantry is in the playroom.
+6 Elizabeth entered the playroom.
+7 Avery exited the playroom.
+8 Elizabeth moved the socks to the bathtub.
+9 The bathtub is in the playroom.
+10 Elizabeth moved the socks to the envelope.
+11 The envelope is in the playroom.
+12 Where will Elizabeth look for the socks?	envelope	1
+1 Mila is in the porch.
+2 The stockings is in the drawer.
+3 The drawer is in the porch.
+4 Mila moved the stockings to the bottle.
+5 The bottle is in the porch.
+6 Evelyn entered the porch.
+7 Mila exited the porch.
+8 Evelyn moved the stockings to the cupboard.
+9 The cupboard is in the porch.
+10 Evelyn moved the stockings to the basket.
+11 The basket is in the porch.
+12 Where does Mila think that Evelyn searches for the stockings?	bottle	1
+1 Mila is in the porch.
+2 The stockings is in the drawer.
+3 The drawer is in the porch.
+4 Mila moved the stockings to the bottle.
+5 The bottle is in the porch.
+6 Evelyn entered the porch.
+7 Mila exited the porch.
+8 Evelyn moved the stockings to the cupboard.
+9 The cupboard is in the porch.
+10 Evelyn moved the stockings to the basket.
+11 The basket is in the porch.
+12 Where does Evelyn think that Mila searches for the stockings?	bottle	1
+1 Mila is in the porch.
+2 The stockings is in the drawer.
+3 The drawer is in the porch.
+4 Mila moved the stockings to the bottle.
+5 The bottle is in the porch.
+6 Evelyn entered the porch.
+7 Mila exited the porch.
+8 Evelyn moved the stockings to the cupboard.
+9 The cupboard is in the porch.
+10 Evelyn moved the stockings to the basket.
+11 The basket is in the porch.
+12 Where will Mila look for the stockings?	bottle	1
+1 Mila is in the porch.
+2 The stockings is in the drawer.
+3 The drawer is in the porch.
+4 Mila moved the stockings to the bottle.
+5 The bottle is in the porch.
+6 Evelyn entered the porch.
+7 Mila exited the porch.
+8 Evelyn moved the stockings to the cupboard.
+9 The cupboard is in the porch.
+10 Evelyn moved the stockings to the basket.
+11 The basket is in the porch.
+12 Where will Evelyn look for the stockings?	basket	1
+1 Oliver is in the staircase.
+2 The suit is in the crate.
+3 The crate is in the staircase.
+4 Oliver moved the suit to the suitcase.
+5 The suitcase is in the staircase.
+6 Ethan entered the staircase.
+7 Oliver exited the staircase.
+8 Ethan moved the suit to the bucket.
+9 The bucket is in the staircase.
+10 Ethan moved the suit to the container.
+11 The container is in the staircase.
+12 Where does Oliver think that Ethan searches for the suit?	suitcase	1
+1 Oliver is in the staircase.
+2 The suit is in the crate.
+3 The crate is in the staircase.
+4 Oliver moved the suit to the suitcase.
+5 The suitcase is in the staircase.
+6 Ethan entered the staircase.
+7 Oliver exited the staircase.
+8 Ethan moved the suit to the bucket.
+9 The bucket is in the staircase.
+10 Ethan moved the suit to the container.
+11 The container is in the staircase.
+12 Where does Ethan think that Oliver searches for the suit?	suitcase	1
+1 Oliver is in the staircase.
+2 The suit is in the crate.
+3 The crate is in the staircase.
+4 Oliver moved the suit to the suitcase.
+5 The suitcase is in the staircase.
+6 Ethan entered the staircase.
+7 Oliver exited the staircase.
+8 Ethan moved the suit to the bucket.
+9 The bucket is in the staircase.
+10 Ethan moved the suit to the container.
+11 The container is in the staircase.
+12 Where will Oliver look for the suit?	suitcase	1
+1 Oliver is in the staircase.
+2 The suit is in the crate.
+3 The crate is in the staircase.
+4 Oliver moved the suit to the suitcase.
+5 The suitcase is in the staircase.
+6 Ethan entered the staircase.
+7 Oliver exited the staircase.
+8 Ethan moved the suit to the bucket.
+9 The bucket is in the staircase.
+10 Ethan moved the suit to the container.
+11 The container is in the staircase.
+12 Where will Ethan look for the suit?	container	1
+1 Liam is in the study.
+2 The sweater is in the box.
+3 The box is in the study.
+4 Liam moved the sweater to the pantry.
+5 The pantry is in the study.
+6 Benjamin entered the study.
+7 Liam exited the study.
+8 Benjamin moved the sweater to the bathtub.
+9 The bathtub is in the study.
+10 Benjamin moved the sweater to the envelope.
+11 The envelope is in the study.
+12 Where does Liam think that Benjamin searches for the sweater?	pantry	1
+1 Liam is in the study.
+2 The sweater is in the box.
+3 The box is in the study.
+4 Liam moved the sweater to the pantry.
+5 The pantry is in the study.
+6 Benjamin entered the study.
+7 Liam exited the study.
+8 Benjamin moved the sweater to the bathtub.
+9 The bathtub is in the study.
+10 Benjamin moved the sweater to the envelope.
+11 The envelope is in the study.
+12 Where does Benjamin think that Liam searches for the sweater?	pantry	1
+1 Liam is in the study.
+2 The sweater is in the box.
+3 The box is in the study.
+4 Liam moved the sweater to the pantry.
+5 The pantry is in the study.
+6 Benjamin entered the study.
+7 Liam exited the study.
+8 Benjamin moved the sweater to the bathtub.
+9 The bathtub is in the study.
+10 Benjamin moved the sweater to the envelope.
+11 The envelope is in the study.
+12 Where will Liam look for the sweater?	pantry	1
+1 Liam is in the study.
+2 The sweater is in the box.
+3 The box is in the study.
+4 Liam moved the sweater to the pantry.
+5 The pantry is in the study.
+6 Benjamin entered the study.
+7 Liam exited the study.
+8 Benjamin moved the sweater to the bathtub.
+9 The bathtub is in the study.
+10 Benjamin moved the sweater to the envelope.
+11 The envelope is in the study.
+12 Where will Benjamin look for the sweater?	envelope	1
+1 Lucas is in the sunroom.
+2 The sweatshirt is in the drawer.
+3 The drawer is in the sunroom.
+4 Lucas moved the sweatshirt to the bottle.
+5 The bottle is in the sunroom.
+6 Alexander entered the sunroom.
+7 Lucas exited the sunroom.
+8 Alexander moved the sweatshirt to the cupboard.
+9 The cupboard is in the sunroom.
+10 Alexander moved the sweatshirt to the basket.
+11 The basket is in the sunroom.
+12 Where does Lucas think that Alexander searches for the sweatshirt?	bottle	1
+1 Lucas is in the sunroom.
+2 The sweatshirt is in the drawer.
+3 The drawer is in the sunroom.
+4 Lucas moved the sweatshirt to the bottle.
+5 The bottle is in the sunroom.
+6 Alexander entered the sunroom.
+7 Lucas exited the sunroom.
+8 Alexander moved the sweatshirt to the cupboard.
+9 The cupboard is in the sunroom.
+10 Alexander moved the sweatshirt to the basket.
+11 The basket is in the sunroom.
+12 Where does Alexander think that Lucas searches for the sweatshirt?	bottle	1
+1 Lucas is in the sunroom.
+2 The sweatshirt is in the drawer.
+3 The drawer is in the sunroom.
+4 Lucas moved the sweatshirt to the bottle.
+5 The bottle is in the sunroom.
+6 Alexander entered the sunroom.
+7 Lucas exited the sunroom.
+8 Alexander moved the sweatshirt to the cupboard.
+9 The cupboard is in the sunroom.
+10 Alexander moved the sweatshirt to the basket.
+11 The basket is in the sunroom.
+12 Where will Lucas look for the sweatshirt?	bottle	1
+1 Lucas is in the sunroom.
+2 The sweatshirt is in the drawer.
+3 The drawer is in the sunroom.
+4 Lucas moved the sweatshirt to the bottle.
+5 The bottle is in the sunroom.
+6 Alexander entered the sunroom.
+7 Lucas exited the sunroom.
+8 Alexander moved the sweatshirt to the cupboard.
+9 The cupboard is in the sunroom.
+10 Alexander moved the sweatshirt to the basket.
+11 The basket is in the sunroom.
+12 Where will Alexander look for the sweatshirt?	basket	1
+1 Jacob is in the workshop.
+2 The t-shirt is in the crate.
+3 The crate is in the workshop.
+4 Jacob moved the t-shirt to the suitcase.
+5 The suitcase is in the workshop.
+6 Mason entered the workshop.
+7 Jacob exited the workshop.
+8 Mason moved the t-shirt to the bucket.
+9 The bucket is in the workshop.
+10 Mason moved the t-shirt to the container.
+11 The container is in the workshop.
+12 Where does Jacob think that Mason searches for the t-shirt?	suitcase	1
+1 Jacob is in the workshop.
+2 The t-shirt is in the crate.
+3 The crate is in the workshop.
+4 Jacob moved the t-shirt to the suitcase.
+5 The suitcase is in the workshop.
+6 Mason entered the workshop.
+7 Jacob exited the workshop.
+8 Mason moved the t-shirt to the bucket.
+9 The bucket is in the workshop.
+10 Mason moved the t-shirt to the container.
+11 The container is in the workshop.
+12 Where does Mason think that Jacob searches for the t-shirt?	suitcase	1
+1 Jacob is in the workshop.
+2 The t-shirt is in the crate.
+3 The crate is in the workshop.
+4 Jacob moved the t-shirt to the suitcase.
+5 The suitcase is in the workshop.
+6 Mason entered the workshop.
+7 Jacob exited the workshop.
+8 Mason moved the t-shirt to the bucket.
+9 The bucket is in the workshop.
+10 Mason moved the t-shirt to the container.
+11 The container is in the workshop.
+12 Where will Jacob look for the t-shirt?	suitcase	1
+1 Jacob is in the workshop.
+2 The t-shirt is in the crate.
+3 The crate is in the workshop.
+4 Jacob moved the t-shirt to the suitcase.
+5 The suitcase is in the workshop.
+6 Mason entered the workshop.
+7 Jacob exited the workshop.
+8 Mason moved the t-shirt to the bucket.
+9 The bucket is in the workshop.
+10 Mason moved the t-shirt to the container.
+11 The container is in the workshop.
+12 Where will Mason look for the t-shirt?	container	1
+1 William is in the attic.
+2 The tie is in the box.
+3 The box is in the attic.
+4 William moved the tie to the pantry.
+5 The pantry is in the attic.
+6 Hunter entered the attic.
+7 William exited the attic.
+8 Hunter moved the tie to the bathtub.
+9 The bathtub is in the attic.
+10 Hunter moved the tie to the envelope.
+11 The envelope is in the attic.
+12 Where does William think that Hunter searches for the tie?	pantry	1
+1 William is in the attic.
+2 The tie is in the box.
+3 The box is in the attic.
+4 William moved the tie to the pantry.
+5 The pantry is in the attic.
+6 Hunter entered the attic.
+7 William exited the attic.
+8 Hunter moved the tie to the bathtub.
+9 The bathtub is in the attic.
+10 Hunter moved the tie to the envelope.
+11 The envelope is in the attic.
+12 Where does Hunter think that William searches for the tie?	pantry	1
+1 William is in the attic.
+2 The tie is in the box.
+3 The box is in the attic.
+4 William moved the tie to the pantry.
+5 The pantry is in the attic.
+6 Hunter entered the attic.
+7 William exited the attic.
+8 Hunter moved the tie to the bathtub.
+9 The bathtub is in the attic.
+10 Hunter moved the tie to the envelope.
+11 The envelope is in the attic.
+12 Where will William look for the tie?	pantry	1
+1 William is in the attic.
+2 The tie is in the box.
+3 The box is in the attic.
+4 William moved the tie to the pantry.
+5 The pantry is in the attic.
+6 Hunter entered the attic.
+7 William exited the attic.
+8 Hunter moved the tie to the bathtub.
+9 The bathtub is in the attic.
+10 Hunter moved the tie to the envelope.
+11 The envelope is in the attic.
+12 Where will Hunter look for the tie?	envelope	1
+1 James is in the basement.
+2 The trousers is in the drawer.
+3 The drawer is in the basement.
+4 James moved the trousers to the bottle.
+5 The bottle is in the basement.
+6 Logan entered the basement.
+7 James exited the basement.
+8 Logan moved the trousers to the cupboard.
+9 The cupboard is in the basement.
+10 Logan moved the trousers to the basket.
+11 The basket is in the basement.
+12 Where does James think that Logan searches for the trousers?	bottle	1
+1 James is in the basement.
+2 The trousers is in the drawer.
+3 The drawer is in the basement.
+4 James moved the trousers to the bottle.
+5 The bottle is in the basement.
+6 Logan entered the basement.
+7 James exited the basement.
+8 Logan moved the trousers to the cupboard.
+9 The cupboard is in the basement.
+10 Logan moved the trousers to the basket.
+11 The basket is in the basement.
+12 Where does Logan think that James searches for the trousers?	bottle	1
+1 James is in the basement.
+2 The trousers is in the drawer.
+3 The drawer is in the basement.
+4 James moved the trousers to the bottle.
+5 The bottle is in the basement.
+6 Logan entered the basement.
+7 James exited the basement.
+8 Logan moved the trousers to the cupboard.
+9 The cupboard is in the basement.
+10 Logan moved the trousers to the basket.
+11 The basket is in the basement.
+12 Where will James look for the trousers?	bottle	1
+1 James is in the basement.
+2 The trousers is in the drawer.
+3 The drawer is in the basement.
+4 James moved the trousers to the bottle.
+5 The bottle is in the basement.
+6 Logan entered the basement.
+7 James exited the basement.
+8 Logan moved the trousers to the cupboard.
+9 The cupboard is in the basement.
+10 Logan moved the trousers to the basket.
+11 The basket is in the basement.
+12 Where will Logan look for the trousers?	basket	1
+1 Owen is in the bathroom.
+2 The underclothes is in the crate.
+3 The crate is in the bathroom.
+4 Owen moved the underclothes to the suitcase.
+5 The suitcase is in the bathroom.
+6 Noah entered the bathroom.
+7 Owen exited the bathroom.
+8 Noah moved the underclothes to the bucket.
+9 The bucket is in the bathroom.
+10 Noah moved the underclothes to the container.
+11 The container is in the bathroom.
+12 Where does Owen think that Noah searches for the underclothes?	suitcase	1
+1 Owen is in the bathroom.
+2 The underclothes is in the crate.
+3 The crate is in the bathroom.
+4 Owen moved the underclothes to the suitcase.
+5 The suitcase is in the bathroom.
+6 Noah entered the bathroom.
+7 Owen exited the bathroom.
+8 Noah moved the underclothes to the bucket.
+9 The bucket is in the bathroom.
+10 Noah moved the underclothes to the container.
+11 The container is in the bathroom.
+12 Where does Noah think that Owen searches for the underclothes?	suitcase	1
+1 Owen is in the bathroom.
+2 The underclothes is in the crate.
+3 The crate is in the bathroom.
+4 Owen moved the underclothes to the suitcase.
+5 The suitcase is in the bathroom.
+6 Noah entered the bathroom.
+7 Owen exited the bathroom.
+8 Noah moved the underclothes to the bucket.
+9 The bucket is in the bathroom.
+10 Noah moved the underclothes to the container.
+11 The container is in the bathroom.
+12 Where will Owen look for the underclothes?	suitcase	1
+1 Owen is in the bathroom.
+2 The underclothes is in the crate.
+3 The crate is in the bathroom.
+4 Owen moved the underclothes to the suitcase.
+5 The suitcase is in the bathroom.
+6 Noah entered the bathroom.
+7 Owen exited the bathroom.
+8 Noah moved the underclothes to the bucket.
+9 The bucket is in the bathroom.
+10 Noah moved the underclothes to the container.
+11 The container is in the bathroom.
+12 Where will Noah look for the underclothes?	container	1
+1 Carter is in the bedroom.
+2 The underpants is in the box.
+3 The box is in the bedroom.
+4 Carter moved the underpants to the pantry.
+5 The pantry is in the bedroom.
+6 Nathan entered the bedroom.
+7 Carter exited the bedroom.
+8 Nathan moved the underpants to the bathtub.
+9 The bathtub is in the bedroom.
+10 Nathan moved the underpants to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Carter think that Nathan searches for the underpants?	pantry	1
+1 Carter is in the bedroom.
+2 The underpants is in the box.
+3 The box is in the bedroom.
+4 Carter moved the underpants to the pantry.
+5 The pantry is in the bedroom.
+6 Nathan entered the bedroom.
+7 Carter exited the bedroom.
+8 Nathan moved the underpants to the bathtub.
+9 The bathtub is in the bedroom.
+10 Nathan moved the underpants to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Nathan think that Carter searches for the underpants?	pantry	1
+1 Carter is in the bedroom.
+2 The underpants is in the box.
+3 The box is in the bedroom.
+4 Carter moved the underpants to the pantry.
+5 The pantry is in the bedroom.
+6 Nathan entered the bedroom.
+7 Carter exited the bedroom.
+8 Nathan moved the underpants to the bathtub.
+9 The bathtub is in the bedroom.
+10 Nathan moved the underpants to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Carter look for the underpants?	pantry	1
+1 Carter is in the bedroom.
+2 The underpants is in the box.
+3 The box is in the bedroom.
+4 Carter moved the underpants to the pantry.
+5 The pantry is in the bedroom.
+6 Nathan entered the bedroom.
+7 Carter exited the bedroom.
+8 Nathan moved the underpants to the bathtub.
+9 The bathtub is in the bedroom.
+10 Nathan moved the underpants to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Nathan look for the underpants?	envelope	1
+1 Jack is in the cellar.
+2 The undershirt is in the drawer.
+3 The drawer is in the cellar.
+4 Jack moved the undershirt to the bottle.
+5 The bottle is in the cellar.
+6 Aiden entered the cellar.
+7 Jack exited the cellar.
+8 Aiden moved the undershirt to the cupboard.
+9 The cupboard is in the cellar.
+10 Aiden moved the undershirt to the basket.
+11 The basket is in the cellar.
+12 Where does Jack think that Aiden searches for the undershirt?	bottle	1
+1 Jack is in the cellar.
+2 The undershirt is in the drawer.
+3 The drawer is in the cellar.
+4 Jack moved the undershirt to the bottle.
+5 The bottle is in the cellar.
+6 Aiden entered the cellar.
+7 Jack exited the cellar.
+8 Aiden moved the undershirt to the cupboard.
+9 The cupboard is in the cellar.
+10 Aiden moved the undershirt to the basket.
+11 The basket is in the cellar.
+12 Where does Aiden think that Jack searches for the undershirt?	bottle	1
+1 Jack is in the cellar.
+2 The undershirt is in the drawer.
+3 The drawer is in the cellar.
+4 Jack moved the undershirt to the bottle.
+5 The bottle is in the cellar.
+6 Aiden entered the cellar.
+7 Jack exited the cellar.
+8 Aiden moved the undershirt to the cupboard.
+9 The cupboard is in the cellar.
+10 Aiden moved the undershirt to the basket.
+11 The basket is in the cellar.
+12 Where will Jack look for the undershirt?	bottle	1
+1 Jack is in the cellar.
+2 The undershirt is in the drawer.
+3 The drawer is in the cellar.
+4 Jack moved the undershirt to the bottle.
+5 The bottle is in the cellar.
+6 Aiden entered the cellar.
+7 Jack exited the cellar.
+8 Aiden moved the undershirt to the cupboard.
+9 The cupboard is in the cellar.
+10 Aiden moved the undershirt to the basket.
+11 The basket is in the cellar.
+12 Where will Aiden look for the undershirt?	basket	1
+1 Jackson is in the closet.
+2 The apple is in the crate.
+3 The crate is in the closet.
+4 Jackson moved the apple to the suitcase.
+5 The suitcase is in the closet.
+6 Jayden entered the closet.
+7 Jackson exited the closet.
+8 Jayden moved the apple to the bucket.
+9 The bucket is in the closet.
+10 Jayden moved the apple to the container.
+11 The container is in the closet.
+12 Where does Jackson think that Jayden searches for the apple?	suitcase	1
+1 Jackson is in the closet.
+2 The apple is in the crate.
+3 The crate is in the closet.
+4 Jackson moved the apple to the suitcase.
+5 The suitcase is in the closet.
+6 Jayden entered the closet.
+7 Jackson exited the closet.
+8 Jayden moved the apple to the bucket.
+9 The bucket is in the closet.
+10 Jayden moved the apple to the container.
+11 The container is in the closet.
+12 Where does Jayden think that Jackson searches for the apple?	suitcase	1
+1 Jackson is in the closet.
+2 The apple is in the crate.
+3 The crate is in the closet.
+4 Jackson moved the apple to the suitcase.
+5 The suitcase is in the closet.
+6 Jayden entered the closet.
+7 Jackson exited the closet.
+8 Jayden moved the apple to the bucket.
+9 The bucket is in the closet.
+10 Jayden moved the apple to the container.
+11 The container is in the closet.
+12 Where will Jackson look for the apple?	suitcase	1
+1 Jackson is in the closet.
+2 The apple is in the crate.
+3 The crate is in the closet.
+4 Jackson moved the apple to the suitcase.
+5 The suitcase is in the closet.
+6 Jayden entered the closet.
+7 Jackson exited the closet.
+8 Jayden moved the apple to the bucket.
+9 The bucket is in the closet.
+10 Jayden moved the apple to the container.
+11 The container is in the closet.
+12 Where will Jayden look for the apple?	container	1
+1 Emma is in the crawlspace.
+2 The banana is in the box.
+3 The box is in the crawlspace.
+4 Emma moved the banana to the pantry.
+5 The pantry is in the crawlspace.
+6 Olivia entered the crawlspace.
+7 Emma exited the crawlspace.
+8 Olivia moved the banana to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Olivia moved the banana to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Emma think that Olivia searches for the banana?	pantry	1
+1 Emma is in the crawlspace.
+2 The banana is in the box.
+3 The box is in the crawlspace.
+4 Emma moved the banana to the pantry.
+5 The pantry is in the crawlspace.
+6 Olivia entered the crawlspace.
+7 Emma exited the crawlspace.
+8 Olivia moved the banana to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Olivia moved the banana to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Olivia think that Emma searches for the banana?	pantry	1
+1 Emma is in the crawlspace.
+2 The banana is in the box.
+3 The box is in the crawlspace.
+4 Emma moved the banana to the pantry.
+5 The pantry is in the crawlspace.
+6 Olivia entered the crawlspace.
+7 Emma exited the crawlspace.
+8 Olivia moved the banana to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Olivia moved the banana to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Emma look for the banana?	pantry	1
+1 Emma is in the crawlspace.
+2 The banana is in the box.
+3 The box is in the crawlspace.
+4 Emma moved the banana to the pantry.
+5 The pantry is in the crawlspace.
+6 Olivia entered the crawlspace.
+7 Emma exited the crawlspace.
+8 Olivia moved the banana to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Olivia moved the banana to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Olivia look for the banana?	envelope	1
+1 Emily is in the den.
+2 The cherry is in the drawer.
+3 The drawer is in the den.
+4 Emily moved the cherry to the bottle.
+5 The bottle is in the den.
+6 Sophia entered the den.
+7 Emily exited the den.
+8 Sophia moved the cherry to the cupboard.
+9 The cupboard is in the den.
+10 Sophia moved the cherry to the basket.
+11 The basket is in the den.
+12 Where does Emily think that Sophia searches for the cherry?	bottle	1
+1 Emily is in the den.
+2 The cherry is in the drawer.
+3 The drawer is in the den.
+4 Emily moved the cherry to the bottle.
+5 The bottle is in the den.
+6 Sophia entered the den.
+7 Emily exited the den.
+8 Sophia moved the cherry to the cupboard.
+9 The cupboard is in the den.
+10 Sophia moved the cherry to the basket.
+11 The basket is in the den.
+12 Where does Sophia think that Emily searches for the cherry?	bottle	1
+1 Emily is in the den.
+2 The cherry is in the drawer.
+3 The drawer is in the den.
+4 Emily moved the cherry to the bottle.
+5 The bottle is in the den.
+6 Sophia entered the den.
+7 Emily exited the den.
+8 Sophia moved the cherry to the cupboard.
+9 The cupboard is in the den.
+10 Sophia moved the cherry to the basket.
+11 The basket is in the den.
+12 Where will Emily look for the cherry?	bottle	1
+1 Emily is in the den.
+2 The cherry is in the drawer.
+3 The drawer is in the den.
+4 Emily moved the cherry to the bottle.
+5 The bottle is in the den.
+6 Sophia entered the den.
+7 Emily exited the den.
+8 Sophia moved the cherry to the cupboard.
+9 The cupboard is in the den.
+10 Sophia moved the cherry to the basket.
+11 The basket is in the den.
+12 Where will Sophia look for the cherry?	basket	1
+1 Ava is in the garage.
+2 The grapefruit is in the crate.
+3 The crate is in the garage.
+4 Ava moved the grapefruit to the suitcase.
+5 The suitcase is in the garage.
+6 Chloe entered the garage.
+7 Ava exited the garage.
+8 Chloe moved the grapefruit to the bucket.
+9 The bucket is in the garage.
+10 Chloe moved the grapefruit to the container.
+11 The container is in the garage.
+12 Where does Ava think that Chloe searches for the grapefruit?	suitcase	1
+1 Ava is in the garage.
+2 The grapefruit is in the crate.
+3 The crate is in the garage.
+4 Ava moved the grapefruit to the suitcase.
+5 The suitcase is in the garage.
+6 Chloe entered the garage.
+7 Ava exited the garage.
+8 Chloe moved the grapefruit to the bucket.
+9 The bucket is in the garage.
+10 Chloe moved the grapefruit to the container.
+11 The container is in the garage.
+12 Where does Chloe think that Ava searches for the grapefruit?	suitcase	1
+1 Ava is in the garage.
+2 The grapefruit is in the crate.
+3 The crate is in the garage.
+4 Ava moved the grapefruit to the suitcase.
+5 The suitcase is in the garage.
+6 Chloe entered the garage.
+7 Ava exited the garage.
+8 Chloe moved the grapefruit to the bucket.
+9 The bucket is in the garage.
+10 Chloe moved the grapefruit to the container.
+11 The container is in the garage.
+12 Where will Ava look for the grapefruit?	suitcase	1
+1 Ava is in the garage.
+2 The grapefruit is in the crate.
+3 The crate is in the garage.
+4 Ava moved the grapefruit to the suitcase.
+5 The suitcase is in the garage.
+6 Chloe entered the garage.
+7 Ava exited the garage.
+8 Chloe moved the grapefruit to the bucket.
+9 The bucket is in the garage.
+10 Chloe moved the grapefruit to the container.
+11 The container is in the garage.
+12 Where will Chloe look for the grapefruit?	container	1
+1 Charlotte is in the garden.
+2 The grapes is in the box.
+3 The box is in the garden.
+4 Charlotte moved the grapes to the pantry.
+5 The pantry is in the garden.
+6 Abigail entered the garden.
+7 Charlotte exited the garden.
+8 Abigail moved the grapes to the bathtub.
+9 The bathtub is in the garden.
+10 Abigail moved the grapes to the envelope.
+11 The envelope is in the garden.
+12 Where does Charlotte think that Abigail searches for the grapes?	pantry	1
+1 Charlotte is in the garden.
+2 The grapes is in the box.
+3 The box is in the garden.
+4 Charlotte moved the grapes to the pantry.
+5 The pantry is in the garden.
+6 Abigail entered the garden.
+7 Charlotte exited the garden.
+8 Abigail moved the grapes to the bathtub.
+9 The bathtub is in the garden.
+10 Abigail moved the grapes to the envelope.
+11 The envelope is in the garden.
+12 Where does Abigail think that Charlotte searches for the grapes?	pantry	1
+1 Charlotte is in the garden.
+2 The grapes is in the box.
+3 The box is in the garden.
+4 Charlotte moved the grapes to the pantry.
+5 The pantry is in the garden.
+6 Abigail entered the garden.
+7 Charlotte exited the garden.
+8 Abigail moved the grapes to the bathtub.
+9 The bathtub is in the garden.
+10 Abigail moved the grapes to the envelope.
+11 The envelope is in the garden.
+12 Where will Charlotte look for the grapes?	pantry	1
+1 Charlotte is in the garden.
+2 The grapes is in the box.
+3 The box is in the garden.
+4 Charlotte moved the grapes to the pantry.
+5 The pantry is in the garden.
+6 Abigail entered the garden.
+7 Charlotte exited the garden.
+8 Abigail moved the grapes to the bathtub.
+9 The bathtub is in the garden.
+10 Abigail moved the grapes to the envelope.
+11 The envelope is in the garden.
+12 Where will Abigail look for the grapes?	envelope	1
+1 Amelia is in the hall.
+2 The lemon is in the drawer.
+3 The drawer is in the hall.
+4 Amelia moved the lemon to the bottle.
+5 The bottle is in the hall.
+6 Ella entered the hall.
+7 Amelia exited the hall.
+8 Ella moved the lemon to the cupboard.
+9 The cupboard is in the hall.
+10 Ella moved the lemon to the basket.
+11 The basket is in the hall.
+12 Where does Amelia think that Ella searches for the lemon?	bottle	1
+1 Amelia is in the hall.
+2 The lemon is in the drawer.
+3 The drawer is in the hall.
+4 Amelia moved the lemon to the bottle.
+5 The bottle is in the hall.
+6 Ella entered the hall.
+7 Amelia exited the hall.
+8 Ella moved the lemon to the cupboard.
+9 The cupboard is in the hall.
+10 Ella moved the lemon to the basket.
+11 The basket is in the hall.
+12 Where does Ella think that Amelia searches for the lemon?	bottle	1
+1 Amelia is in the hall.
+2 The lemon is in the drawer.
+3 The drawer is in the hall.
+4 Amelia moved the lemon to the bottle.
+5 The bottle is in the hall.
+6 Ella entered the hall.
+7 Amelia exited the hall.
+8 Ella moved the lemon to the cupboard.
+9 The cupboard is in the hall.
+10 Ella moved the lemon to the basket.
+11 The basket is in the hall.
+12 Where will Amelia look for the lemon?	bottle	1
+1 Amelia is in the hall.
+2 The lemon is in the drawer.
+3 The drawer is in the hall.
+4 Amelia moved the lemon to the bottle.
+5 The bottle is in the hall.
+6 Ella entered the hall.
+7 Amelia exited the hall.
+8 Ella moved the lemon to the cupboard.
+9 The cupboard is in the hall.
+10 Ella moved the lemon to the basket.
+11 The basket is in the hall.
+12 Where will Ella look for the lemon?	basket	1
+1 Hannah is in the hallway.
+2 The lime is in the crate.
+3 The crate is in the hallway.
+4 Hannah moved the lime to the suitcase.
+5 The suitcase is in the hallway.
+6 Isabella entered the hallway.
+7 Hannah exited the hallway.
+8 Isabella moved the lime to the bucket.
+9 The bucket is in the hallway.
+10 Isabella moved the lime to the container.
+11 The container is in the hallway.
+12 Where does Hannah think that Isabella searches for the lime?	suitcase	1
+1 Hannah is in the hallway.
+2 The lime is in the crate.
+3 The crate is in the hallway.
+4 Hannah moved the lime to the suitcase.
+5 The suitcase is in the hallway.
+6 Isabella entered the hallway.
+7 Hannah exited the hallway.
+8 Isabella moved the lime to the bucket.
+9 The bucket is in the hallway.
+10 Isabella moved the lime to the container.
+11 The container is in the hallway.
+12 Where does Isabella think that Hannah searches for the lime?	suitcase	1
+1 Hannah is in the hallway.
+2 The lime is in the crate.
+3 The crate is in the hallway.
+4 Hannah moved the lime to the suitcase.
+5 The suitcase is in the hallway.
+6 Isabella entered the hallway.
+7 Hannah exited the hallway.
+8 Isabella moved the lime to the bucket.
+9 The bucket is in the hallway.
+10 Isabella moved the lime to the container.
+11 The container is in the hallway.
+12 Where will Hannah look for the lime?	suitcase	1
+1 Hannah is in the hallway.
+2 The lime is in the crate.
+3 The crate is in the hallway.
+4 Hannah moved the lime to the suitcase.
+5 The suitcase is in the hallway.
+6 Isabella entered the hallway.
+7 Hannah exited the hallway.
+8 Isabella moved the lime to the bucket.
+9 The bucket is in the hallway.
+10 Isabella moved the lime to the container.
+11 The container is in the hallway.
+12 Where will Isabella look for the lime?	container	1
+1 Aria is in the kitchen.
+2 The melon is in the box.
+3 The box is in the kitchen.
+4 Aria moved the melon to the pantry.
+5 The pantry is in the kitchen.
+6 Lily entered the kitchen.
+7 Aria exited the kitchen.
+8 Lily moved the melon to the bathtub.
+9 The bathtub is in the kitchen.
+10 Lily moved the melon to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Aria think that Lily searches for the melon?	pantry	1
+1 Aria is in the kitchen.
+2 The melon is in the box.
+3 The box is in the kitchen.
+4 Aria moved the melon to the pantry.
+5 The pantry is in the kitchen.
+6 Lily entered the kitchen.
+7 Aria exited the kitchen.
+8 Lily moved the melon to the bathtub.
+9 The bathtub is in the kitchen.
+10 Lily moved the melon to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Lily think that Aria searches for the melon?	pantry	1
+1 Aria is in the kitchen.
+2 The melon is in the box.
+3 The box is in the kitchen.
+4 Aria moved the melon to the pantry.
+5 The pantry is in the kitchen.
+6 Lily entered the kitchen.
+7 Aria exited the kitchen.
+8 Lily moved the melon to the bathtub.
+9 The bathtub is in the kitchen.
+10 Lily moved the melon to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Aria look for the melon?	pantry	1
+1 Aria is in the kitchen.
+2 The melon is in the box.
+3 The box is in the kitchen.
+4 Aria moved the melon to the pantry.
+5 The pantry is in the kitchen.
+6 Lily entered the kitchen.
+7 Aria exited the kitchen.
+8 Lily moved the melon to the bathtub.
+9 The bathtub is in the kitchen.
+10 Lily moved the melon to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Lily look for the melon?	envelope	1
+1 Mia is in the laundry.
+2 The orange is in the drawer.
+3 The drawer is in the laundry.
+4 Mia moved the orange to the bottle.
+5 The bottle is in the laundry.
+6 Isla entered the laundry.
+7 Mia exited the laundry.
+8 Isla moved the orange to the cupboard.
+9 The cupboard is in the laundry.
+10 Isla moved the orange to the basket.
+11 The basket is in the laundry.
+12 Where does Mia think that Isla searches for the orange?	bottle	1
+1 Mia is in the laundry.
+2 The orange is in the drawer.
+3 The drawer is in the laundry.
+4 Mia moved the orange to the bottle.
+5 The bottle is in the laundry.
+6 Isla entered the laundry.
+7 Mia exited the laundry.
+8 Isla moved the orange to the cupboard.
+9 The cupboard is in the laundry.
+10 Isla moved the orange to the basket.
+11 The basket is in the laundry.
+12 Where does Isla think that Mia searches for the orange?	bottle	1
+1 Mia is in the laundry.
+2 The orange is in the drawer.
+3 The drawer is in the laundry.
+4 Mia moved the orange to the bottle.
+5 The bottle is in the laundry.
+6 Isla entered the laundry.
+7 Mia exited the laundry.
+8 Isla moved the orange to the cupboard.
+9 The cupboard is in the laundry.
+10 Isla moved the orange to the basket.
+11 The basket is in the laundry.
+12 Where will Mia look for the orange?	bottle	1
+1 Mia is in the laundry.
+2 The orange is in the drawer.
+3 The drawer is in the laundry.
+4 Mia moved the orange to the bottle.
+5 The bottle is in the laundry.
+6 Isla entered the laundry.
+7 Mia exited the laundry.
+8 Isla moved the orange to the cupboard.
+9 The cupboard is in the laundry.
+10 Isla moved the orange to the basket.
+11 The basket is in the laundry.
+12 Where will Isla look for the orange?	basket	1
+1 Avery is in the lounge.
+2 The peach is in the crate.
+3 The crate is in the lounge.
+4 Avery moved the peach to the suitcase.
+5 The suitcase is in the lounge.
+6 Elizabeth entered the lounge.
+7 Avery exited the lounge.
+8 Elizabeth moved the peach to the bucket.
+9 The bucket is in the lounge.
+10 Elizabeth moved the peach to the container.
+11 The container is in the lounge.
+12 Where does Avery think that Elizabeth searches for the peach?	suitcase	1
+1 Avery is in the lounge.
+2 The peach is in the crate.
+3 The crate is in the lounge.
+4 Avery moved the peach to the suitcase.
+5 The suitcase is in the lounge.
+6 Elizabeth entered the lounge.
+7 Avery exited the lounge.
+8 Elizabeth moved the peach to the bucket.
+9 The bucket is in the lounge.
+10 Elizabeth moved the peach to the container.
+11 The container is in the lounge.
+12 Where does Elizabeth think that Avery searches for the peach?	suitcase	1
+1 Avery is in the lounge.
+2 The peach is in the crate.
+3 The crate is in the lounge.
+4 Avery moved the peach to the suitcase.
+5 The suitcase is in the lounge.
+6 Elizabeth entered the lounge.
+7 Avery exited the lounge.
+8 Elizabeth moved the peach to the bucket.
+9 The bucket is in the lounge.
+10 Elizabeth moved the peach to the container.
+11 The container is in the lounge.
+12 Where will Avery look for the peach?	suitcase	1
+1 Avery is in the lounge.
+2 The peach is in the crate.
+3 The crate is in the lounge.
+4 Avery moved the peach to the suitcase.
+5 The suitcase is in the lounge.
+6 Elizabeth entered the lounge.
+7 Avery exited the lounge.
+8 Elizabeth moved the peach to the bucket.
+9 The bucket is in the lounge.
+10 Elizabeth moved the peach to the container.
+11 The container is in the lounge.
+12 Where will Elizabeth look for the peach?	container	1
+1 Mila is in the office.
+2 The pear is in the box.
+3 The box is in the office.
+4 Mila moved the pear to the pantry.
+5 The pantry is in the office.
+6 Evelyn entered the office.
+7 Mila exited the office.
+8 Evelyn moved the pear to the bathtub.
+9 The bathtub is in the office.
+10 Evelyn moved the pear to the envelope.
+11 The envelope is in the office.
+12 Where does Mila think that Evelyn searches for the pear?	pantry	1
+1 Mila is in the office.
+2 The pear is in the box.
+3 The box is in the office.
+4 Mila moved the pear to the pantry.
+5 The pantry is in the office.
+6 Evelyn entered the office.
+7 Mila exited the office.
+8 Evelyn moved the pear to the bathtub.
+9 The bathtub is in the office.
+10 Evelyn moved the pear to the envelope.
+11 The envelope is in the office.
+12 Where does Evelyn think that Mila searches for the pear?	pantry	1
+1 Mila is in the office.
+2 The pear is in the box.
+3 The box is in the office.
+4 Mila moved the pear to the pantry.
+5 The pantry is in the office.
+6 Evelyn entered the office.
+7 Mila exited the office.
+8 Evelyn moved the pear to the bathtub.
+9 The bathtub is in the office.
+10 Evelyn moved the pear to the envelope.
+11 The envelope is in the office.
+12 Where will Mila look for the pear?	pantry	1
+1 Mila is in the office.
+2 The pear is in the box.
+3 The box is in the office.
+4 Mila moved the pear to the pantry.
+5 The pantry is in the office.
+6 Evelyn entered the office.
+7 Mila exited the office.
+8 Evelyn moved the pear to the bathtub.
+9 The bathtub is in the office.
+10 Evelyn moved the pear to the envelope.
+11 The envelope is in the office.
+12 Where will Evelyn look for the pear?	envelope	1
+1 Oliver is in the pantry.
+2 The persimmon is in the drawer.
+3 The drawer is in the pantry.
+4 Oliver moved the persimmon to the bottle.
+5 The bottle is in the pantry.
+6 Ethan entered the pantry.
+7 Oliver exited the pantry.
+8 Ethan moved the persimmon to the cupboard.
+9 The cupboard is in the pantry.
+10 Ethan moved the persimmon to the basket.
+11 The basket is in the pantry.
+12 Where does Oliver think that Ethan searches for the persimmon?	bottle	1
+1 Oliver is in the pantry.
+2 The persimmon is in the drawer.
+3 The drawer is in the pantry.
+4 Oliver moved the persimmon to the bottle.
+5 The bottle is in the pantry.
+6 Ethan entered the pantry.
+7 Oliver exited the pantry.
+8 Ethan moved the persimmon to the cupboard.
+9 The cupboard is in the pantry.
+10 Ethan moved the persimmon to the basket.
+11 The basket is in the pantry.
+12 Where does Ethan think that Oliver searches for the persimmon?	bottle	1
+1 Oliver is in the pantry.
+2 The persimmon is in the drawer.
+3 The drawer is in the pantry.
+4 Oliver moved the persimmon to the bottle.
+5 The bottle is in the pantry.
+6 Ethan entered the pantry.
+7 Oliver exited the pantry.
+8 Ethan moved the persimmon to the cupboard.
+9 The cupboard is in the pantry.
+10 Ethan moved the persimmon to the basket.
+11 The basket is in the pantry.
+12 Where will Oliver look for the persimmon?	bottle	1
+1 Oliver is in the pantry.
+2 The persimmon is in the drawer.
+3 The drawer is in the pantry.
+4 Oliver moved the persimmon to the bottle.
+5 The bottle is in the pantry.
+6 Ethan entered the pantry.
+7 Oliver exited the pantry.
+8 Ethan moved the persimmon to the cupboard.
+9 The cupboard is in the pantry.
+10 Ethan moved the persimmon to the basket.
+11 The basket is in the pantry.
+12 Where will Ethan look for the persimmon?	basket	1
+1 Liam is in the patio.
+2 The pineapple is in the crate.
+3 The crate is in the patio.
+4 Liam moved the pineapple to the suitcase.
+5 The suitcase is in the patio.
+6 Benjamin entered the patio.
+7 Liam exited the patio.
+8 Benjamin moved the pineapple to the bucket.
+9 The bucket is in the patio.
+10 Benjamin moved the pineapple to the container.
+11 The container is in the patio.
+12 Where does Liam think that Benjamin searches for the pineapple?	suitcase	1
+1 Liam is in the patio.
+2 The pineapple is in the crate.
+3 The crate is in the patio.
+4 Liam moved the pineapple to the suitcase.
+5 The suitcase is in the patio.
+6 Benjamin entered the patio.
+7 Liam exited the patio.
+8 Benjamin moved the pineapple to the bucket.
+9 The bucket is in the patio.
+10 Benjamin moved the pineapple to the container.
+11 The container is in the patio.
+12 Where does Benjamin think that Liam searches for the pineapple?	suitcase	1
+1 Liam is in the patio.
+2 The pineapple is in the crate.
+3 The crate is in the patio.
+4 Liam moved the pineapple to the suitcase.
+5 The suitcase is in the patio.
+6 Benjamin entered the patio.
+7 Liam exited the patio.
+8 Benjamin moved the pineapple to the bucket.
+9 The bucket is in the patio.
+10 Benjamin moved the pineapple to the container.
+11 The container is in the patio.
+12 Where will Liam look for the pineapple?	suitcase	1
+1 Liam is in the patio.
+2 The pineapple is in the crate.
+3 The crate is in the patio.
+4 Liam moved the pineapple to the suitcase.
+5 The suitcase is in the patio.
+6 Benjamin entered the patio.
+7 Liam exited the patio.
+8 Benjamin moved the pineapple to the bucket.
+9 The bucket is in the patio.
+10 Benjamin moved the pineapple to the container.
+11 The container is in the patio.
+12 Where will Benjamin look for the pineapple?	container	1
+1 Lucas is in the playroom.
+2 The plum is in the box.
+3 The box is in the playroom.
+4 Lucas moved the plum to the pantry.
+5 The pantry is in the playroom.
+6 Alexander entered the playroom.
+7 Lucas exited the playroom.
+8 Alexander moved the plum to the bathtub.
+9 The bathtub is in the playroom.
+10 Alexander moved the plum to the envelope.
+11 The envelope is in the playroom.
+12 Where does Lucas think that Alexander searches for the plum?	pantry	1
+1 Lucas is in the playroom.
+2 The plum is in the box.
+3 The box is in the playroom.
+4 Lucas moved the plum to the pantry.
+5 The pantry is in the playroom.
+6 Alexander entered the playroom.
+7 Lucas exited the playroom.
+8 Alexander moved the plum to the bathtub.
+9 The bathtub is in the playroom.
+10 Alexander moved the plum to the envelope.
+11 The envelope is in the playroom.
+12 Where does Alexander think that Lucas searches for the plum?	pantry	1
+1 Lucas is in the playroom.
+2 The plum is in the box.
+3 The box is in the playroom.
+4 Lucas moved the plum to the pantry.
+5 The pantry is in the playroom.
+6 Alexander entered the playroom.
+7 Lucas exited the playroom.
+8 Alexander moved the plum to the bathtub.
+9 The bathtub is in the playroom.
+10 Alexander moved the plum to the envelope.
+11 The envelope is in the playroom.
+12 Where will Lucas look for the plum?	pantry	1
+1 Lucas is in the playroom.
+2 The plum is in the box.
+3 The box is in the playroom.
+4 Lucas moved the plum to the pantry.
+5 The pantry is in the playroom.
+6 Alexander entered the playroom.
+7 Lucas exited the playroom.
+8 Alexander moved the plum to the bathtub.
+9 The bathtub is in the playroom.
+10 Alexander moved the plum to the envelope.
+11 The envelope is in the playroom.
+12 Where will Alexander look for the plum?	envelope	1
+1 Jacob is in the porch.
+2 The strawberry is in the drawer.
+3 The drawer is in the porch.
+4 Jacob moved the strawberry to the bottle.
+5 The bottle is in the porch.
+6 Mason entered the porch.
+7 Jacob exited the porch.
+8 Mason moved the strawberry to the cupboard.
+9 The cupboard is in the porch.
+10 Mason moved the strawberry to the basket.
+11 The basket is in the porch.
+12 Where does Jacob think that Mason searches for the strawberry?	bottle	1
+1 Jacob is in the porch.
+2 The strawberry is in the drawer.
+3 The drawer is in the porch.
+4 Jacob moved the strawberry to the bottle.
+5 The bottle is in the porch.
+6 Mason entered the porch.
+7 Jacob exited the porch.
+8 Mason moved the strawberry to the cupboard.
+9 The cupboard is in the porch.
+10 Mason moved the strawberry to the basket.
+11 The basket is in the porch.
+12 Where does Mason think that Jacob searches for the strawberry?	bottle	1
+1 Jacob is in the porch.
+2 The strawberry is in the drawer.
+3 The drawer is in the porch.
+4 Jacob moved the strawberry to the bottle.
+5 The bottle is in the porch.
+6 Mason entered the porch.
+7 Jacob exited the porch.
+8 Mason moved the strawberry to the cupboard.
+9 The cupboard is in the porch.
+10 Mason moved the strawberry to the basket.
+11 The basket is in the porch.
+12 Where will Jacob look for the strawberry?	bottle	1
+1 Jacob is in the porch.
+2 The strawberry is in the drawer.
+3 The drawer is in the porch.
+4 Jacob moved the strawberry to the bottle.
+5 The bottle is in the porch.
+6 Mason entered the porch.
+7 Jacob exited the porch.
+8 Mason moved the strawberry to the cupboard.
+9 The cupboard is in the porch.
+10 Mason moved the strawberry to the basket.
+11 The basket is in the porch.
+12 Where will Mason look for the strawberry?	basket	1
+1 William is in the staircase.
+2 The tangerine is in the crate.
+3 The crate is in the staircase.
+4 William moved the tangerine to the suitcase.
+5 The suitcase is in the staircase.
+6 Hunter entered the staircase.
+7 William exited the staircase.
+8 Hunter moved the tangerine to the bucket.
+9 The bucket is in the staircase.
+10 Hunter moved the tangerine to the container.
+11 The container is in the staircase.
+12 Where does William think that Hunter searches for the tangerine?	suitcase	1
+1 William is in the staircase.
+2 The tangerine is in the crate.
+3 The crate is in the staircase.
+4 William moved the tangerine to the suitcase.
+5 The suitcase is in the staircase.
+6 Hunter entered the staircase.
+7 William exited the staircase.
+8 Hunter moved the tangerine to the bucket.
+9 The bucket is in the staircase.
+10 Hunter moved the tangerine to the container.
+11 The container is in the staircase.
+12 Where does Hunter think that William searches for the tangerine?	suitcase	1
+1 William is in the staircase.
+2 The tangerine is in the crate.
+3 The crate is in the staircase.
+4 William moved the tangerine to the suitcase.
+5 The suitcase is in the staircase.
+6 Hunter entered the staircase.
+7 William exited the staircase.
+8 Hunter moved the tangerine to the bucket.
+9 The bucket is in the staircase.
+10 Hunter moved the tangerine to the container.
+11 The container is in the staircase.
+12 Where will William look for the tangerine?	suitcase	1
+1 William is in the staircase.
+2 The tangerine is in the crate.
+3 The crate is in the staircase.
+4 William moved the tangerine to the suitcase.
+5 The suitcase is in the staircase.
+6 Hunter entered the staircase.
+7 William exited the staircase.
+8 Hunter moved the tangerine to the bucket.
+9 The bucket is in the staircase.
+10 Hunter moved the tangerine to the container.
+11 The container is in the staircase.
+12 Where will Hunter look for the tangerine?	container	1
+1 James is in the study.
+2 The watermelon is in the box.
+3 The box is in the study.
+4 James moved the watermelon to the pantry.
+5 The pantry is in the study.
+6 Logan entered the study.
+7 James exited the study.
+8 Logan moved the watermelon to the bathtub.
+9 The bathtub is in the study.
+10 Logan moved the watermelon to the envelope.
+11 The envelope is in the study.
+12 Where does James think that Logan searches for the watermelon?	pantry	1
+1 James is in the study.
+2 The watermelon is in the box.
+3 The box is in the study.
+4 James moved the watermelon to the pantry.
+5 The pantry is in the study.
+6 Logan entered the study.
+7 James exited the study.
+8 Logan moved the watermelon to the bathtub.
+9 The bathtub is in the study.
+10 Logan moved the watermelon to the envelope.
+11 The envelope is in the study.
+12 Where does Logan think that James searches for the watermelon?	pantry	1
+1 James is in the study.
+2 The watermelon is in the box.
+3 The box is in the study.
+4 James moved the watermelon to the pantry.
+5 The pantry is in the study.
+6 Logan entered the study.
+7 James exited the study.
+8 Logan moved the watermelon to the bathtub.
+9 The bathtub is in the study.
+10 Logan moved the watermelon to the envelope.
+11 The envelope is in the study.
+12 Where will James look for the watermelon?	pantry	1
+1 James is in the study.
+2 The watermelon is in the box.
+3 The box is in the study.
+4 James moved the watermelon to the pantry.
+5 The pantry is in the study.
+6 Logan entered the study.
+7 James exited the study.
+8 Logan moved the watermelon to the bathtub.
+9 The bathtub is in the study.
+10 Logan moved the watermelon to the envelope.
+11 The envelope is in the study.
+12 Where will Logan look for the watermelon?	envelope	1
+1 Owen is in the sunroom.
+2 The asparagus is in the drawer.
+3 The drawer is in the sunroom.
+4 Owen moved the asparagus to the bottle.
+5 The bottle is in the sunroom.
+6 Noah entered the sunroom.
+7 Owen exited the sunroom.
+8 Noah moved the asparagus to the cupboard.
+9 The cupboard is in the sunroom.
+10 Noah moved the asparagus to the basket.
+11 The basket is in the sunroom.
+12 Where does Owen think that Noah searches for the asparagus?	bottle	1
+1 Owen is in the sunroom.
+2 The asparagus is in the drawer.
+3 The drawer is in the sunroom.
+4 Owen moved the asparagus to the bottle.
+5 The bottle is in the sunroom.
+6 Noah entered the sunroom.
+7 Owen exited the sunroom.
+8 Noah moved the asparagus to the cupboard.
+9 The cupboard is in the sunroom.
+10 Noah moved the asparagus to the basket.
+11 The basket is in the sunroom.
+12 Where does Noah think that Owen searches for the asparagus?	bottle	1
+1 Owen is in the sunroom.
+2 The asparagus is in the drawer.
+3 The drawer is in the sunroom.
+4 Owen moved the asparagus to the bottle.
+5 The bottle is in the sunroom.
+6 Noah entered the sunroom.
+7 Owen exited the sunroom.
+8 Noah moved the asparagus to the cupboard.
+9 The cupboard is in the sunroom.
+10 Noah moved the asparagus to the basket.
+11 The basket is in the sunroom.
+12 Where will Owen look for the asparagus?	bottle	1
+1 Owen is in the sunroom.
+2 The asparagus is in the drawer.
+3 The drawer is in the sunroom.
+4 Owen moved the asparagus to the bottle.
+5 The bottle is in the sunroom.
+6 Noah entered the sunroom.
+7 Owen exited the sunroom.
+8 Noah moved the asparagus to the cupboard.
+9 The cupboard is in the sunroom.
+10 Noah moved the asparagus to the basket.
+11 The basket is in the sunroom.
+12 Where will Noah look for the asparagus?	basket	1
+1 Carter is in the workshop.
+2 The beans is in the crate.
+3 The crate is in the workshop.
+4 Carter moved the beans to the suitcase.
+5 The suitcase is in the workshop.
+6 Nathan entered the workshop.
+7 Carter exited the workshop.
+8 Nathan moved the beans to the bucket.
+9 The bucket is in the workshop.
+10 Nathan moved the beans to the container.
+11 The container is in the workshop.
+12 Where does Carter think that Nathan searches for the beans?	suitcase	1
+1 Carter is in the workshop.
+2 The beans is in the crate.
+3 The crate is in the workshop.
+4 Carter moved the beans to the suitcase.
+5 The suitcase is in the workshop.
+6 Nathan entered the workshop.
+7 Carter exited the workshop.
+8 Nathan moved the beans to the bucket.
+9 The bucket is in the workshop.
+10 Nathan moved the beans to the container.
+11 The container is in the workshop.
+12 Where does Nathan think that Carter searches for the beans?	suitcase	1
+1 Carter is in the workshop.
+2 The beans is in the crate.
+3 The crate is in the workshop.
+4 Carter moved the beans to the suitcase.
+5 The suitcase is in the workshop.
+6 Nathan entered the workshop.
+7 Carter exited the workshop.
+8 Nathan moved the beans to the bucket.
+9 The bucket is in the workshop.
+10 Nathan moved the beans to the container.
+11 The container is in the workshop.
+12 Where will Carter look for the beans?	suitcase	1
+1 Carter is in the workshop.
+2 The beans is in the crate.
+3 The crate is in the workshop.
+4 Carter moved the beans to the suitcase.
+5 The suitcase is in the workshop.
+6 Nathan entered the workshop.
+7 Carter exited the workshop.
+8 Nathan moved the beans to the bucket.
+9 The bucket is in the workshop.
+10 Nathan moved the beans to the container.
+11 The container is in the workshop.
+12 Where will Nathan look for the beans?	container	1
+1 Jack is in the attic.
+2 The broccoli is in the box.
+3 The box is in the attic.
+4 Jack moved the broccoli to the pantry.
+5 The pantry is in the attic.
+6 Aiden entered the attic.
+7 Jack exited the attic.
+8 Aiden moved the broccoli to the bathtub.
+9 The bathtub is in the attic.
+10 Aiden moved the broccoli to the envelope.
+11 The envelope is in the attic.
+12 Where does Jack think that Aiden searches for the broccoli?	pantry	1
+1 Jack is in the attic.
+2 The broccoli is in the box.
+3 The box is in the attic.
+4 Jack moved the broccoli to the pantry.
+5 The pantry is in the attic.
+6 Aiden entered the attic.
+7 Jack exited the attic.
+8 Aiden moved the broccoli to the bathtub.
+9 The bathtub is in the attic.
+10 Aiden moved the broccoli to the envelope.
+11 The envelope is in the attic.
+12 Where does Aiden think that Jack searches for the broccoli?	pantry	1
+1 Jack is in the attic.
+2 The broccoli is in the box.
+3 The box is in the attic.
+4 Jack moved the broccoli to the pantry.
+5 The pantry is in the attic.
+6 Aiden entered the attic.
+7 Jack exited the attic.
+8 Aiden moved the broccoli to the bathtub.
+9 The bathtub is in the attic.
+10 Aiden moved the broccoli to the envelope.
+11 The envelope is in the attic.
+12 Where will Jack look for the broccoli?	pantry	1
+1 Jack is in the attic.
+2 The broccoli is in the box.
+3 The box is in the attic.
+4 Jack moved the broccoli to the pantry.
+5 The pantry is in the attic.
+6 Aiden entered the attic.
+7 Jack exited the attic.
+8 Aiden moved the broccoli to the bathtub.
+9 The bathtub is in the attic.
+10 Aiden moved the broccoli to the envelope.
+11 The envelope is in the attic.
+12 Where will Aiden look for the broccoli?	envelope	1
+1 Jackson is in the basement.
+2 The cabbage is in the drawer.
+3 The drawer is in the basement.
+4 Jackson moved the cabbage to the bottle.
+5 The bottle is in the basement.
+6 Jayden entered the basement.
+7 Jackson exited the basement.
+8 Jayden moved the cabbage to the cupboard.
+9 The cupboard is in the basement.
+10 Jayden moved the cabbage to the basket.
+11 The basket is in the basement.
+12 Where does Jackson think that Jayden searches for the cabbage?	bottle	1
+1 Jackson is in the basement.
+2 The cabbage is in the drawer.
+3 The drawer is in the basement.
+4 Jackson moved the cabbage to the bottle.
+5 The bottle is in the basement.
+6 Jayden entered the basement.
+7 Jackson exited the basement.
+8 Jayden moved the cabbage to the cupboard.
+9 The cupboard is in the basement.
+10 Jayden moved the cabbage to the basket.
+11 The basket is in the basement.
+12 Where does Jayden think that Jackson searches for the cabbage?	bottle	1
+1 Jackson is in the basement.
+2 The cabbage is in the drawer.
+3 The drawer is in the basement.
+4 Jackson moved the cabbage to the bottle.
+5 The bottle is in the basement.
+6 Jayden entered the basement.
+7 Jackson exited the basement.
+8 Jayden moved the cabbage to the cupboard.
+9 The cupboard is in the basement.
+10 Jayden moved the cabbage to the basket.
+11 The basket is in the basement.
+12 Where will Jackson look for the cabbage?	bottle	1
+1 Jackson is in the basement.
+2 The cabbage is in the drawer.
+3 The drawer is in the basement.
+4 Jackson moved the cabbage to the bottle.
+5 The bottle is in the basement.
+6 Jayden entered the basement.
+7 Jackson exited the basement.
+8 Jayden moved the cabbage to the cupboard.
+9 The cupboard is in the basement.
+10 Jayden moved the cabbage to the basket.
+11 The basket is in the basement.
+12 Where will Jayden look for the cabbage?	basket	1
+1 Emma is in the bathroom.
+2 The carrot is in the crate.
+3 The crate is in the bathroom.
+4 Emma moved the carrot to the suitcase.
+5 The suitcase is in the bathroom.
+6 Olivia entered the bathroom.
+7 Emma exited the bathroom.
+8 Olivia moved the carrot to the bucket.
+9 The bucket is in the bathroom.
+10 Olivia moved the carrot to the container.
+11 The container is in the bathroom.
+12 Where does Emma think that Olivia searches for the carrot?	suitcase	1
+1 Emma is in the bathroom.
+2 The carrot is in the crate.
+3 The crate is in the bathroom.
+4 Emma moved the carrot to the suitcase.
+5 The suitcase is in the bathroom.
+6 Olivia entered the bathroom.
+7 Emma exited the bathroom.
+8 Olivia moved the carrot to the bucket.
+9 The bucket is in the bathroom.
+10 Olivia moved the carrot to the container.
+11 The container is in the bathroom.
+12 Where does Olivia think that Emma searches for the carrot?	suitcase	1
+1 Emma is in the bathroom.
+2 The carrot is in the crate.
+3 The crate is in the bathroom.
+4 Emma moved the carrot to the suitcase.
+5 The suitcase is in the bathroom.
+6 Olivia entered the bathroom.
+7 Emma exited the bathroom.
+8 Olivia moved the carrot to the bucket.
+9 The bucket is in the bathroom.
+10 Olivia moved the carrot to the container.
+11 The container is in the bathroom.
+12 Where will Emma look for the carrot?	suitcase	1
+1 Emma is in the bathroom.
+2 The carrot is in the crate.
+3 The crate is in the bathroom.
+4 Emma moved the carrot to the suitcase.
+5 The suitcase is in the bathroom.
+6 Olivia entered the bathroom.
+7 Emma exited the bathroom.
+8 Olivia moved the carrot to the bucket.
+9 The bucket is in the bathroom.
+10 Olivia moved the carrot to the container.
+11 The container is in the bathroom.
+12 Where will Olivia look for the carrot?	container	1
+1 Emily is in the bedroom.
+2 The celery is in the box.
+3 The box is in the bedroom.
+4 Emily moved the celery to the pantry.
+5 The pantry is in the bedroom.
+6 Sophia entered the bedroom.
+7 Emily exited the bedroom.
+8 Sophia moved the celery to the bathtub.
+9 The bathtub is in the bedroom.
+10 Sophia moved the celery to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Emily think that Sophia searches for the celery?	pantry	1
+1 Emily is in the bedroom.
+2 The celery is in the box.
+3 The box is in the bedroom.
+4 Emily moved the celery to the pantry.
+5 The pantry is in the bedroom.
+6 Sophia entered the bedroom.
+7 Emily exited the bedroom.
+8 Sophia moved the celery to the bathtub.
+9 The bathtub is in the bedroom.
+10 Sophia moved the celery to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Sophia think that Emily searches for the celery?	pantry	1
+1 Emily is in the bedroom.
+2 The celery is in the box.
+3 The box is in the bedroom.
+4 Emily moved the celery to the pantry.
+5 The pantry is in the bedroom.
+6 Sophia entered the bedroom.
+7 Emily exited the bedroom.
+8 Sophia moved the celery to the bathtub.
+9 The bathtub is in the bedroom.
+10 Sophia moved the celery to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Emily look for the celery?	pantry	1
+1 Emily is in the bedroom.
+2 The celery is in the box.
+3 The box is in the bedroom.
+4 Emily moved the celery to the pantry.
+5 The pantry is in the bedroom.
+6 Sophia entered the bedroom.
+7 Emily exited the bedroom.
+8 Sophia moved the celery to the bathtub.
+9 The bathtub is in the bedroom.
+10 Sophia moved the celery to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Sophia look for the celery?	envelope	1
+1 Ava is in the cellar.
+2 The corn is in the drawer.
+3 The drawer is in the cellar.
+4 Ava moved the corn to the bottle.
+5 The bottle is in the cellar.
+6 Chloe entered the cellar.
+7 Ava exited the cellar.
+8 Chloe moved the corn to the cupboard.
+9 The cupboard is in the cellar.
+10 Chloe moved the corn to the basket.
+11 The basket is in the cellar.
+12 Where does Ava think that Chloe searches for the corn?	bottle	1
+1 Ava is in the cellar.
+2 The corn is in the drawer.
+3 The drawer is in the cellar.
+4 Ava moved the corn to the bottle.
+5 The bottle is in the cellar.
+6 Chloe entered the cellar.
+7 Ava exited the cellar.
+8 Chloe moved the corn to the cupboard.
+9 The cupboard is in the cellar.
+10 Chloe moved the corn to the basket.
+11 The basket is in the cellar.
+12 Where does Chloe think that Ava searches for the corn?	bottle	1
+1 Ava is in the cellar.
+2 The corn is in the drawer.
+3 The drawer is in the cellar.
+4 Ava moved the corn to the bottle.
+5 The bottle is in the cellar.
+6 Chloe entered the cellar.
+7 Ava exited the cellar.
+8 Chloe moved the corn to the cupboard.
+9 The cupboard is in the cellar.
+10 Chloe moved the corn to the basket.
+11 The basket is in the cellar.
+12 Where will Ava look for the corn?	bottle	1
+1 Ava is in the cellar.
+2 The corn is in the drawer.
+3 The drawer is in the cellar.
+4 Ava moved the corn to the bottle.
+5 The bottle is in the cellar.
+6 Chloe entered the cellar.
+7 Ava exited the cellar.
+8 Chloe moved the corn to the cupboard.
+9 The cupboard is in the cellar.
+10 Chloe moved the corn to the basket.
+11 The basket is in the cellar.
+12 Where will Chloe look for the corn?	basket	1
+1 Charlotte is in the closet.
+2 The cucumber is in the crate.
+3 The crate is in the closet.
+4 Charlotte moved the cucumber to the suitcase.
+5 The suitcase is in the closet.
+6 Abigail entered the closet.
+7 Charlotte exited the closet.
+8 Abigail moved the cucumber to the bucket.
+9 The bucket is in the closet.
+10 Abigail moved the cucumber to the container.
+11 The container is in the closet.
+12 Where does Charlotte think that Abigail searches for the cucumber?	suitcase	1
+1 Charlotte is in the closet.
+2 The cucumber is in the crate.
+3 The crate is in the closet.
+4 Charlotte moved the cucumber to the suitcase.
+5 The suitcase is in the closet.
+6 Abigail entered the closet.
+7 Charlotte exited the closet.
+8 Abigail moved the cucumber to the bucket.
+9 The bucket is in the closet.
+10 Abigail moved the cucumber to the container.
+11 The container is in the closet.
+12 Where does Abigail think that Charlotte searches for the cucumber?	suitcase	1
+1 Charlotte is in the closet.
+2 The cucumber is in the crate.
+3 The crate is in the closet.
+4 Charlotte moved the cucumber to the suitcase.
+5 The suitcase is in the closet.
+6 Abigail entered the closet.
+7 Charlotte exited the closet.
+8 Abigail moved the cucumber to the bucket.
+9 The bucket is in the closet.
+10 Abigail moved the cucumber to the container.
+11 The container is in the closet.
+12 Where will Charlotte look for the cucumber?	suitcase	1
+1 Charlotte is in the closet.
+2 The cucumber is in the crate.
+3 The crate is in the closet.
+4 Charlotte moved the cucumber to the suitcase.
+5 The suitcase is in the closet.
+6 Abigail entered the closet.
+7 Charlotte exited the closet.
+8 Abigail moved the cucumber to the bucket.
+9 The bucket is in the closet.
+10 Abigail moved the cucumber to the container.
+11 The container is in the closet.
+12 Where will Abigail look for the cucumber?	container	1
+1 Amelia is in the crawlspace.
+2 The eggplant is in the box.
+3 The box is in the crawlspace.
+4 Amelia moved the eggplant to the pantry.
+5 The pantry is in the crawlspace.
+6 Ella entered the crawlspace.
+7 Amelia exited the crawlspace.
+8 Ella moved the eggplant to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Ella moved the eggplant to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Amelia think that Ella searches for the eggplant?	pantry	1
+1 Amelia is in the crawlspace.
+2 The eggplant is in the box.
+3 The box is in the crawlspace.
+4 Amelia moved the eggplant to the pantry.
+5 The pantry is in the crawlspace.
+6 Ella entered the crawlspace.
+7 Amelia exited the crawlspace.
+8 Ella moved the eggplant to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Ella moved the eggplant to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Ella think that Amelia searches for the eggplant?	pantry	1
+1 Amelia is in the crawlspace.
+2 The eggplant is in the box.
+3 The box is in the crawlspace.
+4 Amelia moved the eggplant to the pantry.
+5 The pantry is in the crawlspace.
+6 Ella entered the crawlspace.
+7 Amelia exited the crawlspace.
+8 Ella moved the eggplant to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Ella moved the eggplant to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Amelia look for the eggplant?	pantry	1
+1 Amelia is in the crawlspace.
+2 The eggplant is in the box.
+3 The box is in the crawlspace.
+4 Amelia moved the eggplant to the pantry.
+5 The pantry is in the crawlspace.
+6 Ella entered the crawlspace.
+7 Amelia exited the crawlspace.
+8 Ella moved the eggplant to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Ella moved the eggplant to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Ella look for the eggplant?	envelope	1
+1 Hannah is in the den.
+2 The lettuce is in the drawer.
+3 The drawer is in the den.
+4 Hannah moved the lettuce to the bottle.
+5 The bottle is in the den.
+6 Isabella entered the den.
+7 Hannah exited the den.
+8 Isabella moved the lettuce to the cupboard.
+9 The cupboard is in the den.
+10 Isabella moved the lettuce to the basket.
+11 The basket is in the den.
+12 Where does Hannah think that Isabella searches for the lettuce?	bottle	1
+1 Hannah is in the den.
+2 The lettuce is in the drawer.
+3 The drawer is in the den.
+4 Hannah moved the lettuce to the bottle.
+5 The bottle is in the den.
+6 Isabella entered the den.
+7 Hannah exited the den.
+8 Isabella moved the lettuce to the cupboard.
+9 The cupboard is in the den.
+10 Isabella moved the lettuce to the basket.
+11 The basket is in the den.
+12 Where does Isabella think that Hannah searches for the lettuce?	bottle	1
+1 Hannah is in the den.
+2 The lettuce is in the drawer.
+3 The drawer is in the den.
+4 Hannah moved the lettuce to the bottle.
+5 The bottle is in the den.
+6 Isabella entered the den.
+7 Hannah exited the den.
+8 Isabella moved the lettuce to the cupboard.
+9 The cupboard is in the den.
+10 Isabella moved the lettuce to the basket.
+11 The basket is in the den.
+12 Where will Hannah look for the lettuce?	bottle	1
+1 Hannah is in the den.
+2 The lettuce is in the drawer.
+3 The drawer is in the den.
+4 Hannah moved the lettuce to the bottle.
+5 The bottle is in the den.
+6 Isabella entered the den.
+7 Hannah exited the den.
+8 Isabella moved the lettuce to the cupboard.
+9 The cupboard is in the den.
+10 Isabella moved the lettuce to the basket.
+11 The basket is in the den.
+12 Where will Isabella look for the lettuce?	basket	1
+1 Aria is in the garage.
+2 The onion is in the crate.
+3 The crate is in the garage.
+4 Aria moved the onion to the suitcase.
+5 The suitcase is in the garage.
+6 Lily entered the garage.
+7 Aria exited the garage.
+8 Lily moved the onion to the bucket.
+9 The bucket is in the garage.
+10 Lily moved the onion to the container.
+11 The container is in the garage.
+12 Where does Aria think that Lily searches for the onion?	suitcase	1
+1 Aria is in the garage.
+2 The onion is in the crate.
+3 The crate is in the garage.
+4 Aria moved the onion to the suitcase.
+5 The suitcase is in the garage.
+6 Lily entered the garage.
+7 Aria exited the garage.
+8 Lily moved the onion to the bucket.
+9 The bucket is in the garage.
+10 Lily moved the onion to the container.
+11 The container is in the garage.
+12 Where does Lily think that Aria searches for the onion?	suitcase	1
+1 Aria is in the garage.
+2 The onion is in the crate.
+3 The crate is in the garage.
+4 Aria moved the onion to the suitcase.
+5 The suitcase is in the garage.
+6 Lily entered the garage.
+7 Aria exited the garage.
+8 Lily moved the onion to the bucket.
+9 The bucket is in the garage.
+10 Lily moved the onion to the container.
+11 The container is in the garage.
+12 Where will Aria look for the onion?	suitcase	1
+1 Aria is in the garage.
+2 The onion is in the crate.
+3 The crate is in the garage.
+4 Aria moved the onion to the suitcase.
+5 The suitcase is in the garage.
+6 Lily entered the garage.
+7 Aria exited the garage.
+8 Lily moved the onion to the bucket.
+9 The bucket is in the garage.
+10 Lily moved the onion to the container.
+11 The container is in the garage.
+12 Where will Lily look for the onion?	container	1
+1 Mia is in the garden.
+2 The peas is in the box.
+3 The box is in the garden.
+4 Mia moved the peas to the pantry.
+5 The pantry is in the garden.
+6 Isla entered the garden.
+7 Mia exited the garden.
+8 Isla moved the peas to the bathtub.
+9 The bathtub is in the garden.
+10 Isla moved the peas to the envelope.
+11 The envelope is in the garden.
+12 Where does Mia think that Isla searches for the peas?	pantry	1
+1 Mia is in the garden.
+2 The peas is in the box.
+3 The box is in the garden.
+4 Mia moved the peas to the pantry.
+5 The pantry is in the garden.
+6 Isla entered the garden.
+7 Mia exited the garden.
+8 Isla moved the peas to the bathtub.
+9 The bathtub is in the garden.
+10 Isla moved the peas to the envelope.
+11 The envelope is in the garden.
+12 Where does Isla think that Mia searches for the peas?	pantry	1
+1 Mia is in the garden.
+2 The peas is in the box.
+3 The box is in the garden.
+4 Mia moved the peas to the pantry.
+5 The pantry is in the garden.
+6 Isla entered the garden.
+7 Mia exited the garden.
+8 Isla moved the peas to the bathtub.
+9 The bathtub is in the garden.
+10 Isla moved the peas to the envelope.
+11 The envelope is in the garden.
+12 Where will Mia look for the peas?	pantry	1
+1 Mia is in the garden.
+2 The peas is in the box.
+3 The box is in the garden.
+4 Mia moved the peas to the pantry.
+5 The pantry is in the garden.
+6 Isla entered the garden.
+7 Mia exited the garden.
+8 Isla moved the peas to the bathtub.
+9 The bathtub is in the garden.
+10 Isla moved the peas to the envelope.
+11 The envelope is in the garden.
+12 Where will Isla look for the peas?	envelope	1
+1 Avery is in the hall.
+2 The potato is in the drawer.
+3 The drawer is in the hall.
+4 Avery moved the potato to the bottle.
+5 The bottle is in the hall.
+6 Elizabeth entered the hall.
+7 Avery exited the hall.
+8 Elizabeth moved the potato to the cupboard.
+9 The cupboard is in the hall.
+10 Elizabeth moved the potato to the basket.
+11 The basket is in the hall.
+12 Where does Avery think that Elizabeth searches for the potato?	bottle	1
+1 Avery is in the hall.
+2 The potato is in the drawer.
+3 The drawer is in the hall.
+4 Avery moved the potato to the bottle.
+5 The bottle is in the hall.
+6 Elizabeth entered the hall.
+7 Avery exited the hall.
+8 Elizabeth moved the potato to the cupboard.
+9 The cupboard is in the hall.
+10 Elizabeth moved the potato to the basket.
+11 The basket is in the hall.
+12 Where does Elizabeth think that Avery searches for the potato?	bottle	1
+1 Avery is in the hall.
+2 The potato is in the drawer.
+3 The drawer is in the hall.
+4 Avery moved the potato to the bottle.
+5 The bottle is in the hall.
+6 Elizabeth entered the hall.
+7 Avery exited the hall.
+8 Elizabeth moved the potato to the cupboard.
+9 The cupboard is in the hall.
+10 Elizabeth moved the potato to the basket.
+11 The basket is in the hall.
+12 Where will Avery look for the potato?	bottle	1
+1 Avery is in the hall.
+2 The potato is in the drawer.
+3 The drawer is in the hall.
+4 Avery moved the potato to the bottle.
+5 The bottle is in the hall.
+6 Elizabeth entered the hall.
+7 Avery exited the hall.
+8 Elizabeth moved the potato to the cupboard.
+9 The cupboard is in the hall.
+10 Elizabeth moved the potato to the basket.
+11 The basket is in the hall.
+12 Where will Elizabeth look for the potato?	basket	1
+1 Mila is in the hallway.
+2 The pumpkin is in the crate.
+3 The crate is in the hallway.
+4 Mila moved the pumpkin to the suitcase.
+5 The suitcase is in the hallway.
+6 Evelyn entered the hallway.
+7 Mila exited the hallway.
+8 Evelyn moved the pumpkin to the bucket.
+9 The bucket is in the hallway.
+10 Evelyn moved the pumpkin to the container.
+11 The container is in the hallway.
+12 Where does Mila think that Evelyn searches for the pumpkin?	suitcase	1
+1 Mila is in the hallway.
+2 The pumpkin is in the crate.
+3 The crate is in the hallway.
+4 Mila moved the pumpkin to the suitcase.
+5 The suitcase is in the hallway.
+6 Evelyn entered the hallway.
+7 Mila exited the hallway.
+8 Evelyn moved the pumpkin to the bucket.
+9 The bucket is in the hallway.
+10 Evelyn moved the pumpkin to the container.
+11 The container is in the hallway.
+12 Where does Evelyn think that Mila searches for the pumpkin?	suitcase	1
+1 Mila is in the hallway.
+2 The pumpkin is in the crate.
+3 The crate is in the hallway.
+4 Mila moved the pumpkin to the suitcase.
+5 The suitcase is in the hallway.
+6 Evelyn entered the hallway.
+7 Mila exited the hallway.
+8 Evelyn moved the pumpkin to the bucket.
+9 The bucket is in the hallway.
+10 Evelyn moved the pumpkin to the container.
+11 The container is in the hallway.
+12 Where will Mila look for the pumpkin?	suitcase	1
+1 Mila is in the hallway.
+2 The pumpkin is in the crate.
+3 The crate is in the hallway.
+4 Mila moved the pumpkin to the suitcase.
+5 The suitcase is in the hallway.
+6 Evelyn entered the hallway.
+7 Mila exited the hallway.
+8 Evelyn moved the pumpkin to the bucket.
+9 The bucket is in the hallway.
+10 Evelyn moved the pumpkin to the container.
+11 The container is in the hallway.
+12 Where will Evelyn look for the pumpkin?	container	1
+1 Oliver is in the kitchen.
+2 The radish is in the box.
+3 The box is in the kitchen.
+4 Oliver moved the radish to the pantry.
+5 The pantry is in the kitchen.
+6 Ethan entered the kitchen.
+7 Oliver exited the kitchen.
+8 Ethan moved the radish to the bathtub.
+9 The bathtub is in the kitchen.
+10 Ethan moved the radish to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Oliver think that Ethan searches for the radish?	pantry	1
+1 Oliver is in the kitchen.
+2 The radish is in the box.
+3 The box is in the kitchen.
+4 Oliver moved the radish to the pantry.
+5 The pantry is in the kitchen.
+6 Ethan entered the kitchen.
+7 Oliver exited the kitchen.
+8 Ethan moved the radish to the bathtub.
+9 The bathtub is in the kitchen.
+10 Ethan moved the radish to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Ethan think that Oliver searches for the radish?	pantry	1
+1 Oliver is in the kitchen.
+2 The radish is in the box.
+3 The box is in the kitchen.
+4 Oliver moved the radish to the pantry.
+5 The pantry is in the kitchen.
+6 Ethan entered the kitchen.
+7 Oliver exited the kitchen.
+8 Ethan moved the radish to the bathtub.
+9 The bathtub is in the kitchen.
+10 Ethan moved the radish to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Oliver look for the radish?	pantry	1
+1 Oliver is in the kitchen.
+2 The radish is in the box.
+3 The box is in the kitchen.
+4 Oliver moved the radish to the pantry.
+5 The pantry is in the kitchen.
+6 Ethan entered the kitchen.
+7 Oliver exited the kitchen.
+8 Ethan moved the radish to the bathtub.
+9 The bathtub is in the kitchen.
+10 Ethan moved the radish to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Ethan look for the radish?	envelope	1
+1 Liam is in the laundry.
+2 The spinach is in the drawer.
+3 The drawer is in the laundry.
+4 Liam moved the spinach to the bottle.
+5 The bottle is in the laundry.
+6 Benjamin entered the laundry.
+7 Liam exited the laundry.
+8 Benjamin moved the spinach to the cupboard.
+9 The cupboard is in the laundry.
+10 Benjamin moved the spinach to the basket.
+11 The basket is in the laundry.
+12 Where does Liam think that Benjamin searches for the spinach?	bottle	1
+1 Liam is in the laundry.
+2 The spinach is in the drawer.
+3 The drawer is in the laundry.
+4 Liam moved the spinach to the bottle.
+5 The bottle is in the laundry.
+6 Benjamin entered the laundry.
+7 Liam exited the laundry.
+8 Benjamin moved the spinach to the cupboard.
+9 The cupboard is in the laundry.
+10 Benjamin moved the spinach to the basket.
+11 The basket is in the laundry.
+12 Where does Benjamin think that Liam searches for the spinach?	bottle	1
+1 Liam is in the laundry.
+2 The spinach is in the drawer.
+3 The drawer is in the laundry.
+4 Liam moved the spinach to the bottle.
+5 The bottle is in the laundry.
+6 Benjamin entered the laundry.
+7 Liam exited the laundry.
+8 Benjamin moved the spinach to the cupboard.
+9 The cupboard is in the laundry.
+10 Benjamin moved the spinach to the basket.
+11 The basket is in the laundry.
+12 Where will Liam look for the spinach?	bottle	1
+1 Liam is in the laundry.
+2 The spinach is in the drawer.
+3 The drawer is in the laundry.
+4 Liam moved the spinach to the bottle.
+5 The bottle is in the laundry.
+6 Benjamin entered the laundry.
+7 Liam exited the laundry.
+8 Benjamin moved the spinach to the cupboard.
+9 The cupboard is in the laundry.
+10 Benjamin moved the spinach to the basket.
+11 The basket is in the laundry.
+12 Where will Benjamin look for the spinach?	basket	1
+1 Lucas is in the lounge.
+2 The tomato is in the crate.
+3 The crate is in the lounge.
+4 Lucas moved the tomato to the suitcase.
+5 The suitcase is in the lounge.
+6 Alexander entered the lounge.
+7 Lucas exited the lounge.
+8 Alexander moved the tomato to the bucket.
+9 The bucket is in the lounge.
+10 Alexander moved the tomato to the container.
+11 The container is in the lounge.
+12 Where does Lucas think that Alexander searches for the tomato?	suitcase	1
+1 Lucas is in the lounge.
+2 The tomato is in the crate.
+3 The crate is in the lounge.
+4 Lucas moved the tomato to the suitcase.
+5 The suitcase is in the lounge.
+6 Alexander entered the lounge.
+7 Lucas exited the lounge.
+8 Alexander moved the tomato to the bucket.
+9 The bucket is in the lounge.
+10 Alexander moved the tomato to the container.
+11 The container is in the lounge.
+12 Where does Alexander think that Lucas searches for the tomato?	suitcase	1
+1 Lucas is in the lounge.
+2 The tomato is in the crate.
+3 The crate is in the lounge.
+4 Lucas moved the tomato to the suitcase.
+5 The suitcase is in the lounge.
+6 Alexander entered the lounge.
+7 Lucas exited the lounge.
+8 Alexander moved the tomato to the bucket.
+9 The bucket is in the lounge.
+10 Alexander moved the tomato to the container.
+11 The container is in the lounge.
+12 Where will Lucas look for the tomato?	suitcase	1
+1 Lucas is in the lounge.
+2 The tomato is in the crate.
+3 The crate is in the lounge.
+4 Lucas moved the tomato to the suitcase.
+5 The suitcase is in the lounge.
+6 Alexander entered the lounge.
+7 Lucas exited the lounge.
+8 Alexander moved the tomato to the bucket.
+9 The bucket is in the lounge.
+10 Alexander moved the tomato to the container.
+11 The container is in the lounge.
+12 Where will Alexander look for the tomato?	container	1
+1 Jacob is in the office.
+2 The turnip is in the box.
+3 The box is in the office.
+4 Jacob moved the turnip to the pantry.
+5 The pantry is in the office.
+6 Mason entered the office.
+7 Jacob exited the office.
+8 Mason moved the turnip to the bathtub.
+9 The bathtub is in the office.
+10 Mason moved the turnip to the envelope.
+11 The envelope is in the office.
+12 Where does Jacob think that Mason searches for the turnip?	pantry	1
+1 Jacob is in the office.
+2 The turnip is in the box.
+3 The box is in the office.
+4 Jacob moved the turnip to the pantry.
+5 The pantry is in the office.
+6 Mason entered the office.
+7 Jacob exited the office.
+8 Mason moved the turnip to the bathtub.
+9 The bathtub is in the office.
+10 Mason moved the turnip to the envelope.
+11 The envelope is in the office.
+12 Where does Mason think that Jacob searches for the turnip?	pantry	1
+1 Jacob is in the office.
+2 The turnip is in the box.
+3 The box is in the office.
+4 Jacob moved the turnip to the pantry.
+5 The pantry is in the office.
+6 Mason entered the office.
+7 Jacob exited the office.
+8 Mason moved the turnip to the bathtub.
+9 The bathtub is in the office.
+10 Mason moved the turnip to the envelope.
+11 The envelope is in the office.
+12 Where will Jacob look for the turnip?	pantry	1
+1 Jacob is in the office.
+2 The turnip is in the box.
+3 The box is in the office.
+4 Jacob moved the turnip to the pantry.
+5 The pantry is in the office.
+6 Mason entered the office.
+7 Jacob exited the office.
+8 Mason moved the turnip to the bathtub.
+9 The bathtub is in the office.
+10 Mason moved the turnip to the envelope.
+11 The envelope is in the office.
+12 Where will Mason look for the turnip?	envelope	1
+1 William is in the pantry.
+2 The belt is in the drawer.
+3 The drawer is in the pantry.
+4 William moved the belt to the bottle.
+5 The bottle is in the pantry.
+6 Hunter entered the pantry.
+7 William exited the pantry.
+8 Hunter moved the belt to the cupboard.
+9 The cupboard is in the pantry.
+10 Hunter moved the belt to the basket.
+11 The basket is in the pantry.
+12 Where does William think that Hunter searches for the belt?	bottle	1
+1 William is in the pantry.
+2 The belt is in the drawer.
+3 The drawer is in the pantry.
+4 William moved the belt to the bottle.
+5 The bottle is in the pantry.
+6 Hunter entered the pantry.
+7 William exited the pantry.
+8 Hunter moved the belt to the cupboard.
+9 The cupboard is in the pantry.
+10 Hunter moved the belt to the basket.
+11 The basket is in the pantry.
+12 Where does Hunter think that William searches for the belt?	bottle	1
+1 William is in the pantry.
+2 The belt is in the drawer.
+3 The drawer is in the pantry.
+4 William moved the belt to the bottle.
+5 The bottle is in the pantry.
+6 Hunter entered the pantry.
+7 William exited the pantry.
+8 Hunter moved the belt to the cupboard.
+9 The cupboard is in the pantry.
+10 Hunter moved the belt to the basket.
+11 The basket is in the pantry.
+12 Where will William look for the belt?	bottle	1
+1 William is in the pantry.
+2 The belt is in the drawer.
+3 The drawer is in the pantry.
+4 William moved the belt to the bottle.
+5 The bottle is in the pantry.
+6 Hunter entered the pantry.
+7 William exited the pantry.
+8 Hunter moved the belt to the cupboard.
+9 The cupboard is in the pantry.
+10 Hunter moved the belt to the basket.
+11 The basket is in the pantry.
+12 Where will Hunter look for the belt?	basket	1
+1 James is in the patio.
+2 The boots is in the crate.
+3 The crate is in the patio.
+4 James moved the boots to the suitcase.
+5 The suitcase is in the patio.
+6 Logan entered the patio.
+7 James exited the patio.
+8 Logan moved the boots to the bucket.
+9 The bucket is in the patio.
+10 Logan moved the boots to the container.
+11 The container is in the patio.
+12 Where does James think that Logan searches for the boots?	suitcase	1
+1 James is in the patio.
+2 The boots is in the crate.
+3 The crate is in the patio.
+4 James moved the boots to the suitcase.
+5 The suitcase is in the patio.
+6 Logan entered the patio.
+7 James exited the patio.
+8 Logan moved the boots to the bucket.
+9 The bucket is in the patio.
+10 Logan moved the boots to the container.
+11 The container is in the patio.
+12 Where does Logan think that James searches for the boots?	suitcase	1
+1 James is in the patio.
+2 The boots is in the crate.
+3 The crate is in the patio.
+4 James moved the boots to the suitcase.
+5 The suitcase is in the patio.
+6 Logan entered the patio.
+7 James exited the patio.
+8 Logan moved the boots to the bucket.
+9 The bucket is in the patio.
+10 Logan moved the boots to the container.
+11 The container is in the patio.
+12 Where will James look for the boots?	suitcase	1
+1 James is in the patio.
+2 The boots is in the crate.
+3 The crate is in the patio.
+4 James moved the boots to the suitcase.
+5 The suitcase is in the patio.
+6 Logan entered the patio.
+7 James exited the patio.
+8 Logan moved the boots to the bucket.
+9 The bucket is in the patio.
+10 Logan moved the boots to the container.
+11 The container is in the patio.
+12 Where will Logan look for the boots?	container	1
+1 Owen is in the playroom.
+2 The cap is in the box.
+3 The box is in the playroom.
+4 Owen moved the cap to the pantry.
+5 The pantry is in the playroom.
+6 Noah entered the playroom.
+7 Owen exited the playroom.
+8 Noah moved the cap to the bathtub.
+9 The bathtub is in the playroom.
+10 Noah moved the cap to the envelope.
+11 The envelope is in the playroom.
+12 Where does Owen think that Noah searches for the cap?	pantry	1
+1 Owen is in the playroom.
+2 The cap is in the box.
+3 The box is in the playroom.
+4 Owen moved the cap to the pantry.
+5 The pantry is in the playroom.
+6 Noah entered the playroom.
+7 Owen exited the playroom.
+8 Noah moved the cap to the bathtub.
+9 The bathtub is in the playroom.
+10 Noah moved the cap to the envelope.
+11 The envelope is in the playroom.
+12 Where does Noah think that Owen searches for the cap?	pantry	1
+1 Owen is in the playroom.
+2 The cap is in the box.
+3 The box is in the playroom.
+4 Owen moved the cap to the pantry.
+5 The pantry is in the playroom.
+6 Noah entered the playroom.
+7 Owen exited the playroom.
+8 Noah moved the cap to the bathtub.
+9 The bathtub is in the playroom.
+10 Noah moved the cap to the envelope.
+11 The envelope is in the playroom.
+12 Where will Owen look for the cap?	pantry	1
+1 Owen is in the playroom.
+2 The cap is in the box.
+3 The box is in the playroom.
+4 Owen moved the cap to the pantry.
+5 The pantry is in the playroom.
+6 Noah entered the playroom.
+7 Owen exited the playroom.
+8 Noah moved the cap to the bathtub.
+9 The bathtub is in the playroom.
+10 Noah moved the cap to the envelope.
+11 The envelope is in the playroom.
+12 Where will Noah look for the cap?	envelope	1
+1 Carter is in the porch.
+2 The coat is in the drawer.
+3 The drawer is in the porch.
+4 Carter moved the coat to the bottle.
+5 The bottle is in the porch.
+6 Nathan entered the porch.
+7 Carter exited the porch.
+8 Nathan moved the coat to the cupboard.
+9 The cupboard is in the porch.
+10 Nathan moved the coat to the basket.
+11 The basket is in the porch.
+12 Where does Carter think that Nathan searches for the coat?	bottle	1
+1 Carter is in the porch.
+2 The coat is in the drawer.
+3 The drawer is in the porch.
+4 Carter moved the coat to the bottle.
+5 The bottle is in the porch.
+6 Nathan entered the porch.
+7 Carter exited the porch.
+8 Nathan moved the coat to the cupboard.
+9 The cupboard is in the porch.
+10 Nathan moved the coat to the basket.
+11 The basket is in the porch.
+12 Where does Nathan think that Carter searches for the coat?	bottle	1
+1 Carter is in the porch.
+2 The coat is in the drawer.
+3 The drawer is in the porch.
+4 Carter moved the coat to the bottle.
+5 The bottle is in the porch.
+6 Nathan entered the porch.
+7 Carter exited the porch.
+8 Nathan moved the coat to the cupboard.
+9 The cupboard is in the porch.
+10 Nathan moved the coat to the basket.
+11 The basket is in the porch.
+12 Where will Carter look for the coat?	bottle	1
+1 Carter is in the porch.
+2 The coat is in the drawer.
+3 The drawer is in the porch.
+4 Carter moved the coat to the bottle.
+5 The bottle is in the porch.
+6 Nathan entered the porch.
+7 Carter exited the porch.
+8 Nathan moved the coat to the cupboard.
+9 The cupboard is in the porch.
+10 Nathan moved the coat to the basket.
+11 The basket is in the porch.
+12 Where will Nathan look for the coat?	basket	1
+1 Jack is in the staircase.
+2 The dress is in the crate.
+3 The crate is in the staircase.
+4 Jack moved the dress to the suitcase.
+5 The suitcase is in the staircase.
+6 Aiden entered the staircase.
+7 Jack exited the staircase.
+8 Aiden moved the dress to the bucket.
+9 The bucket is in the staircase.
+10 Aiden moved the dress to the container.
+11 The container is in the staircase.
+12 Where does Jack think that Aiden searches for the dress?	suitcase	1
+1 Jack is in the staircase.
+2 The dress is in the crate.
+3 The crate is in the staircase.
+4 Jack moved the dress to the suitcase.
+5 The suitcase is in the staircase.
+6 Aiden entered the staircase.
+7 Jack exited the staircase.
+8 Aiden moved the dress to the bucket.
+9 The bucket is in the staircase.
+10 Aiden moved the dress to the container.
+11 The container is in the staircase.
+12 Where does Aiden think that Jack searches for the dress?	suitcase	1
+1 Jack is in the staircase.
+2 The dress is in the crate.
+3 The crate is in the staircase.
+4 Jack moved the dress to the suitcase.
+5 The suitcase is in the staircase.
+6 Aiden entered the staircase.
+7 Jack exited the staircase.
+8 Aiden moved the dress to the bucket.
+9 The bucket is in the staircase.
+10 Aiden moved the dress to the container.
+11 The container is in the staircase.
+12 Where will Jack look for the dress?	suitcase	1
+1 Jack is in the staircase.
+2 The dress is in the crate.
+3 The crate is in the staircase.
+4 Jack moved the dress to the suitcase.
+5 The suitcase is in the staircase.
+6 Aiden entered the staircase.
+7 Jack exited the staircase.
+8 Aiden moved the dress to the bucket.
+9 The bucket is in the staircase.
+10 Aiden moved the dress to the container.
+11 The container is in the staircase.
+12 Where will Aiden look for the dress?	container	1
+1 Jackson is in the study.
+2 The gloves is in the box.
+3 The box is in the study.
+4 Jackson moved the gloves to the pantry.
+5 The pantry is in the study.
+6 Jayden entered the study.
+7 Jackson exited the study.
+8 Jayden moved the gloves to the bathtub.
+9 The bathtub is in the study.
+10 Jayden moved the gloves to the envelope.
+11 The envelope is in the study.
+12 Where does Jackson think that Jayden searches for the gloves?	pantry	1
+1 Jackson is in the study.
+2 The gloves is in the box.
+3 The box is in the study.
+4 Jackson moved the gloves to the pantry.
+5 The pantry is in the study.
+6 Jayden entered the study.
+7 Jackson exited the study.
+8 Jayden moved the gloves to the bathtub.
+9 The bathtub is in the study.
+10 Jayden moved the gloves to the envelope.
+11 The envelope is in the study.
+12 Where does Jayden think that Jackson searches for the gloves?	pantry	1
+1 Jackson is in the study.
+2 The gloves is in the box.
+3 The box is in the study.
+4 Jackson moved the gloves to the pantry.
+5 The pantry is in the study.
+6 Jayden entered the study.
+7 Jackson exited the study.
+8 Jayden moved the gloves to the bathtub.
+9 The bathtub is in the study.
+10 Jayden moved the gloves to the envelope.
+11 The envelope is in the study.
+12 Where will Jackson look for the gloves?	pantry	1
+1 Jackson is in the study.
+2 The gloves is in the box.
+3 The box is in the study.
+4 Jackson moved the gloves to the pantry.
+5 The pantry is in the study.
+6 Jayden entered the study.
+7 Jackson exited the study.
+8 Jayden moved the gloves to the bathtub.
+9 The bathtub is in the study.
+10 Jayden moved the gloves to the envelope.
+11 The envelope is in the study.
+12 Where will Jayden look for the gloves?	envelope	1
+1 Emma is in the sunroom.
+2 The hat is in the drawer.
+3 The drawer is in the sunroom.
+4 Emma moved the hat to the bottle.
+5 The bottle is in the sunroom.
+6 Olivia entered the sunroom.
+7 Emma exited the sunroom.
+8 Olivia moved the hat to the cupboard.
+9 The cupboard is in the sunroom.
+10 Olivia moved the hat to the basket.
+11 The basket is in the sunroom.
+12 Where does Emma think that Olivia searches for the hat?	bottle	1
+1 Emma is in the sunroom.
+2 The hat is in the drawer.
+3 The drawer is in the sunroom.
+4 Emma moved the hat to the bottle.
+5 The bottle is in the sunroom.
+6 Olivia entered the sunroom.
+7 Emma exited the sunroom.
+8 Olivia moved the hat to the cupboard.
+9 The cupboard is in the sunroom.
+10 Olivia moved the hat to the basket.
+11 The basket is in the sunroom.
+12 Where does Olivia think that Emma searches for the hat?	bottle	1
+1 Emma is in the sunroom.
+2 The hat is in the drawer.
+3 The drawer is in the sunroom.
+4 Emma moved the hat to the bottle.
+5 The bottle is in the sunroom.
+6 Olivia entered the sunroom.
+7 Emma exited the sunroom.
+8 Olivia moved the hat to the cupboard.
+9 The cupboard is in the sunroom.
+10 Olivia moved the hat to the basket.
+11 The basket is in the sunroom.
+12 Where will Emma look for the hat?	bottle	1
+1 Emma is in the sunroom.
+2 The hat is in the drawer.
+3 The drawer is in the sunroom.
+4 Emma moved the hat to the bottle.
+5 The bottle is in the sunroom.
+6 Olivia entered the sunroom.
+7 Emma exited the sunroom.
+8 Olivia moved the hat to the cupboard.
+9 The cupboard is in the sunroom.
+10 Olivia moved the hat to the basket.
+11 The basket is in the sunroom.
+12 Where will Olivia look for the hat?	basket	1
+1 Emily is in the workshop.
+2 The jacket is in the crate.
+3 The crate is in the workshop.
+4 Emily moved the jacket to the suitcase.
+5 The suitcase is in the workshop.
+6 Sophia entered the workshop.
+7 Emily exited the workshop.
+8 Sophia moved the jacket to the bucket.
+9 The bucket is in the workshop.
+10 Sophia moved the jacket to the container.
+11 The container is in the workshop.
+12 Where does Emily think that Sophia searches for the jacket?	suitcase	1
+1 Emily is in the workshop.
+2 The jacket is in the crate.
+3 The crate is in the workshop.
+4 Emily moved the jacket to the suitcase.
+5 The suitcase is in the workshop.
+6 Sophia entered the workshop.
+7 Emily exited the workshop.
+8 Sophia moved the jacket to the bucket.
+9 The bucket is in the workshop.
+10 Sophia moved the jacket to the container.
+11 The container is in the workshop.
+12 Where does Sophia think that Emily searches for the jacket?	suitcase	1
+1 Emily is in the workshop.
+2 The jacket is in the crate.
+3 The crate is in the workshop.
+4 Emily moved the jacket to the suitcase.
+5 The suitcase is in the workshop.
+6 Sophia entered the workshop.
+7 Emily exited the workshop.
+8 Sophia moved the jacket to the bucket.
+9 The bucket is in the workshop.
+10 Sophia moved the jacket to the container.
+11 The container is in the workshop.
+12 Where will Emily look for the jacket?	suitcase	1
+1 Emily is in the workshop.
+2 The jacket is in the crate.
+3 The crate is in the workshop.
+4 Emily moved the jacket to the suitcase.
+5 The suitcase is in the workshop.
+6 Sophia entered the workshop.
+7 Emily exited the workshop.
+8 Sophia moved the jacket to the bucket.
+9 The bucket is in the workshop.
+10 Sophia moved the jacket to the container.
+11 The container is in the workshop.
+12 Where will Sophia look for the jacket?	container	1
+1 Ava is in the attic.
+2 The jeans is in the box.
+3 The box is in the attic.
+4 Ava moved the jeans to the pantry.
+5 The pantry is in the attic.
+6 Chloe entered the attic.
+7 Ava exited the attic.
+8 Chloe moved the jeans to the bathtub.
+9 The bathtub is in the attic.
+10 Chloe moved the jeans to the envelope.
+11 The envelope is in the attic.
+12 Where does Ava think that Chloe searches for the jeans?	pantry	1
+1 Ava is in the attic.
+2 The jeans is in the box.
+3 The box is in the attic.
+4 Ava moved the jeans to the pantry.
+5 The pantry is in the attic.
+6 Chloe entered the attic.
+7 Ava exited the attic.
+8 Chloe moved the jeans to the bathtub.
+9 The bathtub is in the attic.
+10 Chloe moved the jeans to the envelope.
+11 The envelope is in the attic.
+12 Where does Chloe think that Ava searches for the jeans?	pantry	1
+1 Ava is in the attic.
+2 The jeans is in the box.
+3 The box is in the attic.
+4 Ava moved the jeans to the pantry.
+5 The pantry is in the attic.
+6 Chloe entered the attic.
+7 Ava exited the attic.
+8 Chloe moved the jeans to the bathtub.
+9 The bathtub is in the attic.
+10 Chloe moved the jeans to the envelope.
+11 The envelope is in the attic.
+12 Where will Ava look for the jeans?	pantry	1
+1 Ava is in the attic.
+2 The jeans is in the box.
+3 The box is in the attic.
+4 Ava moved the jeans to the pantry.
+5 The pantry is in the attic.
+6 Chloe entered the attic.
+7 Ava exited the attic.
+8 Chloe moved the jeans to the bathtub.
+9 The bathtub is in the attic.
+10 Chloe moved the jeans to the envelope.
+11 The envelope is in the attic.
+12 Where will Chloe look for the jeans?	envelope	1
+1 Charlotte is in the basement.
+2 The pajamas is in the drawer.
+3 The drawer is in the basement.
+4 Charlotte moved the pajamas to the bottle.
+5 The bottle is in the basement.
+6 Abigail entered the basement.
+7 Charlotte exited the basement.
+8 Abigail moved the pajamas to the cupboard.
+9 The cupboard is in the basement.
+10 Abigail moved the pajamas to the basket.
+11 The basket is in the basement.
+12 Where does Charlotte think that Abigail searches for the pajamas?	bottle	1
+1 Charlotte is in the basement.
+2 The pajamas is in the drawer.
+3 The drawer is in the basement.
+4 Charlotte moved the pajamas to the bottle.
+5 The bottle is in the basement.
+6 Abigail entered the basement.
+7 Charlotte exited the basement.
+8 Abigail moved the pajamas to the cupboard.
+9 The cupboard is in the basement.
+10 Abigail moved the pajamas to the basket.
+11 The basket is in the basement.
+12 Where does Abigail think that Charlotte searches for the pajamas?	bottle	1
+1 Charlotte is in the basement.
+2 The pajamas is in the drawer.
+3 The drawer is in the basement.
+4 Charlotte moved the pajamas to the bottle.
+5 The bottle is in the basement.
+6 Abigail entered the basement.
+7 Charlotte exited the basement.
+8 Abigail moved the pajamas to the cupboard.
+9 The cupboard is in the basement.
+10 Abigail moved the pajamas to the basket.
+11 The basket is in the basement.
+12 Where will Charlotte look for the pajamas?	bottle	1
+1 Charlotte is in the basement.
+2 The pajamas is in the drawer.
+3 The drawer is in the basement.
+4 Charlotte moved the pajamas to the bottle.
+5 The bottle is in the basement.
+6 Abigail entered the basement.
+7 Charlotte exited the basement.
+8 Abigail moved the pajamas to the cupboard.
+9 The cupboard is in the basement.
+10 Abigail moved the pajamas to the basket.
+11 The basket is in the basement.
+12 Where will Abigail look for the pajamas?	basket	1
+1 Amelia is in the bathroom.
+2 The pants is in the crate.
+3 The crate is in the bathroom.
+4 Amelia moved the pants to the suitcase.
+5 The suitcase is in the bathroom.
+6 Ella entered the bathroom.
+7 Amelia exited the bathroom.
+8 Ella moved the pants to the bucket.
+9 The bucket is in the bathroom.
+10 Ella moved the pants to the container.
+11 The container is in the bathroom.
+12 Where does Amelia think that Ella searches for the pants?	suitcase	1
+1 Amelia is in the bathroom.
+2 The pants is in the crate.
+3 The crate is in the bathroom.
+4 Amelia moved the pants to the suitcase.
+5 The suitcase is in the bathroom.
+6 Ella entered the bathroom.
+7 Amelia exited the bathroom.
+8 Ella moved the pants to the bucket.
+9 The bucket is in the bathroom.
+10 Ella moved the pants to the container.
+11 The container is in the bathroom.
+12 Where does Ella think that Amelia searches for the pants?	suitcase	1
+1 Amelia is in the bathroom.
+2 The pants is in the crate.
+3 The crate is in the bathroom.
+4 Amelia moved the pants to the suitcase.
+5 The suitcase is in the bathroom.
+6 Ella entered the bathroom.
+7 Amelia exited the bathroom.
+8 Ella moved the pants to the bucket.
+9 The bucket is in the bathroom.
+10 Ella moved the pants to the container.
+11 The container is in the bathroom.
+12 Where will Amelia look for the pants?	suitcase	1
+1 Amelia is in the bathroom.
+2 The pants is in the crate.
+3 The crate is in the bathroom.
+4 Amelia moved the pants to the suitcase.
+5 The suitcase is in the bathroom.
+6 Ella entered the bathroom.
+7 Amelia exited the bathroom.
+8 Ella moved the pants to the bucket.
+9 The bucket is in the bathroom.
+10 Ella moved the pants to the container.
+11 The container is in the bathroom.
+12 Where will Ella look for the pants?	container	1
+1 Hannah is in the bedroom.
+2 The raincoat is in the box.
+3 The box is in the bedroom.
+4 Hannah moved the raincoat to the pantry.
+5 The pantry is in the bedroom.
+6 Isabella entered the bedroom.
+7 Hannah exited the bedroom.
+8 Isabella moved the raincoat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Isabella moved the raincoat to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Hannah think that Isabella searches for the raincoat?	pantry	1
+1 Hannah is in the bedroom.
+2 The raincoat is in the box.
+3 The box is in the bedroom.
+4 Hannah moved the raincoat to the pantry.
+5 The pantry is in the bedroom.
+6 Isabella entered the bedroom.
+7 Hannah exited the bedroom.
+8 Isabella moved the raincoat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Isabella moved the raincoat to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Isabella think that Hannah searches for the raincoat?	pantry	1
+1 Hannah is in the bedroom.
+2 The raincoat is in the box.
+3 The box is in the bedroom.
+4 Hannah moved the raincoat to the pantry.
+5 The pantry is in the bedroom.
+6 Isabella entered the bedroom.
+7 Hannah exited the bedroom.
+8 Isabella moved the raincoat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Isabella moved the raincoat to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Hannah look for the raincoat?	pantry	1
+1 Hannah is in the bedroom.
+2 The raincoat is in the box.
+3 The box is in the bedroom.
+4 Hannah moved the raincoat to the pantry.
+5 The pantry is in the bedroom.
+6 Isabella entered the bedroom.
+7 Hannah exited the bedroom.
+8 Isabella moved the raincoat to the bathtub.
+9 The bathtub is in the bedroom.
+10 Isabella moved the raincoat to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Isabella look for the raincoat?	envelope	1
+1 Aria is in the cellar.
+2 The scarf is in the drawer.
+3 The drawer is in the cellar.
+4 Aria moved the scarf to the bottle.
+5 The bottle is in the cellar.
+6 Lily entered the cellar.
+7 Aria exited the cellar.
+8 Lily moved the scarf to the cupboard.
+9 The cupboard is in the cellar.
+10 Lily moved the scarf to the basket.
+11 The basket is in the cellar.
+12 Where does Aria think that Lily searches for the scarf?	bottle	1
+1 Aria is in the cellar.
+2 The scarf is in the drawer.
+3 The drawer is in the cellar.
+4 Aria moved the scarf to the bottle.
+5 The bottle is in the cellar.
+6 Lily entered the cellar.
+7 Aria exited the cellar.
+8 Lily moved the scarf to the cupboard.
+9 The cupboard is in the cellar.
+10 Lily moved the scarf to the basket.
+11 The basket is in the cellar.
+12 Where does Lily think that Aria searches for the scarf?	bottle	1
+1 Aria is in the cellar.
+2 The scarf is in the drawer.
+3 The drawer is in the cellar.
+4 Aria moved the scarf to the bottle.
+5 The bottle is in the cellar.
+6 Lily entered the cellar.
+7 Aria exited the cellar.
+8 Lily moved the scarf to the cupboard.
+9 The cupboard is in the cellar.
+10 Lily moved the scarf to the basket.
+11 The basket is in the cellar.
+12 Where will Aria look for the scarf?	bottle	1
+1 Aria is in the cellar.
+2 The scarf is in the drawer.
+3 The drawer is in the cellar.
+4 Aria moved the scarf to the bottle.
+5 The bottle is in the cellar.
+6 Lily entered the cellar.
+7 Aria exited the cellar.
+8 Lily moved the scarf to the cupboard.
+9 The cupboard is in the cellar.
+10 Lily moved the scarf to the basket.
+11 The basket is in the cellar.
+12 Where will Lily look for the scarf?	basket	1
+1 Mia is in the closet.
+2 The shirt is in the crate.
+3 The crate is in the closet.
+4 Mia moved the shirt to the suitcase.
+5 The suitcase is in the closet.
+6 Isla entered the closet.
+7 Mia exited the closet.
+8 Isla moved the shirt to the bucket.
+9 The bucket is in the closet.
+10 Isla moved the shirt to the container.
+11 The container is in the closet.
+12 Where does Mia think that Isla searches for the shirt?	suitcase	1
+1 Mia is in the closet.
+2 The shirt is in the crate.
+3 The crate is in the closet.
+4 Mia moved the shirt to the suitcase.
+5 The suitcase is in the closet.
+6 Isla entered the closet.
+7 Mia exited the closet.
+8 Isla moved the shirt to the bucket.
+9 The bucket is in the closet.
+10 Isla moved the shirt to the container.
+11 The container is in the closet.
+12 Where does Isla think that Mia searches for the shirt?	suitcase	1
+1 Mia is in the closet.
+2 The shirt is in the crate.
+3 The crate is in the closet.
+4 Mia moved the shirt to the suitcase.
+5 The suitcase is in the closet.
+6 Isla entered the closet.
+7 Mia exited the closet.
+8 Isla moved the shirt to the bucket.
+9 The bucket is in the closet.
+10 Isla moved the shirt to the container.
+11 The container is in the closet.
+12 Where will Mia look for the shirt?	suitcase	1
+1 Mia is in the closet.
+2 The shirt is in the crate.
+3 The crate is in the closet.
+4 Mia moved the shirt to the suitcase.
+5 The suitcase is in the closet.
+6 Isla entered the closet.
+7 Mia exited the closet.
+8 Isla moved the shirt to the bucket.
+9 The bucket is in the closet.
+10 Isla moved the shirt to the container.
+11 The container is in the closet.
+12 Where will Isla look for the shirt?	container	1
+1 Avery is in the crawlspace.
+2 The shoes is in the box.
+3 The box is in the crawlspace.
+4 Avery moved the shoes to the pantry.
+5 The pantry is in the crawlspace.
+6 Elizabeth entered the crawlspace.
+7 Avery exited the crawlspace.
+8 Elizabeth moved the shoes to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Elizabeth moved the shoes to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Avery think that Elizabeth searches for the shoes?	pantry	1
+1 Avery is in the crawlspace.
+2 The shoes is in the box.
+3 The box is in the crawlspace.
+4 Avery moved the shoes to the pantry.
+5 The pantry is in the crawlspace.
+6 Elizabeth entered the crawlspace.
+7 Avery exited the crawlspace.
+8 Elizabeth moved the shoes to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Elizabeth moved the shoes to the envelope.
+11 The envelope is in the crawlspace.
+12 Where does Elizabeth think that Avery searches for the shoes?	pantry	1
+1 Avery is in the crawlspace.
+2 The shoes is in the box.
+3 The box is in the crawlspace.
+4 Avery moved the shoes to the pantry.
+5 The pantry is in the crawlspace.
+6 Elizabeth entered the crawlspace.
+7 Avery exited the crawlspace.
+8 Elizabeth moved the shoes to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Elizabeth moved the shoes to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Avery look for the shoes?	pantry	1
+1 Avery is in the crawlspace.
+2 The shoes is in the box.
+3 The box is in the crawlspace.
+4 Avery moved the shoes to the pantry.
+5 The pantry is in the crawlspace.
+6 Elizabeth entered the crawlspace.
+7 Avery exited the crawlspace.
+8 Elizabeth moved the shoes to the bathtub.
+9 The bathtub is in the crawlspace.
+10 Elizabeth moved the shoes to the envelope.
+11 The envelope is in the crawlspace.
+12 Where will Elizabeth look for the shoes?	envelope	1
+1 Mila is in the den.
+2 The skirt is in the drawer.
+3 The drawer is in the den.
+4 Mila moved the skirt to the bottle.
+5 The bottle is in the den.
+6 Evelyn entered the den.
+7 Mila exited the den.
+8 Evelyn moved the skirt to the cupboard.
+9 The cupboard is in the den.
+10 Evelyn moved the skirt to the basket.
+11 The basket is in the den.
+12 Where does Mila think that Evelyn searches for the skirt?	bottle	1
+1 Mila is in the den.
+2 The skirt is in the drawer.
+3 The drawer is in the den.
+4 Mila moved the skirt to the bottle.
+5 The bottle is in the den.
+6 Evelyn entered the den.
+7 Mila exited the den.
+8 Evelyn moved the skirt to the cupboard.
+9 The cupboard is in the den.
+10 Evelyn moved the skirt to the basket.
+11 The basket is in the den.
+12 Where does Evelyn think that Mila searches for the skirt?	bottle	1
+1 Mila is in the den.
+2 The skirt is in the drawer.
+3 The drawer is in the den.
+4 Mila moved the skirt to the bottle.
+5 The bottle is in the den.
+6 Evelyn entered the den.
+7 Mila exited the den.
+8 Evelyn moved the skirt to the cupboard.
+9 The cupboard is in the den.
+10 Evelyn moved the skirt to the basket.
+11 The basket is in the den.
+12 Where will Mila look for the skirt?	bottle	1
+1 Mila is in the den.
+2 The skirt is in the drawer.
+3 The drawer is in the den.
+4 Mila moved the skirt to the bottle.
+5 The bottle is in the den.
+6 Evelyn entered the den.
+7 Mila exited the den.
+8 Evelyn moved the skirt to the cupboard.
+9 The cupboard is in the den.
+10 Evelyn moved the skirt to the basket.
+11 The basket is in the den.
+12 Where will Evelyn look for the skirt?	basket	1
+1 Oliver is in the garage.
+2 The slacks is in the crate.
+3 The crate is in the garage.
+4 Oliver moved the slacks to the suitcase.
+5 The suitcase is in the garage.
+6 Ethan entered the garage.
+7 Oliver exited the garage.
+8 Ethan moved the slacks to the bucket.
+9 The bucket is in the garage.
+10 Ethan moved the slacks to the container.
+11 The container is in the garage.
+12 Where does Oliver think that Ethan searches for the slacks?	suitcase	1
+1 Oliver is in the garage.
+2 The slacks is in the crate.
+3 The crate is in the garage.
+4 Oliver moved the slacks to the suitcase.
+5 The suitcase is in the garage.
+6 Ethan entered the garage.
+7 Oliver exited the garage.
+8 Ethan moved the slacks to the bucket.
+9 The bucket is in the garage.
+10 Ethan moved the slacks to the container.
+11 The container is in the garage.
+12 Where does Ethan think that Oliver searches for the slacks?	suitcase	1
+1 Oliver is in the garage.
+2 The slacks is in the crate.
+3 The crate is in the garage.
+4 Oliver moved the slacks to the suitcase.
+5 The suitcase is in the garage.
+6 Ethan entered the garage.
+7 Oliver exited the garage.
+8 Ethan moved the slacks to the bucket.
+9 The bucket is in the garage.
+10 Ethan moved the slacks to the container.
+11 The container is in the garage.
+12 Where will Oliver look for the slacks?	suitcase	1
+1 Oliver is in the garage.
+2 The slacks is in the crate.
+3 The crate is in the garage.
+4 Oliver moved the slacks to the suitcase.
+5 The suitcase is in the garage.
+6 Ethan entered the garage.
+7 Oliver exited the garage.
+8 Ethan moved the slacks to the bucket.
+9 The bucket is in the garage.
+10 Ethan moved the slacks to the container.
+11 The container is in the garage.
+12 Where will Ethan look for the slacks?	container	1
+1 Liam is in the garden.
+2 The slippers is in the box.
+3 The box is in the garden.
+4 Liam moved the slippers to the pantry.
+5 The pantry is in the garden.
+6 Benjamin entered the garden.
+7 Liam exited the garden.
+8 Benjamin moved the slippers to the bathtub.
+9 The bathtub is in the garden.
+10 Benjamin moved the slippers to the envelope.
+11 The envelope is in the garden.
+12 Where does Liam think that Benjamin searches for the slippers?	pantry	1
+1 Liam is in the garden.
+2 The slippers is in the box.
+3 The box is in the garden.
+4 Liam moved the slippers to the pantry.
+5 The pantry is in the garden.
+6 Benjamin entered the garden.
+7 Liam exited the garden.
+8 Benjamin moved the slippers to the bathtub.
+9 The bathtub is in the garden.
+10 Benjamin moved the slippers to the envelope.
+11 The envelope is in the garden.
+12 Where does Benjamin think that Liam searches for the slippers?	pantry	1
+1 Liam is in the garden.
+2 The slippers is in the box.
+3 The box is in the garden.
+4 Liam moved the slippers to the pantry.
+5 The pantry is in the garden.
+6 Benjamin entered the garden.
+7 Liam exited the garden.
+8 Benjamin moved the slippers to the bathtub.
+9 The bathtub is in the garden.
+10 Benjamin moved the slippers to the envelope.
+11 The envelope is in the garden.
+12 Where will Liam look for the slippers?	pantry	1
+1 Liam is in the garden.
+2 The slippers is in the box.
+3 The box is in the garden.
+4 Liam moved the slippers to the pantry.
+5 The pantry is in the garden.
+6 Benjamin entered the garden.
+7 Liam exited the garden.
+8 Benjamin moved the slippers to the bathtub.
+9 The bathtub is in the garden.
+10 Benjamin moved the slippers to the envelope.
+11 The envelope is in the garden.
+12 Where will Benjamin look for the slippers?	envelope	1
+1 Lucas is in the hall.
+2 The socks is in the drawer.
+3 The drawer is in the hall.
+4 Lucas moved the socks to the bottle.
+5 The bottle is in the hall.
+6 Alexander entered the hall.
+7 Lucas exited the hall.
+8 Alexander moved the socks to the cupboard.
+9 The cupboard is in the hall.
+10 Alexander moved the socks to the basket.
+11 The basket is in the hall.
+12 Where does Lucas think that Alexander searches for the socks?	bottle	1
+1 Lucas is in the hall.
+2 The socks is in the drawer.
+3 The drawer is in the hall.
+4 Lucas moved the socks to the bottle.
+5 The bottle is in the hall.
+6 Alexander entered the hall.
+7 Lucas exited the hall.
+8 Alexander moved the socks to the cupboard.
+9 The cupboard is in the hall.
+10 Alexander moved the socks to the basket.
+11 The basket is in the hall.
+12 Where does Alexander think that Lucas searches for the socks?	bottle	1
+1 Lucas is in the hall.
+2 The socks is in the drawer.
+3 The drawer is in the hall.
+4 Lucas moved the socks to the bottle.
+5 The bottle is in the hall.
+6 Alexander entered the hall.
+7 Lucas exited the hall.
+8 Alexander moved the socks to the cupboard.
+9 The cupboard is in the hall.
+10 Alexander moved the socks to the basket.
+11 The basket is in the hall.
+12 Where will Lucas look for the socks?	bottle	1
+1 Lucas is in the hall.
+2 The socks is in the drawer.
+3 The drawer is in the hall.
+4 Lucas moved the socks to the bottle.
+5 The bottle is in the hall.
+6 Alexander entered the hall.
+7 Lucas exited the hall.
+8 Alexander moved the socks to the cupboard.
+9 The cupboard is in the hall.
+10 Alexander moved the socks to the basket.
+11 The basket is in the hall.
+12 Where will Alexander look for the socks?	basket	1
+1 Jacob is in the hallway.
+2 The stockings is in the crate.
+3 The crate is in the hallway.
+4 Jacob moved the stockings to the suitcase.
+5 The suitcase is in the hallway.
+6 Mason entered the hallway.
+7 Jacob exited the hallway.
+8 Mason moved the stockings to the bucket.
+9 The bucket is in the hallway.
+10 Mason moved the stockings to the container.
+11 The container is in the hallway.
+12 Where does Jacob think that Mason searches for the stockings?	suitcase	1
+1 Jacob is in the hallway.
+2 The stockings is in the crate.
+3 The crate is in the hallway.
+4 Jacob moved the stockings to the suitcase.
+5 The suitcase is in the hallway.
+6 Mason entered the hallway.
+7 Jacob exited the hallway.
+8 Mason moved the stockings to the bucket.
+9 The bucket is in the hallway.
+10 Mason moved the stockings to the container.
+11 The container is in the hallway.
+12 Where does Mason think that Jacob searches for the stockings?	suitcase	1
+1 Jacob is in the hallway.
+2 The stockings is in the crate.
+3 The crate is in the hallway.
+4 Jacob moved the stockings to the suitcase.
+5 The suitcase is in the hallway.
+6 Mason entered the hallway.
+7 Jacob exited the hallway.
+8 Mason moved the stockings to the bucket.
+9 The bucket is in the hallway.
+10 Mason moved the stockings to the container.
+11 The container is in the hallway.
+12 Where will Jacob look for the stockings?	suitcase	1
+1 Jacob is in the hallway.
+2 The stockings is in the crate.
+3 The crate is in the hallway.
+4 Jacob moved the stockings to the suitcase.
+5 The suitcase is in the hallway.
+6 Mason entered the hallway.
+7 Jacob exited the hallway.
+8 Mason moved the stockings to the bucket.
+9 The bucket is in the hallway.
+10 Mason moved the stockings to the container.
+11 The container is in the hallway.
+12 Where will Mason look for the stockings?	container	1
+1 William is in the kitchen.
+2 The suit is in the box.
+3 The box is in the kitchen.
+4 William moved the suit to the pantry.
+5 The pantry is in the kitchen.
+6 Hunter entered the kitchen.
+7 William exited the kitchen.
+8 Hunter moved the suit to the bathtub.
+9 The bathtub is in the kitchen.
+10 Hunter moved the suit to the envelope.
+11 The envelope is in the kitchen.
+12 Where does William think that Hunter searches for the suit?	pantry	1
+1 William is in the kitchen.
+2 The suit is in the box.
+3 The box is in the kitchen.
+4 William moved the suit to the pantry.
+5 The pantry is in the kitchen.
+6 Hunter entered the kitchen.
+7 William exited the kitchen.
+8 Hunter moved the suit to the bathtub.
+9 The bathtub is in the kitchen.
+10 Hunter moved the suit to the envelope.
+11 The envelope is in the kitchen.
+12 Where does Hunter think that William searches for the suit?	pantry	1
+1 William is in the kitchen.
+2 The suit is in the box.
+3 The box is in the kitchen.
+4 William moved the suit to the pantry.
+5 The pantry is in the kitchen.
+6 Hunter entered the kitchen.
+7 William exited the kitchen.
+8 Hunter moved the suit to the bathtub.
+9 The bathtub is in the kitchen.
+10 Hunter moved the suit to the envelope.
+11 The envelope is in the kitchen.
+12 Where will William look for the suit?	pantry	1
+1 William is in the kitchen.
+2 The suit is in the box.
+3 The box is in the kitchen.
+4 William moved the suit to the pantry.
+5 The pantry is in the kitchen.
+6 Hunter entered the kitchen.
+7 William exited the kitchen.
+8 Hunter moved the suit to the bathtub.
+9 The bathtub is in the kitchen.
+10 Hunter moved the suit to the envelope.
+11 The envelope is in the kitchen.
+12 Where will Hunter look for the suit?	envelope	1
+1 James is in the laundry.
+2 The sweater is in the drawer.
+3 The drawer is in the laundry.
+4 James moved the sweater to the bottle.
+5 The bottle is in the laundry.
+6 Logan entered the laundry.
+7 James exited the laundry.
+8 Logan moved the sweater to the cupboard.
+9 The cupboard is in the laundry.
+10 Logan moved the sweater to the basket.
+11 The basket is in the laundry.
+12 Where does James think that Logan searches for the sweater?	bottle	1
+1 James is in the laundry.
+2 The sweater is in the drawer.
+3 The drawer is in the laundry.
+4 James moved the sweater to the bottle.
+5 The bottle is in the laundry.
+6 Logan entered the laundry.
+7 James exited the laundry.
+8 Logan moved the sweater to the cupboard.
+9 The cupboard is in the laundry.
+10 Logan moved the sweater to the basket.
+11 The basket is in the laundry.
+12 Where does Logan think that James searches for the sweater?	bottle	1
+1 James is in the laundry.
+2 The sweater is in the drawer.
+3 The drawer is in the laundry.
+4 James moved the sweater to the bottle.
+5 The bottle is in the laundry.
+6 Logan entered the laundry.
+7 James exited the laundry.
+8 Logan moved the sweater to the cupboard.
+9 The cupboard is in the laundry.
+10 Logan moved the sweater to the basket.
+11 The basket is in the laundry.
+12 Where will James look for the sweater?	bottle	1
+1 James is in the laundry.
+2 The sweater is in the drawer.
+3 The drawer is in the laundry.
+4 James moved the sweater to the bottle.
+5 The bottle is in the laundry.
+6 Logan entered the laundry.
+7 James exited the laundry.
+8 Logan moved the sweater to the cupboard.
+9 The cupboard is in the laundry.
+10 Logan moved the sweater to the basket.
+11 The basket is in the laundry.
+12 Where will Logan look for the sweater?	basket	1
+1 Owen is in the lounge.
+2 The sweatshirt is in the crate.
+3 The crate is in the lounge.
+4 Owen moved the sweatshirt to the suitcase.
+5 The suitcase is in the lounge.
+6 Noah entered the lounge.
+7 Owen exited the lounge.
+8 Noah moved the sweatshirt to the bucket.
+9 The bucket is in the lounge.
+10 Noah moved the sweatshirt to the container.
+11 The container is in the lounge.
+12 Where does Owen think that Noah searches for the sweatshirt?	suitcase	1
+1 Owen is in the lounge.
+2 The sweatshirt is in the crate.
+3 The crate is in the lounge.
+4 Owen moved the sweatshirt to the suitcase.
+5 The suitcase is in the lounge.
+6 Noah entered the lounge.
+7 Owen exited the lounge.
+8 Noah moved the sweatshirt to the bucket.
+9 The bucket is in the lounge.
+10 Noah moved the sweatshirt to the container.
+11 The container is in the lounge.
+12 Where does Noah think that Owen searches for the sweatshirt?	suitcase	1
+1 Owen is in the lounge.
+2 The sweatshirt is in the crate.
+3 The crate is in the lounge.
+4 Owen moved the sweatshirt to the suitcase.
+5 The suitcase is in the lounge.
+6 Noah entered the lounge.
+7 Owen exited the lounge.
+8 Noah moved the sweatshirt to the bucket.
+9 The bucket is in the lounge.
+10 Noah moved the sweatshirt to the container.
+11 The container is in the lounge.
+12 Where will Owen look for the sweatshirt?	suitcase	1
+1 Owen is in the lounge.
+2 The sweatshirt is in the crate.
+3 The crate is in the lounge.
+4 Owen moved the sweatshirt to the suitcase.
+5 The suitcase is in the lounge.
+6 Noah entered the lounge.
+7 Owen exited the lounge.
+8 Noah moved the sweatshirt to the bucket.
+9 The bucket is in the lounge.
+10 Noah moved the sweatshirt to the container.
+11 The container is in the lounge.
+12 Where will Noah look for the sweatshirt?	container	1
+1 Carter is in the office.
+2 The t-shirt is in the box.
+3 The box is in the office.
+4 Carter moved the t-shirt to the pantry.
+5 The pantry is in the office.
+6 Nathan entered the office.
+7 Carter exited the office.
+8 Nathan moved the t-shirt to the bathtub.
+9 The bathtub is in the office.
+10 Nathan moved the t-shirt to the envelope.
+11 The envelope is in the office.
+12 Where does Carter think that Nathan searches for the t-shirt?	pantry	1
+1 Carter is in the office.
+2 The t-shirt is in the box.
+3 The box is in the office.
+4 Carter moved the t-shirt to the pantry.
+5 The pantry is in the office.
+6 Nathan entered the office.
+7 Carter exited the office.
+8 Nathan moved the t-shirt to the bathtub.
+9 The bathtub is in the office.
+10 Nathan moved the t-shirt to the envelope.
+11 The envelope is in the office.
+12 Where does Nathan think that Carter searches for the t-shirt?	pantry	1
+1 Carter is in the office.
+2 The t-shirt is in the box.
+3 The box is in the office.
+4 Carter moved the t-shirt to the pantry.
+5 The pantry is in the office.
+6 Nathan entered the office.
+7 Carter exited the office.
+8 Nathan moved the t-shirt to the bathtub.
+9 The bathtub is in the office.
+10 Nathan moved the t-shirt to the envelope.
+11 The envelope is in the office.
+12 Where will Carter look for the t-shirt?	pantry	1
+1 Carter is in the office.
+2 The t-shirt is in the box.
+3 The box is in the office.
+4 Carter moved the t-shirt to the pantry.
+5 The pantry is in the office.
+6 Nathan entered the office.
+7 Carter exited the office.
+8 Nathan moved the t-shirt to the bathtub.
+9 The bathtub is in the office.
+10 Nathan moved the t-shirt to the envelope.
+11 The envelope is in the office.
+12 Where will Nathan look for the t-shirt?	envelope	1
+1 Jack is in the pantry.
+2 The tie is in the drawer.
+3 The drawer is in the pantry.
+4 Jack moved the tie to the bottle.
+5 The bottle is in the pantry.
+6 Aiden entered the pantry.
+7 Jack exited the pantry.
+8 Aiden moved the tie to the cupboard.
+9 The cupboard is in the pantry.
+10 Aiden moved the tie to the basket.
+11 The basket is in the pantry.
+12 Where does Jack think that Aiden searches for the tie?	bottle	1
+1 Jack is in the pantry.
+2 The tie is in the drawer.
+3 The drawer is in the pantry.
+4 Jack moved the tie to the bottle.
+5 The bottle is in the pantry.
+6 Aiden entered the pantry.
+7 Jack exited the pantry.
+8 Aiden moved the tie to the cupboard.
+9 The cupboard is in the pantry.
+10 Aiden moved the tie to the basket.
+11 The basket is in the pantry.
+12 Where does Aiden think that Jack searches for the tie?	bottle	1
+1 Jack is in the pantry.
+2 The tie is in the drawer.
+3 The drawer is in the pantry.
+4 Jack moved the tie to the bottle.
+5 The bottle is in the pantry.
+6 Aiden entered the pantry.
+7 Jack exited the pantry.
+8 Aiden moved the tie to the cupboard.
+9 The cupboard is in the pantry.
+10 Aiden moved the tie to the basket.
+11 The basket is in the pantry.
+12 Where will Jack look for the tie?	bottle	1
+1 Jack is in the pantry.
+2 The tie is in the drawer.
+3 The drawer is in the pantry.
+4 Jack moved the tie to the bottle.
+5 The bottle is in the pantry.
+6 Aiden entered the pantry.
+7 Jack exited the pantry.
+8 Aiden moved the tie to the cupboard.
+9 The cupboard is in the pantry.
+10 Aiden moved the tie to the basket.
+11 The basket is in the pantry.
+12 Where will Aiden look for the tie?	basket	1
+1 Jackson is in the patio.
+2 The trousers is in the crate.
+3 The crate is in the patio.
+4 Jackson moved the trousers to the suitcase.
+5 The suitcase is in the patio.
+6 Jayden entered the patio.
+7 Jackson exited the patio.
+8 Jayden moved the trousers to the bucket.
+9 The bucket is in the patio.
+10 Jayden moved the trousers to the container.
+11 The container is in the patio.
+12 Where does Jackson think that Jayden searches for the trousers?	suitcase	1
+1 Jackson is in the patio.
+2 The trousers is in the crate.
+3 The crate is in the patio.
+4 Jackson moved the trousers to the suitcase.
+5 The suitcase is in the patio.
+6 Jayden entered the patio.
+7 Jackson exited the patio.
+8 Jayden moved the trousers to the bucket.
+9 The bucket is in the patio.
+10 Jayden moved the trousers to the container.
+11 The container is in the patio.
+12 Where does Jayden think that Jackson searches for the trousers?	suitcase	1
+1 Jackson is in the patio.
+2 The trousers is in the crate.
+3 The crate is in the patio.
+4 Jackson moved the trousers to the suitcase.
+5 The suitcase is in the patio.
+6 Jayden entered the patio.
+7 Jackson exited the patio.
+8 Jayden moved the trousers to the bucket.
+9 The bucket is in the patio.
+10 Jayden moved the trousers to the container.
+11 The container is in the patio.
+12 Where will Jackson look for the trousers?	suitcase	1
+1 Jackson is in the patio.
+2 The trousers is in the crate.
+3 The crate is in the patio.
+4 Jackson moved the trousers to the suitcase.
+5 The suitcase is in the patio.
+6 Jayden entered the patio.
+7 Jackson exited the patio.
+8 Jayden moved the trousers to the bucket.
+9 The bucket is in the patio.
+10 Jayden moved the trousers to the container.
+11 The container is in the patio.
+12 Where will Jayden look for the trousers?	container	1
+1 Emma is in the playroom.
+2 The underclothes is in the box.
+3 The box is in the playroom.
+4 Emma moved the underclothes to the pantry.
+5 The pantry is in the playroom.
+6 Olivia entered the playroom.
+7 Emma exited the playroom.
+8 Olivia moved the underclothes to the bathtub.
+9 The bathtub is in the playroom.
+10 Olivia moved the underclothes to the envelope.
+11 The envelope is in the playroom.
+12 Where does Emma think that Olivia searches for the underclothes?	pantry	1
+1 Emma is in the playroom.
+2 The underclothes is in the box.
+3 The box is in the playroom.
+4 Emma moved the underclothes to the pantry.
+5 The pantry is in the playroom.
+6 Olivia entered the playroom.
+7 Emma exited the playroom.
+8 Olivia moved the underclothes to the bathtub.
+9 The bathtub is in the playroom.
+10 Olivia moved the underclothes to the envelope.
+11 The envelope is in the playroom.
+12 Where does Olivia think that Emma searches for the underclothes?	pantry	1
+1 Emma is in the playroom.
+2 The underclothes is in the box.
+3 The box is in the playroom.
+4 Emma moved the underclothes to the pantry.
+5 The pantry is in the playroom.
+6 Olivia entered the playroom.
+7 Emma exited the playroom.
+8 Olivia moved the underclothes to the bathtub.
+9 The bathtub is in the playroom.
+10 Olivia moved the underclothes to the envelope.
+11 The envelope is in the playroom.
+12 Where will Emma look for the underclothes?	pantry	1
+1 Emma is in the playroom.
+2 The underclothes is in the box.
+3 The box is in the playroom.
+4 Emma moved the underclothes to the pantry.
+5 The pantry is in the playroom.
+6 Olivia entered the playroom.
+7 Emma exited the playroom.
+8 Olivia moved the underclothes to the bathtub.
+9 The bathtub is in the playroom.
+10 Olivia moved the underclothes to the envelope.
+11 The envelope is in the playroom.
+12 Where will Olivia look for the underclothes?	envelope	1
+1 Emily is in the porch.
+2 The underpants is in the drawer.
+3 The drawer is in the porch.
+4 Emily moved the underpants to the bottle.
+5 The bottle is in the porch.
+6 Sophia entered the porch.
+7 Emily exited the porch.
+8 Sophia moved the underpants to the cupboard.
+9 The cupboard is in the porch.
+10 Sophia moved the underpants to the basket.
+11 The basket is in the porch.
+12 Where does Emily think that Sophia searches for the underpants?	bottle	1
+1 Emily is in the porch.
+2 The underpants is in the drawer.
+3 The drawer is in the porch.
+4 Emily moved the underpants to the bottle.
+5 The bottle is in the porch.
+6 Sophia entered the porch.
+7 Emily exited the porch.
+8 Sophia moved the underpants to the cupboard.
+9 The cupboard is in the porch.
+10 Sophia moved the underpants to the basket.
+11 The basket is in the porch.
+12 Where does Sophia think that Emily searches for the underpants?	bottle	1
+1 Emily is in the porch.
+2 The underpants is in the drawer.
+3 The drawer is in the porch.
+4 Emily moved the underpants to the bottle.
+5 The bottle is in the porch.
+6 Sophia entered the porch.
+7 Emily exited the porch.
+8 Sophia moved the underpants to the cupboard.
+9 The cupboard is in the porch.
+10 Sophia moved the underpants to the basket.
+11 The basket is in the porch.
+12 Where will Emily look for the underpants?	bottle	1
+1 Emily is in the porch.
+2 The underpants is in the drawer.
+3 The drawer is in the porch.
+4 Emily moved the underpants to the bottle.
+5 The bottle is in the porch.
+6 Sophia entered the porch.
+7 Emily exited the porch.
+8 Sophia moved the underpants to the cupboard.
+9 The cupboard is in the porch.
+10 Sophia moved the underpants to the basket.
+11 The basket is in the porch.
+12 Where will Sophia look for the underpants?	basket	1
+1 Ava is in the staircase.
+2 The undershirt is in the crate.
+3 The crate is in the staircase.
+4 Ava moved the undershirt to the suitcase.
+5 The suitcase is in the staircase.
+6 Chloe entered the staircase.
+7 Ava exited the staircase.
+8 Chloe moved the undershirt to the bucket.
+9 The bucket is in the staircase.
+10 Chloe moved the undershirt to the container.
+11 The container is in the staircase.
+12 Where does Ava think that Chloe searches for the undershirt?	suitcase	1
+1 Ava is in the staircase.
+2 The undershirt is in the crate.
+3 The crate is in the staircase.
+4 Ava moved the undershirt to the suitcase.
+5 The suitcase is in the staircase.
+6 Chloe entered the staircase.
+7 Ava exited the staircase.
+8 Chloe moved the undershirt to the bucket.
+9 The bucket is in the staircase.
+10 Chloe moved the undershirt to the container.
+11 The container is in the staircase.
+12 Where does Chloe think that Ava searches for the undershirt?	suitcase	1
+1 Ava is in the staircase.
+2 The undershirt is in the crate.
+3 The crate is in the staircase.
+4 Ava moved the undershirt to the suitcase.
+5 The suitcase is in the staircase.
+6 Chloe entered the staircase.
+7 Ava exited the staircase.
+8 Chloe moved the undershirt to the bucket.
+9 The bucket is in the staircase.
+10 Chloe moved the undershirt to the container.
+11 The container is in the staircase.
+12 Where will Ava look for the undershirt?	suitcase	1
+1 Ava is in the staircase.
+2 The undershirt is in the crate.
+3 The crate is in the staircase.
+4 Ava moved the undershirt to the suitcase.
+5 The suitcase is in the staircase.
+6 Chloe entered the staircase.
+7 Ava exited the staircase.
+8 Chloe moved the undershirt to the bucket.
+9 The bucket is in the staircase.
+10 Chloe moved the undershirt to the container.
+11 The container is in the staircase.
+12 Where will Chloe look for the undershirt?	container	1
+1 Charlotte is in the study.
+2 The apple is in the box.
+3 The box is in the study.
+4 Charlotte moved the apple to the pantry.
+5 The pantry is in the study.
+6 Abigail entered the study.
+7 Charlotte exited the study.
+8 Abigail moved the apple to the bathtub.
+9 The bathtub is in the study.
+10 Abigail moved the apple to the envelope.
+11 The envelope is in the study.
+12 Where does Charlotte think that Abigail searches for the apple?	pantry	1
+1 Charlotte is in the study.
+2 The apple is in the box.
+3 The box is in the study.
+4 Charlotte moved the apple to the pantry.
+5 The pantry is in the study.
+6 Abigail entered the study.
+7 Charlotte exited the study.
+8 Abigail moved the apple to the bathtub.
+9 The bathtub is in the study.
+10 Abigail moved the apple to the envelope.
+11 The envelope is in the study.
+12 Where does Abigail think that Charlotte searches for the apple?	pantry	1
+1 Charlotte is in the study.
+2 The apple is in the box.
+3 The box is in the study.
+4 Charlotte moved the apple to the pantry.
+5 The pantry is in the study.
+6 Abigail entered the study.
+7 Charlotte exited the study.
+8 Abigail moved the apple to the bathtub.
+9 The bathtub is in the study.
+10 Abigail moved the apple to the envelope.
+11 The envelope is in the study.
+12 Where will Charlotte look for the apple?	pantry	1
+1 Charlotte is in the study.
+2 The apple is in the box.
+3 The box is in the study.
+4 Charlotte moved the apple to the pantry.
+5 The pantry is in the study.
+6 Abigail entered the study.
+7 Charlotte exited the study.
+8 Abigail moved the apple to the bathtub.
+9 The bathtub is in the study.
+10 Abigail moved the apple to the envelope.
+11 The envelope is in the study.
+12 Where will Abigail look for the apple?	envelope	1
+1 Amelia is in the sunroom.
+2 The banana is in the drawer.
+3 The drawer is in the sunroom.
+4 Amelia moved the banana to the bottle.
+5 The bottle is in the sunroom.
+6 Ella entered the sunroom.
+7 Amelia exited the sunroom.
+8 Ella moved the banana to the cupboard.
+9 The cupboard is in the sunroom.
+10 Ella moved the banana to the basket.
+11 The basket is in the sunroom.
+12 Where does Amelia think that Ella searches for the banana?	bottle	1
+1 Amelia is in the sunroom.
+2 The banana is in the drawer.
+3 The drawer is in the sunroom.
+4 Amelia moved the banana to the bottle.
+5 The bottle is in the sunroom.
+6 Ella entered the sunroom.
+7 Amelia exited the sunroom.
+8 Ella moved the banana to the cupboard.
+9 The cupboard is in the sunroom.
+10 Ella moved the banana to the basket.
+11 The basket is in the sunroom.
+12 Where does Ella think that Amelia searches for the banana?	bottle	1
+1 Amelia is in the sunroom.
+2 The banana is in the drawer.
+3 The drawer is in the sunroom.
+4 Amelia moved the banana to the bottle.
+5 The bottle is in the sunroom.
+6 Ella entered the sunroom.
+7 Amelia exited the sunroom.
+8 Ella moved the banana to the cupboard.
+9 The cupboard is in the sunroom.
+10 Ella moved the banana to the basket.
+11 The basket is in the sunroom.
+12 Where will Amelia look for the banana?	bottle	1
+1 Amelia is in the sunroom.
+2 The banana is in the drawer.
+3 The drawer is in the sunroom.
+4 Amelia moved the banana to the bottle.
+5 The bottle is in the sunroom.
+6 Ella entered the sunroom.
+7 Amelia exited the sunroom.
+8 Ella moved the banana to the cupboard.
+9 The cupboard is in the sunroom.
+10 Ella moved the banana to the basket.
+11 The basket is in the sunroom.
+12 Where will Ella look for the banana?	basket	1
+1 Hannah is in the workshop.
+2 The cherry is in the crate.
+3 The crate is in the workshop.
+4 Hannah moved the cherry to the suitcase.
+5 The suitcase is in the workshop.
+6 Isabella entered the workshop.
+7 Hannah exited the workshop.
+8 Isabella moved the cherry to the bucket.
+9 The bucket is in the workshop.
+10 Isabella moved the cherry to the container.
+11 The container is in the workshop.
+12 Where does Hannah think that Isabella searches for the cherry?	suitcase	1
+1 Hannah is in the workshop.
+2 The cherry is in the crate.
+3 The crate is in the workshop.
+4 Hannah moved the cherry to the suitcase.
+5 The suitcase is in the workshop.
+6 Isabella entered the workshop.
+7 Hannah exited the workshop.
+8 Isabella moved the cherry to the bucket.
+9 The bucket is in the workshop.
+10 Isabella moved the cherry to the container.
+11 The container is in the workshop.
+12 Where does Isabella think that Hannah searches for the cherry?	suitcase	1
+1 Hannah is in the workshop.
+2 The cherry is in the crate.
+3 The crate is in the workshop.
+4 Hannah moved the cherry to the suitcase.
+5 The suitcase is in the workshop.
+6 Isabella entered the workshop.
+7 Hannah exited the workshop.
+8 Isabella moved the cherry to the bucket.
+9 The bucket is in the workshop.
+10 Isabella moved the cherry to the container.
+11 The container is in the workshop.
+12 Where will Hannah look for the cherry?	suitcase	1
+1 Hannah is in the workshop.
+2 The cherry is in the crate.
+3 The crate is in the workshop.
+4 Hannah moved the cherry to the suitcase.
+5 The suitcase is in the workshop.
+6 Isabella entered the workshop.
+7 Hannah exited the workshop.
+8 Isabella moved the cherry to the bucket.
+9 The bucket is in the workshop.
+10 Isabella moved the cherry to the container.
+11 The container is in the workshop.
+12 Where will Isabella look for the cherry?	container	1
+1 Aria is in the attic.
+2 The grapefruit is in the box.
+3 The box is in the attic.
+4 Aria moved the grapefruit to the pantry.
+5 The pantry is in the attic.
+6 Lily entered the attic.
+7 Aria exited the attic.
+8 Lily moved the grapefruit to the bathtub.
+9 The bathtub is in the attic.
+10 Lily moved the grapefruit to the envelope.
+11 The envelope is in the attic.
+12 Where does Aria think that Lily searches for the grapefruit?	pantry	1
+1 Aria is in the attic.
+2 The grapefruit is in the box.
+3 The box is in the attic.
+4 Aria moved the grapefruit to the pantry.
+5 The pantry is in the attic.
+6 Lily entered the attic.
+7 Aria exited the attic.
+8 Lily moved the grapefruit to the bathtub.
+9 The bathtub is in the attic.
+10 Lily moved the grapefruit to the envelope.
+11 The envelope is in the attic.
+12 Where does Lily think that Aria searches for the grapefruit?	pantry	1
+1 Aria is in the attic.
+2 The grapefruit is in the box.
+3 The box is in the attic.
+4 Aria moved the grapefruit to the pantry.
+5 The pantry is in the attic.
+6 Lily entered the attic.
+7 Aria exited the attic.
+8 Lily moved the grapefruit to the bathtub.
+9 The bathtub is in the attic.
+10 Lily moved the grapefruit to the envelope.
+11 The envelope is in the attic.
+12 Where will Aria look for the grapefruit?	pantry	1
+1 Aria is in the attic.
+2 The grapefruit is in the box.
+3 The box is in the attic.
+4 Aria moved the grapefruit to the pantry.
+5 The pantry is in the attic.
+6 Lily entered the attic.
+7 Aria exited the attic.
+8 Lily moved the grapefruit to the bathtub.
+9 The bathtub is in the attic.
+10 Lily moved the grapefruit to the envelope.
+11 The envelope is in the attic.
+12 Where will Lily look for the grapefruit?	envelope	1
+1 Mia is in the basement.
+2 The grapes is in the drawer.
+3 The drawer is in the basement.
+4 Mia moved the grapes to the bottle.
+5 The bottle is in the basement.
+6 Isla entered the basement.
+7 Mia exited the basement.
+8 Isla moved the grapes to the cupboard.
+9 The cupboard is in the basement.
+10 Isla moved the grapes to the basket.
+11 The basket is in the basement.
+12 Where does Mia think that Isla searches for the grapes?	bottle	1
+1 Mia is in the basement.
+2 The grapes is in the drawer.
+3 The drawer is in the basement.
+4 Mia moved the grapes to the bottle.
+5 The bottle is in the basement.
+6 Isla entered the basement.
+7 Mia exited the basement.
+8 Isla moved the grapes to the cupboard.
+9 The cupboard is in the basement.
+10 Isla moved the grapes to the basket.
+11 The basket is in the basement.
+12 Where does Isla think that Mia searches for the grapes?	bottle	1
+1 Mia is in the basement.
+2 The grapes is in the drawer.
+3 The drawer is in the basement.
+4 Mia moved the grapes to the bottle.
+5 The bottle is in the basement.
+6 Isla entered the basement.
+7 Mia exited the basement.
+8 Isla moved the grapes to the cupboard.
+9 The cupboard is in the basement.
+10 Isla moved the grapes to the basket.
+11 The basket is in the basement.
+12 Where will Mia look for the grapes?	bottle	1
+1 Mia is in the basement.
+2 The grapes is in the drawer.
+3 The drawer is in the basement.
+4 Mia moved the grapes to the bottle.
+5 The bottle is in the basement.
+6 Isla entered the basement.
+7 Mia exited the basement.
+8 Isla moved the grapes to the cupboard.
+9 The cupboard is in the basement.
+10 Isla moved the grapes to the basket.
+11 The basket is in the basement.
+12 Where will Isla look for the grapes?	basket	1
+1 Avery is in the bathroom.
+2 The lemon is in the crate.
+3 The crate is in the bathroom.
+4 Avery moved the lemon to the suitcase.
+5 The suitcase is in the bathroom.
+6 Elizabeth entered the bathroom.
+7 Avery exited the bathroom.
+8 Elizabeth moved the lemon to the bucket.
+9 The bucket is in the bathroom.
+10 Elizabeth moved the lemon to the container.
+11 The container is in the bathroom.
+12 Where does Avery think that Elizabeth searches for the lemon?	suitcase	1
+1 Avery is in the bathroom.
+2 The lemon is in the crate.
+3 The crate is in the bathroom.
+4 Avery moved the lemon to the suitcase.
+5 The suitcase is in the bathroom.
+6 Elizabeth entered the bathroom.
+7 Avery exited the bathroom.
+8 Elizabeth moved the lemon to the bucket.
+9 The bucket is in the bathroom.
+10 Elizabeth moved the lemon to the container.
+11 The container is in the bathroom.
+12 Where does Elizabeth think that Avery searches for the lemon?	suitcase	1
+1 Avery is in the bathroom.
+2 The lemon is in the crate.
+3 The crate is in the bathroom.
+4 Avery moved the lemon to the suitcase.
+5 The suitcase is in the bathroom.
+6 Elizabeth entered the bathroom.
+7 Avery exited the bathroom.
+8 Elizabeth moved the lemon to the bucket.
+9 The bucket is in the bathroom.
+10 Elizabeth moved the lemon to the container.
+11 The container is in the bathroom.
+12 Where will Avery look for the lemon?	suitcase	1
+1 Avery is in the bathroom.
+2 The lemon is in the crate.
+3 The crate is in the bathroom.
+4 Avery moved the lemon to the suitcase.
+5 The suitcase is in the bathroom.
+6 Elizabeth entered the bathroom.
+7 Avery exited the bathroom.
+8 Elizabeth moved the lemon to the bucket.
+9 The bucket is in the bathroom.
+10 Elizabeth moved the lemon to the container.
+11 The container is in the bathroom.
+12 Where will Elizabeth look for the lemon?	container	1
+1 Mila is in the bedroom.
+2 The lime is in the box.
+3 The box is in the bedroom.
+4 Mila moved the lime to the pantry.
+5 The pantry is in the bedroom.
+6 Evelyn entered the bedroom.
+7 Mila exited the bedroom.
+8 Evelyn moved the lime to the bathtub.
+9 The bathtub is in the bedroom.
+10 Evelyn moved the lime to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Mila think that Evelyn searches for the lime?	pantry	1
+1 Mila is in the bedroom.
+2 The lime is in the box.
+3 The box is in the bedroom.
+4 Mila moved the lime to the pantry.
+5 The pantry is in the bedroom.
+6 Evelyn entered the bedroom.
+7 Mila exited the bedroom.
+8 Evelyn moved the lime to the bathtub.
+9 The bathtub is in the bedroom.
+10 Evelyn moved the lime to the envelope.
+11 The envelope is in the bedroom.
+12 Where does Evelyn think that Mila searches for the lime?	pantry	1
+1 Mila is in the bedroom.
+2 The lime is in the box.
+3 The box is in the bedroom.
+4 Mila moved the lime to the pantry.
+5 The pantry is in the bedroom.
+6 Evelyn entered the bedroom.
+7 Mila exited the bedroom.
+8 Evelyn moved the lime to the bathtub.
+9 The bathtub is in the bedroom.
+10 Evelyn moved the lime to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Mila look for the lime?	pantry	1
+1 Mila is in the bedroom.
+2 The lime is in the box.
+3 The box is in the bedroom.
+4 Mila moved the lime to the pantry.
+5 The pantry is in the bedroom.
+6 Evelyn entered the bedroom.
+7 Mila exited the bedroom.
+8 Evelyn moved the lime to the bathtub.
+9 The bathtub is in the bedroom.
+10 Evelyn moved the lime to the envelope.
+11 The envelope is in the bedroom.
+12 Where will Evelyn look for the lime?	envelope	1

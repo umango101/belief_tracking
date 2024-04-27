@@ -203,9 +203,9 @@ def preprocess_data(current_dir, data):
         if sent_idx > prev_sent_idx:
             example.append(sentence)
         else:
-            context = "".join(example[:-1])
-            question = example[-1].split("\t")[0]
-            answer = example[-1].split("\t")[1]
+            context = "".join(example[:-1]).strip()
+            question = example[-1].split("\t")[0].strip()
+            answer = example[-1].split("\t")[1].strip()
             processed_data.append(
                 {
                     "input": f"{priming_exps}Context: {context}Question: {question}\nAnswer:",
@@ -233,7 +233,7 @@ class Collator(object):
         )
 
         if (
-            self.config.architectures[0] == "LlamaForCausalLM"
+            (self.config.architectures[0] == "LlamaForCausalLM" and "Llama-3" not in self.config._name_or_path)
             or self.config.architectures[0] == "LlaMAForCausalLM"
             or self.config.architectures[0] == "GemmaForCausalLM"
             or self.config.architectures[0] == "MistralForCausalLM"
@@ -250,13 +250,16 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
-    with open(f"{current_dir}/data/ToMi/train.txt", "r") as f:
+    data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
+    path = f"{current_dir}/{data_path}"
+    
+    with open(f"{path}/train.txt", "r") as f:
         train_data = f.readlines()
 
-    with open(f"{current_dir}/data/ToMi/val.txt", "r") as f:
+    with open(f"{path}/val.txt", "r") as f:
         valid_data = f.readlines()
 
-    with open(f"{current_dir}/data/ToMi/test.txt", "r") as f:
+    with open(f"{path}/test.txt", "r") as f:
         test_data = f.readlines()
 
     processed_data = preprocess_data(current_dir, test_data)
