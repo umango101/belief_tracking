@@ -164,11 +164,13 @@ def load_model_and_tokenizer(model_name, precision, device):
     if precision == "fp32":
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
+            token="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",
         ).to(device)
     elif precision == "fp16":
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
             torch_dtype=torch.float16,
+            token="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",
         ).to(device)
     elif precision == "int8":
         model = AutoModelForCausalLM.from_pretrained(
@@ -176,6 +178,7 @@ def load_model_and_tokenizer(model_name, precision, device):
             device_map="auto",
             load_in_8bit=True,
             torch_dtype=torch.float16,
+            token="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",
         )
     elif precision == "int4":
         model = AutoModelForCausalLM.from_pretrained(
@@ -183,6 +186,7 @@ def load_model_and_tokenizer(model_name, precision, device):
             device_map="auto",
             load_in_4bit=True,
             torch_dtype=torch.float16,
+            token="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",
         )
 
     return model, tokenizer
@@ -233,10 +237,14 @@ class Collator(object):
         )
 
         if (
-            (self.config.architectures[0] == "LlamaForCausalLM" and "Llama-3" not in self.config._name_or_path)
+            (
+                self.config.architectures[0] == "LlamaForCausalLM"
+                and "Llama-3" not in self.config._name_or_path
+            )
             or self.config.architectures[0] == "LlaMAForCausalLM"
             or self.config.architectures[0] == "GemmaForCausalLM"
             or self.config.architectures[0] == "MistralForCausalLM"
+            or self.config.architectures[0] == "MixtralForCausalLM"
         ):
             inputs["target"] = torch.tensor(
                 [self.tokenizer.encode(ex["target"])[2] for ex in examples]
@@ -252,7 +260,7 @@ class Collator(object):
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
     data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
     path = f"{current_dir}/{data_path}"
-    
+
     with open(f"{path}/train.txt", "r") as f:
         train_data = f.readlines()
 

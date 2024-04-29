@@ -65,13 +65,13 @@ def main():
                     target_text = tokenizer.decode(inp["target"][idx].tolist())
                     pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
                     with open(
-                        f"{current_dir}/preds/{model_name.split('/')[0]}.txt",
+                        f"{current_dir}/preds/{model_name.split('/')[-1]}.txt",
                         "a",
                     ) as f:
                         f.write(f"Target: {target_text}\tPrediction: {pred_text}\n")
 
-            del inp, outputs, logits, pred_token_ids
-            torch.cuda.empty_cache()
+                del inp, outputs, logits, pred_token_ids
+                torch.cuda.empty_cache()
 
         accuracy = round(correct / total, 2)
         print(f"Model Name: {model_name.split('/')[-1]} | Accuracy: {accuracy}")
