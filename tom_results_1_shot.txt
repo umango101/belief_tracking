@@ -1,0 +1,6 @@
+Model Name: huggyllama/llama-30b | Accuracy: 0.78
+Model Name: mistralai/Mistral-7B-v0.1 | Accuracy: 0.6
+Model Name: NousResearch/Meta-Llama-3-8B | Accuracy: 0.67
+Model Name: NousResearch/Meta-Llama-3-8B-Instruct | Accuracy: 0.63
+Model Name: NousResearch/Meta-Llama-3-70B | Accuracy: 0.57
+Model Name: huggyllama/llama-65b | Accuracy: 0.63

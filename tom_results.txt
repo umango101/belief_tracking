@@ -15,7 +15,6 @@ Model Name: AlekseyKorshuk/vicuna-7b | Accuracy: 0.43
 Model Name: mistralai/Mistral-7B-v0.1 | Accuracy: 0.73
 Model Name: meta-llama/Llama-2-13b-hf | Accuracy: 0.36
 Model Name: meta-llama/Llama-2-13b-chat-hf | Accuracy: 0.41
-Model Name: mistralai/Mixtral-8x7B-v0.1 | Accuracy: 0.0
 Model Name: mistralai/Mistral-7B-Instruct-v0.2 | Accuracy: 0.65
 Model Name: meta-llama/Llama-2-7b-hf | Accuracy: 0.45
 Model Name: meta-llama/Llama-2-7b-chat-hf | Accuracy: 0.56
