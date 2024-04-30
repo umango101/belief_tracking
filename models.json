@@ -1,47 +1,12 @@
 [
     {
-        "model_name": "huggyllama/llama-30b",
-        "precision": "fp16",
-        "batch_size": 1
-    },
-    {
-        "model_name": "mistralai/Mistral-7B-v0.1",
-        "precision": "fp32",
-        "batch_size": 8
-    },
-    {
-        "model_name": "NousResearch/Meta-Llama-3-8B",
-        "precision": "fp32",
-        "batch_size": 8
-    },
-    {
-        "model_name": "NousResearch/Meta-Llama-3-8B-Instruct",
-        "precision": "fp32",
-        "batch_size": 8
-    },
-    {
-        "model_name": "huggyllama/llama-65b",
-        "precision": "int4",
-        "batch_size": 2
-    },
-    {
-        "model_name": "NousResearch/Meta-Llama-3-70B",
-        "precision": "int4",
-        "batch_size": 2
-    },
-    {
         "model_name": "NousResearch/Meta-Llama-3-70B-Instruct",
         "precision": "int4",
-        "batch_size": 2
-    },
-    {
-        "model_name": "meta-llama/Llama-2-70b-hf",
-        "precision": "int4",
-        "batch_size": 2
+        "batch_size": 4
     },
     {
         "model_name": "meta-llama/Llama-2-70b-chat-hf",
         "precision": "int4",
-        "batch_size": 2
+        "batch_size": 4
     }
 ]

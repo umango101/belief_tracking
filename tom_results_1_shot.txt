@@ -4,3 +4,7 @@ Model Name: NousResearch/Meta-Llama-3-8B | Accuracy: 0.67
 Model Name: NousResearch/Meta-Llama-3-8B-Instruct | Accuracy: 0.63
 Model Name: NousResearch/Meta-Llama-3-70B | Accuracy: 0.57
 Model Name: huggyllama/llama-65b | Accuracy: 0.63
+Model Name: meta-llama/Llama-2-70b-hf | Accuracy: 0.75
+Model Name: NousResearch/Meta-Llama-3-70B-Instruct | Accuracy: 0.77
+Model Name: NousResearch/Meta-Llama-3-70B-Instruct | Accuracy: 0.77
+Model Name: meta-llama/Llama-2-70b-chat-hf | Accuracy: 0.57
