@@ -192,7 +192,7 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
-def preprocess_data(current_dir, data):
+def preprocess_data(current_dir, data, traces):
     prev_sent_idx = 0
     processed_data = []
     example = []
@@ -200,6 +200,7 @@ def preprocess_data(current_dir, data):
     with open(f"{current_dir}/priming_examples.txt", "r") as f:
         priming_exps = f.read()
 
+    idx = 0
     for sentence in data:
         sent_idx = int(sentence.split(" ")[0])
         sentence = sentence[2:]
@@ -207,6 +208,21 @@ def preprocess_data(current_dir, data):
         if sent_idx > prev_sent_idx:
             example.append(sentence)
         else:
+            trace = traces[idx].split(",")
+            category = trace[-2]
+            idx += 1
+
+            if "first_order" in category:
+                if "no_tom" in category:
+                    category = "first_order_true_belief"
+                else:
+                    category = "first_order_false_belief"
+            elif "second_order" in category:
+                if "no_tom" in category:
+                    category = "second_order_true_belief"
+                else:
+                    category = "second_order_false_belief"
+
             context = "".join(example[:-1]).strip()
             question = example[-1].split("\t")[0].strip()
             answer = example[-1].split("\t")[1].strip()
@@ -214,6 +230,7 @@ def preprocess_data(current_dir, data):
                 {
                     "input": f"{priming_exps}Context: {context}Question: {question}\nAnswer:",
                     "target": " " + answer,
+                    "category": category,
                 }
             )
 
@@ -254,6 +271,8 @@ class Collator(object):
             inputs["target"] = torch.tensor(
                 [self.tokenizer.encode(ex["target"])[0] for ex in examples]
             )
+
+        inputs["category"] = [ex["category"] for ex in examples]
         return inputs
 
 
@@ -261,16 +280,12 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
     data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
     path = f"{current_dir}/{data_path}"
 
-    with open(f"{path}/train.txt", "r") as f:
-        train_data = f.readlines()
-
-    with open(f"{path}/val.txt", "r") as f:
-        valid_data = f.readlines()
-
     with open(f"{path}/test.txt", "r") as f:
         test_data = f.readlines()
+    with open(f"{path}/test.trace", "r") as f:
+        test_trace = f.readlines()
 
-    processed_data = preprocess_data(current_dir, test_data)
+    processed_data = preprocess_data(current_dir, test_data, test_trace)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")

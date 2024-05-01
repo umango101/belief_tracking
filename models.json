@@ -1,12 +1,7 @@
 [
     {
-        "model_name": "NousResearch/Meta-Llama-3-70B-Instruct",
-        "precision": "int4",
-        "batch_size": 4
-    },
-    {
-        "model_name": "meta-llama/Llama-2-70b-chat-hf",
-        "precision": "int4",
-        "batch_size": 4
+        "model_name": "huggyllama/llama-30b",
+        "precision": "fp16",
+        "batch_size": 1
     }
 ]

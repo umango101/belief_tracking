@@ -48,7 +48,7 @@ def main():
         )
         print("Data loaded successfully")
 
-        correct, total = 0, 0
+        correct, total = {}, {}
         with torch.no_grad():
             for inp in tqdm(dataloader, total=len(dataloader)):
                 inp["input_ids"] = inp["input_ids"].to(device)
@@ -58,26 +58,26 @@ def main():
                 logits = outputs.logits[:, -1]
                 pred_token_ids = torch.argmax(logits, dim=-1)
 
-                correct += torch.sum(pred_token_ids == inp["target"]).item()
-                total += inp["target"].numel()
-
-                for idx in range(len(inp["target"])):
-                    target_text = tokenizer.decode(inp["target"][idx].tolist())
-                    pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
-                    with open(
-                        f"{current_dir}/preds/{model_name.split('/')[-1]}.txt",
-                        "a",
-                    ) as f:
-                        f.write(f"Target: {target_text}\tPrediction: {pred_text}\n")
+                for i in range(len(inp["category"])):
+                    category = inp["category"][i]
+                    if category in correct:
+                        correct[category] += int(pred_token_ids[i] == inp["target"][i])
+                        total[category] += 1
+                    else:
+                        correct[category] = int(pred_token_ids[i] == inp["target"][i])
+                        total[category] = 1
 
                 del inp, outputs, logits, pred_token_ids
                 torch.cuda.empty_cache()
 
-        accuracy = round(correct / total, 2)
-        print(f"Model Name: {model_name.split('/')[-1]} | Accuracy: {accuracy}")
-
         with open(f"{current_dir}/tom_results.txt", "a") as f:
-            f.write(f"Model Name: {model_name} | Accuracy: {accuracy}\n")
+            for category in total:
+                accuracy = round(correct[category] / total[category], 2)
+                print(f"Category: {category}, Accuracy: {accuracy}")
+                f.write(
+                    f"Model Name: {model_name} | Category: {category} | Correct: {correct[category]} | Total: {total[category]}\n"
+                )
+            f.write("\n")
 
         home_dir = str(Path.home())
         shutil.rmtree(
