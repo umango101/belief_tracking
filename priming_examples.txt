@@ -12,3 +12,28 @@ Benjamin tiptoed into the office.
 Question: Where does Elizabeth think that Benjamin searches for the persimmon?
 Answer: treasure_chest
 
+Context: James showed up at the TV_room.
+Lily tiptoed into the TV_room.
+The skirt is set aside in the suitcase.
+The TV_room is keeping the suitcase inside of it.
+Lily set the skirt in the envelope.
+The envelope is deposited in the TV_room.
+Olivia is enthusiastic about the skirt.
+James tiptoed from the TV_room.
+
+Question: Where will Lily look for the skirt?
+Answer: envelope
+
+Context: Noah is nuts about the strawberry.
+Emily is contained in the playroom.
+Noah showed up at the playroom.
+The bathtub is safeguarding the socks.
+The playroom has the bathtub within it.
+Emily left the playroom.
+Noah transferred the socks to the cupboard.
+The cupboard is stored in the playroom.
+Mason arrived in the garden.
+
+Question: Where is the socks really?
+Answer: cupboard
+
