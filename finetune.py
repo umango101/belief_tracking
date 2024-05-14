@@ -1,30 +1,37 @@
+import os
 import sys
 from numpy import dtype
 import torch
 import argparse
 from pytorch_lightning import Trainer
 from lightning.pytorch.loggers import WandbLogger
-import os
-from train_utils import load_model_tokenizer, DataModule, TrainingModule
+from train_utils import (
+    load_model_tokenizer,
+    DataModule,
+    TrainingModule,
+    print_trainable_parameters,
+)
 import warnings
 
-# import torch._dynamo
-
 warnings.filterwarnings("ignore")
-# torch._dynamo.config.suppress_errors = True
 
 from peft import (
     LoraConfig,
     get_peft_model,
-    get_peft_model_state_dict,
     prepare_model_for_kbit_training,
-    set_peft_model_state_dict,
 )
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+if "mind" not in current_dir:
+    current_dir = f"{current_dir}/mind"
+print(f"Current directory: {current_dir}")
 
 
 def train(args):
     torch.set_float32_matmul_precision("medium")
+
     model, tokenizer = load_model_tokenizer(args.model_name)
+
     wandb_logger = WandbLogger(
         log_model="all",
         name=f"{args.model_name}_local",
@@ -50,8 +57,7 @@ def train(args):
         task_type="CAUSAL_LM",
     )
     model = get_peft_model(model, config)
-
-    model.print_trainable_parameters()
+    print_trainable_parameters(model)
 
     model = TrainingModule(
         model,
@@ -76,7 +82,6 @@ def train(args):
         val_check_interval=10 * args.accumulate_grad_batches,
         strategy="ddp",
         log_every_n_steps=args.train_log_step,
-        logger=wandb_logger,
     )
 
     model.model.config.use_cache = False

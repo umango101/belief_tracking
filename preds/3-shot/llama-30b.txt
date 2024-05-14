@@ -1334,7 +1334,7 @@ Target: basket	Prediction: basket
 Target: basket	Prediction: basket
 Target: suit	Prediction: suit
 Target: bott	Prediction: container
-Target: bat	Prediction: bucket
+Target: bat	Prediction: bat
 Target: container	Prediction: container
 Target: cr	Prediction: suit
 Target: basket	Prediction: dra
@@ -1794,7 +1794,7 @@ Target: basket	Prediction: tre
 Target: p	Prediction: p
 Target: p	Prediction: p
 Target: cup	Prediction: cup
-Target: box	Prediction: box
+Target: box	Prediction: container
 Target: en	Prediction: en
 Target: bat	Prediction: suit
 Target: dra	Prediction: dra
@@ -4478,7 +4478,7 @@ Target: bott	Prediction: bott
 Target: basket	Prediction: basket
 Target: basket	Prediction: basket
 Target: basket	Prediction: basket
-Target: bott	Prediction: bott
+Target: bott	Prediction: bucket
 Target: bat	Prediction: basket
 Target: container	Prediction: container
 Target: basket	Prediction: en
@@ -4890,7 +4890,7 @@ Target: bat	Prediction: bat
 Target: bucket	Prediction: bucket
 Target: container	Prediction: container
 Target: dra	Prediction: dra
-Target: cup	Prediction: cup
+Target: cup	Prediction: cr
 Target: container	Prediction: container
 Target: box	Prediction: box
 Target: basket	Prediction: basket

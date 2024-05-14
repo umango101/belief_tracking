@@ -1,0 +1,14 @@
+Model Name: huggyllama/llama-30b | Category: second_order_true_belief | Correct: 1156 | Total: 1214
+Model Name: huggyllama/llama-30b | Category: first_order_true_belief | Correct: 1536 | Total: 1579
+Model Name: huggyllama/llama-30b | Category: reality | Correct: 963 | Total: 1000
+Model Name: huggyllama/llama-30b | Category: first_order_false_belief | Correct: 54 | Total: 423
+Model Name: huggyllama/llama-30b | Category: second_order_false_belief | Correct: 117 | Total: 788
+Model Name: huggyllama/llama-30b | Category: memory | Correct: 995 | Total: 999
+
+Model Name: huggyllama/llama-65b | Category: second_order_true_belief | Correct: 1143 | Total: 1214
+Model Name: huggyllama/llama-65b | Category: first_order_true_belief | Correct: 1518 | Total: 1579
+Model Name: huggyllama/llama-65b | Category: reality | Correct: 970 | Total: 1000
+Model Name: huggyllama/llama-65b | Category: first_order_false_belief | Correct: 23 | Total: 423
+Model Name: huggyllama/llama-65b | Category: second_order_false_belief | Correct: 59 | Total: 788
+Model Name: huggyllama/llama-65b | Category: memory | Correct: 972 | Total: 999
+

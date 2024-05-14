@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from pytorch_lightning import LightningDataModule, LightningModule, seed_everything
 from pytorch_lightning.utilities.data import DataLoader
 import torch
@@ -20,10 +20,8 @@ class LabelClassification(Metric):
         self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
 
     def update(self, preds, targets):
-        for pred, target in zip(preds, targets):
-            if pred.strip() == target.strip():
-                self.correct += 1
-            self.total += 1
+        self.correct += torch.sum(preds == targets).item()
+        self.total += len(targets)
 
     def compute(self):
         return {"accuracy": self.correct.float() / self.total.float()}
@@ -35,6 +33,7 @@ class DataModule(LightningDataModule):
         self,
         tokenizer,
         data_path=None,
+        current_dir=None,
         batch_size=None,
         cutoff_len=None,
         seed=None,
@@ -52,22 +51,52 @@ class DataModule(LightningDataModule):
         self.cutoff_len = cutoff_len
         self.config = config
         self.prepare_data_per_node = False
-
         self.train_set = load_dataset("json", data_files=self.data_path)["train"]
+        self.current_dir = current_dir
 
-        with open("./data/unexpected_contents.jsonl") as f:
-            unexpected_contents = [json.loads(line) for line in f]
-        with open("./data/unexpected_transfer.jsonl") as f:
-            unexpected_transfer = [json.loads(line) for line in f]
+    def preprocess_valid_data(self, data):
+        prev_sent_idx = 0
+        processed_data = []
+        example = []
 
-        tom_data = []
-        for data in unexpected_contents + unexpected_transfer:
-            for i in range(3):
-                inp = {"input": data["prompts"][i], "label": data[f"target_{i+1}"]}
-                tom_data.append(inp)
+        with open(f"{self.current_dir}/priming_examples.txt", "r") as f:
+            priming_exps = f.read()
 
-        tom_dataset = Dataset.from_list(tom_data)
-        self.val_set = tom_dataset
+        for sentence in data:
+            sent_idx = int(sentence.split(" ")[0])
+            sentence = sentence[2:]
+
+            if sent_idx > prev_sent_idx:
+                example.append(sentence)
+            else:
+                context = "".join(example[:-1]).strip()
+                question = example[-1].split("\t")[0].strip()
+                answer = example[-1].split("\t")[1].strip()
+                processed_data.append(
+                    {
+                        "input": f"{priming_exps}Context: {context}Question: {question}\nAnswer:",
+                        "target": " " + answer,
+                    }
+                )
+
+                example = [sentence]
+
+            prev_sent_idx = sent_idx
+
+        return processed_data
+
+    def get_valid_data(self):
+        try:
+            with open(
+                f"{self.current_dir}/data/SymbolicToM Datasets/Linguistic Diversity Dataset/test.txt",
+                "r",
+            ) as f:
+                valid_data = f.readlines()
+            processed_data = self.preprocess_valid_data(valid_data)
+            dataset = Dataset.from_list(processed_data)
+            return dataset
+        except FileNotFoundError:
+            return None
 
     def tokenize(self, prompts):
         results = self.tokenizer(
@@ -78,29 +107,31 @@ class DataModule(LightningDataModule):
         )
         return results
 
-    def test_collate_fn(self, batch):
-        batch_size = len(batch)
-        self.tokenizer.padding_side = "left"
-
-        prompts = [batch[idx]["input"] for idx in range(batch_size)]
-        tokenized_prompts = self.tokenize(prompts)
-        tokenized_prompts["label"] = []
-
-        for idx in range(batch_size):
-            # if "Llama-3" in self.config._name_or_path:
-            #     tokenized_prompts["label"].append(
-            #         self.tokenizer.encode(" " + batch[idx]["label"])[0]
-            #     )
-
-            # elif self.config.architectures[0] == "MistralForCausalLM":
-            tokenized_prompts["label"].append(
-                self.tokenizer.encode(" " + batch[idx]["label"])[2]
+    def valid_collate_fn(self, examples):
+        inputs = self.tokenizer(
+            [ex["input"] for ex in examples],
+            return_tensors="pt",
+            padding=True,
+        )
+        if (
+            (
+                self.config.architectures[0] == "LlamaForCausalLM"
+                and "Llama-3" not in self.config._name_or_path
+            )
+            or self.config.architectures[0] == "LlaMAForCausalLM"
+            or self.config.architectures[0] == "GemmaForCausalLM"
+            or self.config.architectures[0] == "MistralForCausalLM"
+            or self.config.architectures[0] == "MixtralForCausalLM"
+        ):
+            inputs["target"] = torch.tensor(
+                [self.tokenizer.encode(ex["target"])[2] for ex in examples]
             )
 
-        for key in tokenized_prompts.keys():
-            tokenized_prompts[key] = torch.tensor(tokenized_prompts[key])
-
-        return tokenized_prompts
+        else:
+            inputs["target"] = torch.tensor(
+                [self.tokenizer.encode(ex["target"])[0] for ex in examples]
+            )
+        return inputs
 
     def train_collate_fn(self, batch):
         batch_size = len(batch)
@@ -161,13 +192,14 @@ class DataModule(LightningDataModule):
             )
 
     def val_dataloader(self):
+        self.val_set = self.get_valid_data()
         if self.val_set is None:
             return None
         else:
             return DataLoader(
                 self.val_set,
                 batch_size=self.batch_size,
-                collate_fn=self.test_collate_fn,
+                collate_fn=self.valid_collate_fn,
             )
 
 
@@ -247,20 +279,18 @@ class TrainingModule(LightningModule):
         return super().on_validation_start()
 
     def validation_step(self, batch, batch_idx):
-        input_ids, labels = (
+        input_ids, targets = (
             batch["input_ids"],
-            batch["label"],
+            batch["target"],
         )
         outputs = self.model(input_ids)
         logits = outputs.logits[:, -1]
-        pred_ids = torch.argmax(logits, dim=-1)
-        pred_tokens = [self.tokenizer.decode(pred_id) for pred_id in pred_ids]
-        labels = [self.tokenizer.decode(label) for label in labels]
+        pred_token_ids = torch.argmax(logits, dim=-1)
 
-        self.all_outputs.append(pred_tokens)
-        self.all_targets.append(labels)
+        self.all_outputs.append(pred_token_ids)
+        self.all_targets.append(targets)
 
-        metric_scores = self.metric(pred_tokens, labels)
+        metric_scores = self.metric(pred_token_ids, targets)
 
         if self.log_valid_loss:
             loss = self.model(**batch).loss
@@ -307,15 +337,35 @@ def load_model_tokenizer(model_name: str):
     Args:
         model_name (str): Name of the Transformer model.
     """
+
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+    )
+
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        load_in_8bit=True,
-        torch_dtype=torch.float16,
+        quantization_config=bnb_config,
         device_map=device_map,
-        attn_implementation="eager",
-        token="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",
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     tokenizer.pad_token_id = tokenizer.eos_token_id
     return model, tokenizer
+
+
+def print_trainable_parameters(model):
+    """
+    Prints the number of trainable parameters in the model.
+    """
+    trainable_params = 0
+    all_param = 0
+    for _, param in model.named_parameters():
+        all_param += param.numel()
+        if param.requires_grad:
+            trainable_params += param.numel()
+    print(
+        f"trainable params: {trainable_params} || all params: {all_param} || trainable%: {100 * trainable_params / all_param}"
+    )
