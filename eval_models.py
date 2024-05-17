@@ -88,10 +88,10 @@ def main():
                 )
             f.write("\n")
 
-        home_dir = str(Path.home())
-        shutil.rmtree(
-            f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
-        )
+        # home_dir = str(Path.home())
+        # shutil.rmtree(
+        #     f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
+        # )
 
 
 if __name__ == "__main__":
