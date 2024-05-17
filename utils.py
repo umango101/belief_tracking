@@ -192,15 +192,14 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
-def preprocess_data(current_dir, data, traces):
+def create_exps(path, data):
+    with open(f"{path}/priming_examples.txt", "r") as f:
+        priming_exps = f.readlines()
+
     prev_sent_idx = 0
-    processed_data = []
+    examples = []
     example = []
 
-    with open(f"{current_dir}/priming_examples.txt", "r") as f:
-        priming_exps = f.read()
-
-    idx = 0
     for sentence in data:
         sent_idx = int(sentence.split(" ")[0])
         sentence = sentence[2:]
@@ -208,35 +207,52 @@ def preprocess_data(current_dir, data, traces):
         if sent_idx > prev_sent_idx:
             example.append(sentence)
         else:
-            trace = traces[idx].split(",")
-            category = trace[-2]
-            idx += 1
-
-            if "first_order" in category:
-                if "no_tom" in category:
-                    category = "first_order_true_belief"
-                else:
-                    category = "first_order_false_belief"
-            elif "second_order" in category:
-                if "no_tom" in category:
-                    category = "second_order_true_belief"
-                else:
-                    category = "second_order_false_belief"
-
             context = "".join(example[:-1]).strip()
             question = example[-1].split("\t")[0].strip()
             answer = example[-1].split("\t")[1].strip()
-            processed_data.append(
+            examples.append(
                 {
-                    "input": f"{priming_exps}Context: {context}Question: {question}\nAnswer:",
+                    "input": f"{priming_exps}Context: {context}\nQuestion: {question}\nAnswer:",
                     "target": " " + answer,
-                    "category": category,
                 }
             )
-
             example = [sentence]
 
         prev_sent_idx = sent_idx
+
+    return examples
+
+
+def prepare_data(data, traces):
+    processed_data = []
+    for example, trace in zip(data, traces):
+        trace = trace.split(",")
+        category = trace[-2]
+        question_type = trace[-1][:-1]
+
+        if "first_order" in category:
+            if "no_tom" in category and "true_belief" == question_type:
+                category = "first_order_true_belief"
+            elif "tom" in category and "false_belief" == question_type:
+                category = "first_order_false_belief"
+            else:
+                continue
+
+        elif "second_order" in category:
+            if "no_tom" in category and "true_belief" == question_type:
+                category = "second_order_true_belief"
+            elif "tom" in category and "false_belief" == question_type:
+                category = "second_order_false_belief"
+            else:
+                continue
+
+        processed_data.append(
+            {
+                "input": example["input"],
+                "target": example["target"],
+                "category": category,
+            }
+        )
 
     return processed_data
 
@@ -285,7 +301,8 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
     with open(f"{path}/test.trace", "r") as f:
         test_trace = f.readlines()
 
-    processed_data = preprocess_data(current_dir, test_data, test_trace)
+    test_data = create_exps(current_dir, test_data)
+    processed_data = prepare_data(test_data, test_trace)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
