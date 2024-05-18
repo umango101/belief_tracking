@@ -70,14 +70,29 @@ def main():
                 for idx in range(len(inp["target"])):
                     target_text = tokenizer.decode(inp["target"][idx].tolist())
                     pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
+                    category = inp["category"][i]
                     with open(
                         f"{current_dir}/preds/{model_name.split('/')[-1]}.txt",
                         "a",
                     ) as f:
-                        f.write(f"Target: {target_text}\tPrediction: {pred_text}\n")
+                        f.write(
+                            f"Target: {target_text}\tPrediction: {pred_text}\tCategory: {category}\n"
+                        )
 
                 del inp, outputs, logits, pred_token_ids
                 torch.cuda.empty_cache()
+
+        all_corrects, all_totals = 0, 0
+        for category in total:
+            all_corrects += correct[category]
+            all_totals += total[category]
+        overall_accuracy = round(all_corrects / all_totals, 2)
+        print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
+
+        with open(f"{current_dir}/tomi_results.txt", "a") as f:
+            f.write(
+                f"Model Name: {model_name} | Overall Correct: {all_corrects} | Overall Total: {all_totals}\n"
+            )
 
         with open(f"{current_dir}/tom_results.txt", "a") as f:
             for category in total:
