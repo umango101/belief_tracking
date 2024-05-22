@@ -31,20 +31,20 @@ class NewLineStoppingCriteria(StoppingCriteria):
             return False
 
 
-def get_dataset(datafiles: list[str]) -> Dataset:
-    with open(datafiles[0]) as f:
-        unexpected_contents = [json.loads(line) for line in f]
+# def get_dataset(datafiles: list[str]) -> Dataset:
+#     with open(datafiles[0]) as f:
+#         unexpected_contents = [json.loads(line) for line in f]
 
-    with open(datafiles[1]) as f:
-        unexpected_transfer = [json.loads(line) for line in f]
+#     with open(datafiles[1]) as f:
+#         unexpected_transfer = [json.loads(line) for line in f]
 
-    tasks = []
-    for data in unexpected_contents + unexpected_transfer:
-        for i in range(3):
-            inp = {"input": data["prompts"][i], "target": data[f"target_{i+1}"]}
-            tasks.append(inp)
+#     tasks = []
+#     for data in unexpected_contents + unexpected_transfer:
+#         for i in range(3):
+#             inp = {"input": data["prompts"][i], "target": data[f"target_{i+1}"]}
+#             tasks.append(inp)
 
-    return Dataset.from_list(tasks).with_format("torch")
+#     return Dataset.from_list(tasks).with_format("torch")
 
 
 def compute_final_roles(players: List[Dict[str, str]]):
@@ -52,9 +52,7 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [
-        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
-    ]
+    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -66,9 +64,7 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(
-            ",", "dna ", 1
-        )[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -116,9 +112,7 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = (
-                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
-            )
+            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
             #             print(question)
             prompt += question
 
@@ -133,15 +127,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                question = (
+                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                )
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[
-                    logits[options_token_ids].argmax()
-                ]
+                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -293,7 +287,7 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
-    data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
+    data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
     path = f"{current_dir}/{data_path}"
 
     with open(f"{path}/test.txt", "r") as f:
@@ -307,8 +301,6 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(
-        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader

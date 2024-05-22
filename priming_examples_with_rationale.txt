@@ -6,6 +6,7 @@ Hunter took the sweater to the bathtub.
 A bathtub is in the cellar.
 Nathan is captivated by the beans.
 Question: Where will Nathan look for the sweater?
+Rationale: Nathan was present in the crate when Hunter transferred the sweater to the bathtub, hence aware of sweater's new location.
 Answer: bathtub
 
 Context: Sophia stepped into the bedroom.
@@ -17,9 +18,10 @@ The pantry is holding the pumpkin.
 The pantry is set in the bedroom.
 Jackson set the pumpkin in the cupboard.
 The bedroom is keeping the cupboard inside of it.
- Jackson is sorrowful by the apple.
- Hannah quit the bedroom.
+Jackson is sorrowful by the apple.
+Hannah quit the bedroom.
 Question: Where is the pumpkin really?
+Rationale: Jackson transferred the pumpkin to the cupboard, hence finally the pumpkin is in the cupboard.
 Answer: cupboard
 
 Context: Emily entered the sunroom.
@@ -32,6 +34,7 @@ Emily hurried from the sunroom.
 Logan transferred the slippers to the bathtub.
 The bathtub is kept in the sunroom.
 Question: Where will James look for the slippers?
+Rationale: James was not present in the sunroom when Logan transferred the slippers to the bathtub, hence unaware of the slippers' new location.
 Answer: bottle
 
 Context: James slithered into the porch.
@@ -43,9 +46,10 @@ The cupboard is set upon in the front_yard.
 Mason put the lemon in the bathtub.
 The bathtub is located in the front_yard.
 Jacob took off from the front_yard.
- James would do anything for a cap.
- Jacob tiptoed into the porch.
+James would do anything for a cap.
+Jacob tiptoed into the porch.
 Question: Where does Jacob think that Mason searches for the lemon?
+Rationale: Since Jacob was present in the front_yard when Mason transferred the lemon to the bathtub, Jacob knows that Mason is aware of the lemon's new location.
 Answer: bathtub
 
 Context: Oliver showed up at the living_room.
@@ -57,6 +61,7 @@ Olivia came out of the living_room.
 Aiden brought the socks to the bucket.
 The bucket is positioned in the living_room.
 Question: Where was the socks at the beginning?
+Rationale: The socks was initially in the envelope.
 Answer: envelope
 
 Context: Elizabeth crept into the kitchen.
@@ -68,5 +73,6 @@ Chloe went out of the kitchen.
 Elizabeth set the peas in the envelope.
 The envelope is stowed in the kitchen.
 Question: Where does Chloe think that Elizabeth searches for the peas?
+Rationale: Since Chloe was not present in the kitchen when Elizabeth transferred the peas to the envelope, Chloe thinks that Elizabeth would look for the peas in the treasure_chest.
 Answer: treasure_chest
 

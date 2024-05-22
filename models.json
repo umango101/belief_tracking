@@ -1,7 +1,12 @@
 [
     {
-        "model_name": "huggyllama/llama-30b",
-        "precision": "fp16",
-        "batch_size": 1
+        "model_name": "meta-llama/Llama-2-70b-hf",
+        "precision": "int8",
+        "batch_size": 4
+    },
+    {
+        "model_name": "meta-llama/Meta-Llama-3-70B",
+        "precision": "int8",
+        "batch_size": 4
     }
 ]

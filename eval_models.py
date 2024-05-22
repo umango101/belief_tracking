@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
+from nnsight import LanguageModel
 
 from utils import load_model_and_tokenizer, load_tomi_data
 
@@ -41,22 +42,28 @@ def main():
         precision = model_details["precision"]
         batch_size = model_details["batch_size"]
 
-        model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
+        # model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
+        model = LanguageModel(model_name)
         print(f"{model_name} loaded successfully")
         dataloader = load_tomi_data(
-            model.config, tokenizer, current_dir, batch_size=batch_size
+            model.config, model.tokenizer, current_dir, batch_size=batch_size
         )
         print("Data loaded successfully")
 
         correct, total = {}, {}
         with torch.no_grad():
-            for inp in tqdm(dataloader, total=len(dataloader)):
-                inp["input_ids"] = inp["input_ids"].to(device)
-                inp["target"] = inp["target"].to(device)
+            for batch_idx, inp in tqdm(enumerate(dataloader), total=len(dataloader)):
+                if batch_idx <= 123:
+                    continue
+                # inp["input_ids"] = inp["input_ids"].to(device)
+                # inp["target"] = inp["target"].to(device)
 
-                outputs = model(inp["input_ids"])
-                logits = outputs.logits[:, -1]
-                pred_token_ids = torch.argmax(logits, dim=-1)
+                # Calling NDIF server to perform the inference
+                with model.trace(inp["input_ids"], scan=False, validate=False, remote=True):
+                    pred_token_ids = torch.argmax(model.output["logits"][:, -1], dim=-1).save()
+
+                # outputs = model(inp["input_ids"])
+                # pred_token_ids = torch.argmax(logits, dim=-1)
 
                 for i in range(len(inp["category"])):
                     category = inp["category"][i]
@@ -68,9 +75,9 @@ def main():
                         total[category] = 1
 
                 for idx in range(len(inp["target"])):
-                    target_text = tokenizer.decode(inp["target"][idx].tolist())
-                    pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
-                    category = inp["category"][i]
+                    target_text = model.tokenizer.decode(inp["target"][idx].tolist())
+                    pred_text = model.tokenizer.decode(pred_token_ids[idx].tolist())
+                    category = inp["category"][idx]
                     with open(
                         f"{current_dir}/preds/{model_name.split('/')[-1]}.txt",
                         "a",
@@ -79,8 +86,8 @@ def main():
                             f"Target: {target_text}\tPrediction: {pred_text}\tCategory: {category}\n"
                         )
 
-                del inp, outputs, logits, pred_token_ids
-                torch.cuda.empty_cache()
+                # del inp, pred_token_ids
+                # torch.cuda.empty_cache()
 
         all_corrects, all_totals = 0, 0
         for category in total:
@@ -89,10 +96,9 @@ def main():
         overall_accuracy = round(all_corrects / all_totals, 2)
         print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
 
-        with open(f"{current_dir}/tomi_results.txt", "a") as f:
-            f.write(
-                f"Model Name: {model_name} | Overall Correct: {all_corrects} | Overall Total: {all_totals}\n"
-            )
+        with open(f"{current_dir}/tom_results.txt", "a") as f:
+            f.write(f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n")
+            f.write("\n")
 
         with open(f"{current_dir}/tom_results.txt", "a") as f:
             for category in total:
@@ -104,9 +110,7 @@ def main():
             f.write("\n")
 
         # home_dir = str(Path.home())
-        # shutil.rmtree(
-        #     f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
-        # )
+        # shutil.rmtree(f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}")
 
 
 if __name__ == "__main__":
