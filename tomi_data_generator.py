@@ -199,6 +199,8 @@ def main():
     parser.add_argument("--n_objects", type=int, default=5)
     args = parser.parse_args()
 
+    # TODO: Two or more agents moved the same object to different containers.
+
     samples = []
     world = World(args.world_file)
     for n_agents in range(2, args.n_agents + 1):

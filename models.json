@@ -1,12 +1,7 @@
 [
     {
         "model_name": "meta-llama/Llama-2-70b-hf",
-        "precision": "int8",
-        "batch_size": 4
-    },
-    {
-        "model_name": "meta-llama/Meta-Llama-3-70B",
-        "precision": "int8",
-        "batch_size": 4
+        "precision": "int4",
+        "batch_size": 1
     }
 ]

@@ -52,7 +52,9 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
+    indices = [
+        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
+    ]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -64,7 +66,9 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(
+            ",", "dna ", 1
+        )[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -112,7 +116,9 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            question = (
+                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            )
             #             print(question)
             prompt += question
 
@@ -127,15 +133,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = (
-                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
-                )
+                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
+                pred_option_logits = options_token_ids[
+                    logits[options_token_ids].argmax()
+                ]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -277,6 +283,11 @@ class Collator(object):
                 [self.tokenizer.encode(ex["target"])[2] for ex in examples]
             )
 
+        elif "Llama-3" in self.config._name_or_path:
+            inputs["target"] = torch.tensor(
+                [self.tokenizer.encode(ex["target"])[1] for ex in examples]
+            )
+
         else:
             inputs["target"] = torch.tensor(
                 [self.tokenizer.encode(ex["target"])[0] for ex in examples]
@@ -287,7 +298,7 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
-    data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
+    data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
     path = f"{current_dir}/{data_path}"
 
     with open(f"{path}/test.txt", "r") as f:
@@ -301,6 +312,8 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
+    dataloader = DataLoader(
+        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
 
     return dataloader
