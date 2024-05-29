@@ -52,9 +52,7 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [
-        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
-    ]
+    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -66,9 +64,7 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(
-            ",", "dna ", 1
-        )[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -116,9 +112,7 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = (
-                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
-            )
+            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
             #             print(question)
             prompt += question
 
@@ -133,15 +127,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                question = (
+                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                )
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[
-                    logits[options_token_ids].argmax()
-                ]
+                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -193,7 +187,7 @@ def load_model_and_tokenizer(model_name, precision, device):
 
 
 def create_exps(path, data):
-    with open(f"{path}/priming_examples.txt", "r") as f:
+    with open(f"{path}/org_tomi_priming_examples.txt", "r") as f:
         priming_exps = f.readlines()
 
     prev_sent_idx = 0
@@ -223,28 +217,28 @@ def create_exps(path, data):
     return examples
 
 
-def prepare_data(data, traces):
+def prepare_data(data):
     processed_data = []
-    for example, trace in zip(data, traces):
-        trace = trace.split(",")
-        category = trace[-2]
-        question_type = trace[-1][:-1]
+    for example in data:
+        # trace = trace.split(",")
+        category = "second_order"
+        # question_type = trace[-1][:-1]
 
-        if "first_order" in category:
-            if "no_tom" in category and "true_belief" == question_type:
-                category = "first_order_true_belief"
-            elif "tom" in category and "false_belief" == question_type:
-                category = "first_order_false_belief"
-            else:
-                continue
+        # if "first_order" in category:
+        #     if "no_tom" in category and "true_belief" == question_type:
+        #         category = "first_order_true_belief"
+        #     elif "tom" in category and "false_belief" == question_type:
+        #         category = "first_order_false_belief"
+        #     else:
+        #         continue
 
-        elif "second_order" in category:
-            if "no_tom" in category and "true_belief" == question_type:
-                category = "second_order_true_belief"
-            elif "tom" in category and "false_belief" == question_type:
-                category = "second_order_false_belief"
-            else:
-                continue
+        # elif "second_order" in category:
+        #     if "no_tom" in category and "true_belief" == question_type:
+        #         category = "second_order_true_belief"
+        #     elif "tom" in category and "false_belief" == question_type:
+        #         category = "second_order_false_belief"
+        #     else:
+        #         continue
 
         processed_data.append(
             {
@@ -298,22 +292,20 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
-    data_path = "data/SymbolicToM Datasets/Linguistic Diversity Dataset/"
+    data_path = "data/SymbolicToM Datasets/Story Structure Robustness Test Sets/"
     path = f"{current_dir}/{data_path}"
 
-    with open(f"{path}/test.txt", "r") as f:
+    with open(f"{path}/D3.txt", "r") as f:
         test_data = f.readlines()
-    with open(f"{path}/test.trace", "r") as f:
-        test_trace = f.readlines()
+    # with open(f"{path}/test.trace", "r") as f:
+    #     test_trace = f.readlines()
 
     test_data = create_exps(current_dir, test_data)
-    processed_data = prepare_data(test_data, test_trace)
+    processed_data = prepare_data(test_data)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(
-        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader

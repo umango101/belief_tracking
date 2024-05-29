@@ -75,13 +75,9 @@ class World:
                         world_state[agent_1]["location"] == primary_location
                         and world_state[agent_2]["location"] == primary_location
                     ):
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = (
-                            containers[idx]
-                        )
+                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = containers[idx]
                     else:
-                        world_state[agent_1]["beliefs"][agent_2][
-                            objects[idx]
-                        ] = "Unknown"
+                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = "Unknown"
 
             ground_truth[objects[idx]] = {
                 "original": containers[idx],
@@ -96,9 +92,7 @@ class World:
 
         # Randomly select m_agents to leave the primary location
         if m_agents <= len(agents_in_primary_location):
-            agents_to_leave_primary_location = random.sample(
-                agents_in_primary_location, m_agents
-            )
+            agents_to_leave_primary_location = random.sample(agents_in_primary_location, m_agents)
         else:
             agents_to_leave_primary_location = random.sample(
                 agents_in_primary_location, len(agents_in_primary_location) - 1
@@ -124,9 +118,7 @@ class World:
                 continue
 
             sample += f"{agent_in_location} moved the {objects[idx]} to the {containers[(idx+1)%len(containers)]}.\n"
-            ground_truth[objects[idx]]["current"] = containers[
-                (idx + 1) % len(containers)
-            ]
+            ground_truth[objects[idx]]["current"] = containers[(idx + 1) % len(containers)]
 
             # Update agent_in_location's own belief as well as other agents' beliefs.
             # An agent's belief about other agents' beliefs is updated only if both are present in the primary location.
@@ -136,15 +128,13 @@ class World:
                         world_state[agent_1]["location"] == primary_location
                         and world_state[agent_2]["location"] == primary_location
                     ):
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = (
-                            containers[(idx + 1) % len(containers)]
-                        )
+                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = containers[
+                            (idx + 1) % len(containers)
+                        ]
 
         # Add redundant text to the sample
         sentences = sample.split("\n")
-        redundant_sentence = (
-            f"{random.choice(agents)} likes the {random.choice(objects)}."
-        )
+        redundant_sentence = f"{random.choice(agents)} likes the {random.choice(objects)}."
         sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
         sample = "\n".join(sentences).replace("\n\n", "\n")
 
@@ -183,9 +173,7 @@ class World:
                             {
                                 "context": sample,
                                 "question": f"Where does {agent_1} think that {agent_2} searches for the {object}?",
-                                "answer": world_state[agent_1]["beliefs"][agent_2][
-                                    object
-                                ],
+                                "answer": world_state[agent_1]["beliefs"][agent_2][object],
                             }
                         )
 
@@ -199,7 +187,7 @@ def main():
     parser.add_argument("--n_objects", type=int, default=5)
     args = parser.parse_args()
 
-    # TODO: Two or more agents moved the same object to different containers.
+    # TODO: Multiple movements of the same object (by single or multiple agents).
 
     samples = []
     world = World(args.world_file)

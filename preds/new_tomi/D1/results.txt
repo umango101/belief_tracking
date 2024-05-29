@@ -1,11 +1,11 @@
-Model Name: meta-llama/Llama-2-70b-hf | Overall Accuracy: 0.84
-Model Name: meta-llama/Llama-2-70b-hf | Category: second_order | Correct: 336 | Total: 399
-
-Model Name: meta-llama/Meta-Llama-3-70B | Overall Accuracy: 0.6
-Model Name: meta-llama/Meta-Llama-3-70B | Category: second_order | Correct: 238 | Total: 399
-
 Model Name: huggyllama/llama-30b | Overall Accuracy: 0.78
 Model Name: huggyllama/llama-30b | Category: second_order | Correct: 312 | Total: 399
 
 Model Name: huggyllama/llama-65b | Overall Accuracy: 0.66
 Model Name: huggyllama/llama-65b | Category: second_order | Correct: 265 | Total: 399
+
+Model Name: meta-llama/Llama-2-70b-hf | Overall Accuracy: 0.84
+Model Name: meta-llama/Llama-2-70b-hf | Category: second_order | Correct: 336 | Total: 399
+
+Model Name: meta-llama/Meta-Llama-3-70B | Overall Accuracy: 0.6
+Model Name: meta-llama/Meta-Llama-3-70B | Category: second_order | Correct: 238 | Total: 399
