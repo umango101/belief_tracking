@@ -30,3 +30,11 @@ Model Name: meta-llama/Llama-2-70b-hf | Category: memory | Correct: 999 | Total:
 Model Name: meta-llama/Llama-2-70b-hf | Category: second_order_false_belief | Correct: 246 | Total: 482
 Model Name: meta-llama/Llama-2-70b-hf | Category: first_order_false_belief | Correct: 240 | Total: 408
 
+// FP32
+Model Name: meta-llama/Llama-2-70b-hf | Overall Accuracy: 0.67
+Model Name: meta-llama/Llama-2-70b-hf | Category: first_order_true_belief | Correct: 281 | Total: 875
+Model Name: meta-llama/Llama-2-70b-hf | Category: reality | Correct: 945 | Total: 1000
+Model Name: meta-llama/Llama-2-70b-hf | Category: second_order_true_belief | Correct: 130 | Total: 666
+Model Name: meta-llama/Llama-2-70b-hf | Category: memory | Correct: 999 | Total: 999
+Model Name: meta-llama/Llama-2-70b-hf | Category: second_order_false_belief | Correct: 349 | Total: 482
+Model Name: meta-llama/Llama-2-70b-hf | Category: first_order_false_belief | Correct: 270 | Total: 408

@@ -9,12 +9,12 @@ from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
 
-# from nnsight import LanguageModel, CONFIG
+from nnsight import LanguageModel, CONFIG
 
 from utils import load_model_and_tokenizer, load_tomi_data
 
-# CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
-# os.environ["HF_TOKEN"] = "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"
+CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
+os.environ["HF_TOKEN"] = "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"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Get current directory
@@ -92,7 +92,7 @@ def main():
                         pred_text = model.tokenizer.decode(pred_token_ids[idx].tolist())
                     category = inp["category"][idx]
                     with open(
-                        f"{current_dir}/preds/new_tomi/D3/{model_name.split('/')[-1]}.txt",
+                        f"{current_dir}/preds/original/{model_name.split('/')[-1]}.txt",
                         "a",
                     ) as f:
                         f.write(
@@ -109,10 +109,10 @@ def main():
         overall_accuracy = round(all_corrects / all_totals, 2)
         print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
 
-        with open(f"{current_dir}/preds/new_tomi/D3/results.txt", "a") as f:
+        with open(f"{current_dir}/preds/original/results.txt", "a") as f:
             f.write(f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n")
 
-        with open(f"{current_dir}/preds/new_tomi/D3/results.txt", "a") as f:
+        with open(f"{current_dir}/preds/original/results.txt", "a") as f:
             for category in total:
                 accuracy = round(correct[category] / total[category], 2)
                 print(f"Category: {category}, Accuracy: {accuracy}")

@@ -217,28 +217,28 @@ def create_exps(path, data):
     return examples
 
 
-def prepare_data(data):
+def prepare_data(data, traces):
     processed_data = []
-    for example in data:
-        # trace = trace.split(",")
-        category = "second_order"
-        # question_type = trace[-1][:-1]
+    for example, trace in zip(data, traces):
+        trace = trace.split(",")
+        category = trace[-2]
+        question_type = trace[-1][:-1]
 
-        # if "first_order" in category:
-        #     if "no_tom" in category and "true_belief" == question_type:
-        #         category = "first_order_true_belief"
-        #     elif "tom" in category and "false_belief" == question_type:
-        #         category = "first_order_false_belief"
-        #     else:
-        #         continue
+        if "first_order" in category:
+            if "no_tom" in category and "true_belief" == question_type:
+                category = "first_order_true_belief"
+            elif "tom" in category and "false_belief" == question_type:
+                category = "first_order_false_belief"
+            else:
+                continue
 
-        # elif "second_order" in category:
-        #     if "no_tom" in category and "true_belief" == question_type:
-        #         category = "second_order_true_belief"
-        #     elif "tom" in category and "false_belief" == question_type:
-        #         category = "second_order_false_belief"
-        #     else:
-        #         continue
+        elif "second_order" in category:
+            if "no_tom" in category and "true_belief" == question_type:
+                category = "second_order_true_belief"
+            elif "tom" in category and "false_belief" == question_type:
+                category = "second_order_false_belief"
+            else:
+                continue
 
         processed_data.append(
             {
@@ -292,16 +292,16 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size):
-    data_path = "data/SymbolicToM Datasets/Story Structure Robustness Test Sets/"
+    data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
     path = f"{current_dir}/{data_path}"
 
-    with open(f"{path}/D3.txt", "r") as f:
+    with open(f"{path}/test.txt", "r") as f:
         test_data = f.readlines()
-    # with open(f"{path}/test.trace", "r") as f:
-    #     test_trace = f.readlines()
+    with open(f"{path}/test.trace", "r") as f:
+        test_trace = f.readlines()
 
     test_data = create_exps(current_dir, test_data)
-    processed_data = prepare_data(test_data)
+    processed_data = prepare_data(test_data, test_trace)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
