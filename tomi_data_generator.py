@@ -32,7 +32,7 @@ class World:
         self.pointers["containers"] %= len(self.world["containers"])
         return self.world["containers"][self.pointers["containers"]]
 
-    def generate_sample(self, n_agents, m_agents, n_objects, m_objects):
+    def generate_sample(self, n_agents, m_agents, n_objects, m_objects, max_movements):
         samples = []
         agents = [self.get_agent() for _ in range(n_agents)]
         objects = [self.get_object() for _ in range(n_objects)]
@@ -114,32 +114,37 @@ class World:
 
         # Agents move the objects to different containers
         for object in objects_to_move:
-            # Randomly select an agent whose "location" is primary location
-            agent_in_primary_location = random.choice(
-                [
-                    agent
-                    for agent in world_state.keys()
-                    if world_state[agent]["location"] == primary_location
-                ]
-            )
+            n_movements = random.randint(1, max_movements)
 
-            # Randomly select a container to move the object which is not the current container
-            new_container = ground_truth[object]["current"]
-            while new_container == ground_truth[object]["current"]:
-                new_container = random.choice(containers)
+            for _ in range(n_movements):
+                # Randomly select an agent whose "location" is primary location
+                agent_in_primary_location = random.choice(
+                    [
+                        agent
+                        for agent in world_state.keys()
+                        if world_state[agent]["location"] == primary_location
+                    ]
+                )
 
-            sample += f"{agent_in_primary_location} moved the {object} to the {new_container}.\n"
-            ground_truth[object]["current"] = new_container
+                # Randomly select a container to move the object which is not the current container
+                new_container = ground_truth[object]["current"]
+                while new_container == ground_truth[object]["current"]:
+                    new_container = random.choice(containers)
 
-            # Update agent_in_primary_location's own belief as well as other agents' beliefs.
-            # An agent's belief about other agents' beliefs is updated only if both are present in the primary location.
-            for agent_1 in world_state.keys():
-                for agent_2 in world_state.keys():
-                    if (
-                        world_state[agent_1]["location"] == primary_location
-                        and world_state[agent_2]["location"] == primary_location
-                    ):
-                        world_state[agent_1]["beliefs"][agent_2][object] = new_container
+                sample += f"{agent_in_primary_location} moved the {object} to the {new_container}.\n"
+                ground_truth[object]["current"] = new_container
+
+                # Update agent_in_primary_location's own belief as well as other agents' beliefs.
+                # An agent's belief about other agents' beliefs is updated only if both are present in the primary location.
+                for agent_1 in world_state.keys():
+                    for agent_2 in world_state.keys():
+                        if (
+                            world_state[agent_1]["location"] == primary_location
+                            and world_state[agent_2]["location"] == primary_location
+                        ):
+                            world_state[agent_1]["beliefs"][agent_2][
+                                object
+                            ] = new_container
 
         # Add redundant text to the sample
         sentences = sample.split("\n")
@@ -196,27 +201,31 @@ class World:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--world_file", type=str, default="world.json")
+    parser.add_argument("--n_iterations", type=int, default=10)
     parser.add_argument("--n_agents", type=int, default=5)
     parser.add_argument("--n_objects", type=int, default=5)
+    parser.add_argument("--max_movements", type=int, default=5)
     args = parser.parse_args()
 
     # TODO: Multiple movements of the same object (by single or multiple agents).
 
     samples = []
     world = World(args.world_file)
-    for n_agents in range(2, args.n_agents + 1):
-        for m_agents in range(0, n_agents):
-            for n_objects in range(1, args.n_objects + 1):
-                for m_objects in range(0, n_objects):
-                    samples += world.generate_sample(
-                        n_agents=n_agents,
-                        m_agents=m_agents,
-                        n_objects=n_objects,
-                        m_objects=m_objects,
-                    )
-                    print(
-                        f"Generated {len(samples)} samples for n_agents={n_agents}, m_agents={m_agents}, n_objects={n_objects}, m_objects={m_objects}"
-                    )
+    for _ in range(args.n_iterations):
+        for n_agents in range(2, args.n_agents + 1):
+            for m_agents in range(0, n_agents):
+                for n_objects in range(1, args.n_objects + 1):
+                    for m_objects in range(0, n_objects):
+                        samples += world.generate_sample(
+                            n_agents=n_agents,
+                            m_agents=m_agents,
+                            n_objects=n_objects,
+                            m_objects=m_objects,
+                            max_movements=args.max_movements,
+                        )
+                        print(
+                            f"Generated {len(samples)} samples for n_agents={n_agents}, m_agents={m_agents}, n_objects={n_objects}, m_objects={m_objects}"
+                        )
 
     with open("generated_tomi.json", "a") as f:
         json.dump(samples, f, indent=4)
