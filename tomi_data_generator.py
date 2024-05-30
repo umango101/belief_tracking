@@ -75,9 +75,13 @@ class World:
                         world_state[agent_1]["location"] == primary_location
                         and world_state[agent_2]["location"] == primary_location
                     ):
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = containers[idx]
+                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = (
+                            containers[idx]
+                        )
                     else:
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = "Unknown"
+                        world_state[agent_1]["beliefs"][agent_2][
+                            objects[idx]
+                        ] = "Unknown"
 
             ground_truth[objects[idx]] = {
                 "original": containers[idx],
@@ -91,8 +95,11 @@ class World:
                 agents_in_primary_location.append(agent)
 
         # Randomly select m_agents to leave the primary location
-        if m_agents <= len(agents_in_primary_location):
-            agents_to_leave_primary_location = random.sample(agents_in_primary_location, m_agents)
+        # There should be at least one agent in the primary location to move the objects.
+        if m_agents < len(agents_in_primary_location):
+            agents_to_leave_primary_location = random.sample(
+                agents_in_primary_location, m_agents
+            )
         else:
             agents_to_leave_primary_location = random.sample(
                 agents_in_primary_location, len(agents_in_primary_location) - 1
@@ -102,25 +109,29 @@ class World:
             sample += f"{agent} left the {primary_location}.\n"
             world_state[agent]["location"] = redundant_location
 
+        # Randomly select m_objects to move
+        objects_to_move = random.sample(objects, m_objects)
+
         # Agents move the objects to different containers
-        for idx in range(m_objects):
+        for object in objects_to_move:
             # Randomly select an agent whose "location" is primary location
-            try:
-                agent_in_location = random.choice(
-                    [
-                        agent
-                        for agent in world_state.keys()
-                        if world_state[agent]["location"] == primary_location
-                    ]
-                )
-            except:
-                print("Exception occurred!")
-                continue
+            agent_in_primary_location = random.choice(
+                [
+                    agent
+                    for agent in world_state.keys()
+                    if world_state[agent]["location"] == primary_location
+                ]
+            )
 
-            sample += f"{agent_in_location} moved the {objects[idx]} to the {containers[(idx+1)%len(containers)]}.\n"
-            ground_truth[objects[idx]]["current"] = containers[(idx + 1) % len(containers)]
+            # Randomly select a container to move the object which is not the current container
+            new_container = ground_truth[object]["current"]
+            while new_container == ground_truth[object]["current"]:
+                new_container = random.choice(containers)
 
-            # Update agent_in_location's own belief as well as other agents' beliefs.
+            sample += f"{agent_in_primary_location} moved the {object} to the {new_container}.\n"
+            ground_truth[object]["current"] = new_container
+
+            # Update agent_in_primary_location's own belief as well as other agents' beliefs.
             # An agent's belief about other agents' beliefs is updated only if both are present in the primary location.
             for agent_1 in world_state.keys():
                 for agent_2 in world_state.keys():
@@ -128,13 +139,13 @@ class World:
                         world_state[agent_1]["location"] == primary_location
                         and world_state[agent_2]["location"] == primary_location
                     ):
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = containers[
-                            (idx + 1) % len(containers)
-                        ]
+                        world_state[agent_1]["beliefs"][agent_2][object] = new_container
 
         # Add redundant text to the sample
         sentences = sample.split("\n")
-        redundant_sentence = f"{random.choice(agents)} likes the {random.choice(objects)}."
+        redundant_sentence = (
+            f"{random.choice(agents)} likes the {random.choice(objects)}."
+        )
         sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
         sample = "\n".join(sentences).replace("\n\n", "\n")
 
@@ -173,7 +184,9 @@ class World:
                             {
                                 "context": sample,
                                 "question": f"Where does {agent_1} think that {agent_2} searches for the {object}?",
-                                "answer": world_state[agent_1]["beliefs"][agent_2][object],
+                                "answer": world_state[agent_1]["beliefs"][agent_2][
+                                    object
+                                ],
                             }
                         )
 
