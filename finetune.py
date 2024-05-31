@@ -35,7 +35,7 @@ def train(args):
     wandb_logger = WandbLogger(
         log_model="all",
         name=f"{args.model_name}_local",
-        project="tom",
+        project="mind",
     )
     datamodule = DataModule(
         tokenizer,
@@ -65,7 +65,6 @@ def train(args):
         seed=args.seed,
         output_dir=args.output_dir,
         lr=args.lr,
-        eval_metric=datamodule.eval_metric(),
         train_log_step=args.accumulate_grad_batches,
     )
 
@@ -76,12 +75,13 @@ def train(args):
         precision="16-mixed",
         gradient_clip_val=1.0,
         deterministic=True,
-        accumulate_grad_batches=args.accumulate_grad_batches,
+        accumulate_grad_batches=args.accumulate_grad_batches // args.batch_size,
         accelerator="gpu",
         enable_checkpointing=False,
         val_check_interval=10 * args.accumulate_grad_batches,
         strategy="ddp",
         log_every_n_steps=args.train_log_step,
+        logger=wandb_logger,
     )
 
     model.model.config.use_cache = False
@@ -91,8 +91,8 @@ def train(args):
         lambda self, *_, **__: get_peft_model_state_dict(self, old_state_dict())
     ).__get__(model, type(model))
 
-    if torch.__version__ >= "2" and sys.platform != "win32":
-        model = torch.compile(model)
+    # if torch.__version__ >= "2" and sys.platform != "win32":
+    #     model = torch.compile(model)
 
     trainer.fit(model, datamodule)
     # trainer.test(model, datamodule.test_dataloader())
@@ -101,12 +101,12 @@ def train(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="llama")
+    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B")
 
     parser.add_argument(
         "--data_path",
         type=str,
-        default="training_data.jsonl",
+        default="generated_tomi.json",
     )
 
     parser.add_argument("--batch_size", type=int, default=1)
@@ -130,9 +130,6 @@ def main():
             "k_proj",
             "v_proj",
             "o_proj",
-            "gate_proj",
-            "up_proj",
-            "down_proj",
         ],
     )
 
