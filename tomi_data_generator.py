@@ -7,10 +7,11 @@ random.seed(10)
 
 
 class World:
-    def __init__(self, world_file) -> None:
+    def __init__(self, world_file, add_redundant_sentence=True) -> None:
         with open(world_file, "r") as f:
             self.world = json.load(f)
         self.pointers = {k: -1 for k in self.world.keys()}
+        self.add_redundant_sentence = add_redundant_sentence
 
     def get_agent(self):
         self.pointers["agents"] += 1
@@ -32,147 +33,241 @@ class World:
         self.pointers["containers"] %= len(self.world["containers"])
         return self.world["containers"][self.pointers["containers"]]
 
-    def generate_sample(self, n_agents, m_agents, n_objects, m_objects, max_movements):
-        samples = []
-        agents = [self.get_agent() for _ in range(n_agents)]
-        objects = [self.get_object() for _ in range(n_objects)]
-        containers = [self.get_containter() for _ in range(n_objects)]
-        primary_location = self.get_location()
-        redundant_location = self.get_location()
-        world_state = defaultdict(dict)
-        ground_truth = {}
+    def agent_entry(self, sample, agent, primary_location, world_state, ground_truth):
+        sample += f"{agent} entered the {primary_location}.\n"
+        world_state[agent] = {
+            "location": defaultdict(dict),
+            "beliefs": defaultdict(dict),
+        }
+        world_state[agent]["location"][agent] = primary_location
 
-        sample = ""
+        for agent_2 in world_state.keys():
+            # If both agent and agent_2 are in the same location,
+            # then their beliefs about each other's location is the same
+            if world_state[agent_2]["location"][agent_2] == primary_location:
+                world_state[agent]["location"][agent_2] = primary_location
+                world_state[agent_2]["location"][agent] = primary_location
+            else:
+                world_state[agent]["location"][agent_2] = "Unknown"
+                world_state[agent_2]["location"][agent] = "Unknown"
 
-        # Defining agent's location
-        num_redundant_location_agent = 0
-        for idx in range(n_agents):
-            if n_agents > 2 and num_redundant_location_agent <= 0:
-                if random.random() < 0.25:
-                    sample += f"{agents[idx]} entered the {redundant_location}.\n"
-                    world_state[agents[idx]] = {
-                        "location": redundant_location,
-                        "beliefs": {},
-                    }
-                    num_redundant_location_agent += 1
-                    continue
+        # Define each agent's own belief as well as other agents' beliefs
+        # based on objects current containers in the primary location
+        for agent_2 in world_state.keys():
+            if world_state[agent_2]["location"][agent_2] == primary_location:
+                for object in ground_truth.keys():
+                    # All objects are in the primary location
+                    world_state[agent]["beliefs"][agent_2][object] = ground_truth[
+                        object
+                    ]["current"]
+                    world_state[agent_2]["beliefs"][agent][object] = ground_truth[
+                        object
+                    ]["current"]
 
-            sample += f"{agents[idx]} entered the {primary_location}.\n"
-            world_state[agents[idx]] = {"location": primary_location, "beliefs": {}}
+            else:
+                for object in ground_truth.keys():
+                    world_state[agent]["beliefs"][agent_2][object] = "Unknown"
+                    world_state[agent_2]["beliefs"][agent][object] = "Unknown"
 
-        # Defining object's location
-        for idx in range(n_objects):
-            sample += f"The {objects[idx]} is in the {containers[idx]}.\n"
-            sample += f"The {containers[idx]} is in the {primary_location}.\n"
+        return sample
 
-            # Define each agent's own belief as well as other agents' beliefs
+    def object_definition(
+        self, sample, object, container, primary_location, world_state, ground_truth
+    ):
+        sample += f"The {object} is in the {container}.\n"
+        sample += f"The {container} is in the {primary_location}.\n"
+
+        # Define each agent's own belief as well as other agents' beliefs
+        for agent_1 in world_state.keys():
+            for agent_2 in world_state.keys():
+                # If an agent is defined in world_state, then they have entered the
+                # primary location and hence know the initial location of all objects
+                if agent_1 == agent_2:
+                    world_state[agent_1]["beliefs"][agent_2][object] = container
+                # An agent's belief about other agents' beliefs is updated only
+                # if both are present in the primary location.
+                elif (
+                    world_state[agent_1]["location"][agent_1] == primary_location
+                    and world_state[agent_2]["location"][agent_2] == primary_location
+                ):
+                    world_state[agent_1]["beliefs"][agent_2][object] = container
+                else:
+                    world_state[agent_1]["beliefs"][agent_2][object] = "Unknown"
+
+        ground_truth[object] = {
+            "original": container,
+            "current": container,
+        }
+
+        return sample
+
+    def agent_exit(self, sample, agent, primary_location, world_state):
+        sample += f"{agent} left the {primary_location}.\n"
+        world_state[agent]["location"][agent] = "Unknown"
+
+        # If anyone is present in primary location, then their beliefs about
+        # the exiting agent's location is updated to "Unknown"
+        for agent_2 in world_state.keys():
+            if world_state[agent_2]["location"][agent_2] == primary_location:
+                world_state[agent_2]["location"][agent] = "Unknown"
+
+        return sample
+
+    def object_movement(
+        self,
+        sample,
+        agent,
+        object,
+        new_container,
+        primary_location,
+        world_state,
+        ground_truth,
+    ):
+        sentence = f"{agent} moved the {object} to the {new_container}."
+        if sentence not in sample:
+            sample += f"{agent} moved the {object} to the {new_container}.\n"
+            ground_truth[object]["current"] = new_container
+
+            # Update agent's own belief as well as other agents' beliefs.
+            # An agent's belief about other agents' beliefs is updated only
+            # if both are present in the primary location.
             for agent_1 in world_state.keys():
                 for agent_2 in world_state.keys():
-                    if agent_2 not in world_state[agent_1]["beliefs"]:
-                        world_state[agent_1]["beliefs"][agent_2] = {}
-
                     if (
-                        world_state[agent_1]["location"] == primary_location
-                        and world_state[agent_2]["location"] == primary_location
+                        world_state[agent_1]["location"][agent_1] == primary_location
+                        and world_state[agent_2]["location"][agent_2]
+                        == primary_location
                     ):
-                        world_state[agent_1]["beliefs"][agent_2][objects[idx]] = (
-                            containers[idx]
-                        )
-                    else:
-                        world_state[agent_1]["beliefs"][agent_2][
-                            objects[idx]
-                        ] = "Unknown"
+                        world_state[agent_1]["beliefs"][agent_2][object] = new_container
+                        world_state[agent_2]["beliefs"][agent_1][object] = new_container
 
-            ground_truth[objects[idx]] = {
-                "original": containers[idx],
-                "current": containers[idx],
-            }
+        return sample
 
-        # Agents leave the primary location
-        agents_in_primary_location = []
-        for agent in world_state.keys():
-            if world_state[agent]["location"] == primary_location:
-                agents_in_primary_location.append(agent)
+    def generate_sample(self, n_agents, m_agents, n_objects, m_objects, max_movements):
+        AGENTS = [self.get_agent() for _ in range(n_agents)]
+        OBJECTS = [self.get_object() for _ in range(n_objects)]
+        CONTAINERS = [self.get_containter() for _ in range(n_objects)]
+        PRIMARY_LOC = self.get_location()
 
-        # Randomly select m_agents to leave the primary location
-        # There should be at least one agent in the primary location to move the objects.
-        if m_agents < len(agents_in_primary_location):
-            agents_to_leave_primary_location = random.sample(
-                agents_in_primary_location, m_agents
-            )
-        else:
-            agents_to_leave_primary_location = random.sample(
-                agents_in_primary_location, len(agents_in_primary_location) - 1
-            )
+        world_state = defaultdict(dict)
+        ground_truth = {}
+        samples = []
+        sample = ""
 
-        for agent in agents_to_leave_primary_location:
-            sample += f"{agent} left the {primary_location}.\n"
-            world_state[agent]["location"] = redundant_location
+        while (
+            (n_agents != 0) or (m_agents != 0) or (n_objects != 0) or (m_objects != 0)
+        ):
+            # 0 - 0.25: Agent entry
+            # 0.25 - 0.5: Object definition
+            # 0.5 - 0.75: Object movement
+            # 0.75 - 1: Agent Exit
+            if random.random() < 0.25:
+                if n_agents != 0:
+                    sample = self.agent_entry(
+                        sample,
+                        AGENTS[n_agents - 1],
+                        PRIMARY_LOC,
+                        world_state,
+                        ground_truth,
+                    )
+                    n_agents -= 1
 
-        # Randomly select m_objects to move
-        objects_to_move = random.sample(objects, m_objects)
+            elif 0.25 <= random.random() < 0.5:
+                if n_objects != 0:
+                    sample = self.object_definition(
+                        sample,
+                        OBJECTS[n_objects - 1],
+                        CONTAINERS[n_objects - 1],
+                        PRIMARY_LOC,
+                        world_state,
+                        ground_truth,
+                    )
+                    n_objects -= 1
 
-        # Agents move the objects to different containers
-        for object in objects_to_move:
-            n_movements = random.randint(1, max_movements)
-
-            for _ in range(n_movements):
-                # Randomly select an agent whose "location" is primary location
-                agent_in_primary_location = random.choice(
-                    [
+            elif 0.5 <= random.random() < 0.75:
+                if m_objects != 0:
+                    # Agents in primary location
+                    agents_in_primary_location = [
                         agent
                         for agent in world_state.keys()
-                        if world_state[agent]["location"] == primary_location
+                        if world_state[agent]["location"][agent] == PRIMARY_LOC
                     ]
-                )
 
-                # Randomly select a container to move the object which is not the current container
-                new_container = ground_truth[object]["current"]
-                while new_container == ground_truth[object]["current"]:
-                    new_container = random.choice(containers)
+                    # If there is atleast one agent in the primary location and
+                    # atleast one object is defined, then move the object
+                    if len(agents_in_primary_location) != 0 and len(ground_truth) != 0:
+                        # Randomly select an agent whose "location" is primary location to move the objects
+                        agent_to_move_obj = random.choice(agents_in_primary_location)
 
-                sample += f"{agent_in_primary_location} moved the {object} to the {new_container}.\n"
-                ground_truth[object]["current"] = new_container
+                        # Randomly select an already defined object to move
+                        object_to_move = random.choice(list(ground_truth.keys()))
 
-                # Update agent_in_primary_location's own belief as well as other agents' beliefs.
-                # An agent's belief about other agents' beliefs is updated only if both are present in the primary location.
-                for agent_1 in world_state.keys():
-                    for agent_2 in world_state.keys():
-                        if (
-                            world_state[agent_1]["location"] == primary_location
-                            and world_state[agent_2]["location"] == primary_location
-                        ):
-                            world_state[agent_1]["beliefs"][agent_2][
-                                object
-                            ] = new_container
+                        # Select n_movements for the object
+                        n_movements = random.randint(1, max_movements)
 
-        # Add redundant text to the sample
-        sentences = sample.split("\n")
-        redundant_sentence = (
-            f"{random.choice(agents)} likes the {random.choice(objects)}."
-        )
-        sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
-        sample = "\n".join(sentences).replace("\n\n", "\n")
+                        # Randomly select a container to move the object which is not the current container
+                        new_container = ground_truth[object_to_move]["current"]
+                        while new_container == ground_truth[object_to_move]["current"]:
+                            new_container = random.choice(CONTAINERS)
+
+                        for _ in range(n_movements):
+                            sample = self.object_movement(
+                                sample,
+                                agent_to_move_obj,
+                                object_to_move,
+                                new_container,
+                                PRIMARY_LOC,
+                                world_state,
+                                ground_truth,
+                            )
+
+                        m_objects -= 1
+
+            else:
+                if m_agents != 0:
+                    # Agents in primary location
+                    agents_in_primary_location = [
+                        agent
+                        for agent in world_state.keys()
+                        if world_state[agent]["location"][agent] == PRIMARY_LOC
+                    ]
+
+                    if len(agents_in_primary_location) != 0:
+                        agent_to_exit = random.choice(agents_in_primary_location)
+
+                        sample = self.agent_exit(
+                            sample, agent_to_exit, PRIMARY_LOC, world_state
+                        )
+
+                        m_agents -= 1
+
+        if self.add_redundant_sentence:
+            sentences = sample.split("\n")
+            redundant_sentence = (
+                f"{random.choice(AGENTS)} likes the {random.choice(OBJECTS)}."
+            )
+            sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
+            sample = "\n".join(sentences).replace("\n\n", "\n")
 
         # Generate questions
-        for idx in range(len(objects)):
+        for idx in range(len(OBJECTS)):
             samples.append(
                 {
                     "context": sample,
-                    "question": f"Where was the {objects[idx]} at the beginning?",
-                    "answer": ground_truth[objects[idx]]["original"],
+                    "question": f"Where was the {OBJECTS[idx]} at the beginning?",
+                    "answer": ground_truth[OBJECTS[idx]]["original"],
                 }
             )
             samples.append(
                 {
                     "context": sample,
-                    "question": f"Where is the {objects[idx]} really?",
-                    "answer": ground_truth[objects[idx]]["current"],
+                    "question": f"Where is the {OBJECTS[idx]} really?",
+                    "answer": ground_truth[OBJECTS[idx]]["current"],
                 }
             )
 
-        for agent_1 in agents:
-            for object in objects:
+        for agent_1 in AGENTS:
+            for object in OBJECTS:
                 samples.append(
                     {
                         "context": sample,
@@ -181,10 +276,10 @@ class World:
                     }
                 )
 
-        for agent_1 in agents:
-            for agent_2 in agents:
+        for agent_1 in AGENTS:
+            for agent_2 in AGENTS:
                 if agent_1 != agent_2:
-                    for object in objects:
+                    for object in OBJECTS:
                         samples.append(
                             {
                                 "context": sample,
@@ -201,13 +296,14 @@ class World:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--world_file", type=str, default="world.json")
-    parser.add_argument("--n_iterations", type=int, default=10)
+    parser.add_argument("--n_iterations", type=int, default=1)
     parser.add_argument("--n_agents", type=int, default=5)
     parser.add_argument("--n_objects", type=int, default=5)
-    parser.add_argument("--max_movements", type=int, default=5)
+    parser.add_argument("--max_movements", type=int, default=1)
+    parser.add_argument("--add_redundant_sentence", action="store_false")
     args = parser.parse_args()
 
-    # TODO: Multiple movements of the same object (by single or multiple agents).
+    print(args)
 
     samples = []
     world = World(args.world_file)

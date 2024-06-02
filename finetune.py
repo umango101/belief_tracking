@@ -4,7 +4,7 @@ from numpy import dtype
 import torch
 import argparse
 from pytorch_lightning import Trainer
-from lightning.pytorch.loggers import WandbLogger
+from pytorch_lightning.loggers import WandbLogger
 from train_utils import (
     load_model_tokenizer,
     DataModule,
@@ -44,6 +44,7 @@ def train(args):
         args.max_context_len,
         args.seed,
         model.config,
+        current_dir,
     )
 
     # For LoRA training
@@ -65,34 +66,26 @@ def train(args):
         seed=args.seed,
         output_dir=args.output_dir,
         lr=args.lr,
-        train_log_step=args.accumulate_grad_batches,
+        eval_metric=datamodule.eval_metric(),
+        train_log_step=(args.accumulate_grad_batches // args.batch_size),
     )
 
     trainer = Trainer(
         default_root_dir=args.output_dir,
         devices=args.devices,
+        min_epochs=args.epochs,
         max_epochs=args.epochs,
         precision="16-mixed",
         gradient_clip_val=1.0,
         deterministic=True,
-        accumulate_grad_batches=args.accumulate_grad_batches // args.batch_size,
+        accumulate_grad_batches=(args.accumulate_grad_batches // args.batch_size),
         accelerator="gpu",
         enable_checkpointing=False,
-        val_check_interval=10 * args.accumulate_grad_batches,
+        val_check_interval=0.05,
         strategy="ddp",
         log_every_n_steps=args.train_log_step,
         logger=wandb_logger,
     )
-
-    model.model.config.use_cache = False
-
-    old_state_dict = model.state_dict
-    model.state_dict = (
-        lambda self, *_, **__: get_peft_model_state_dict(self, old_state_dict())
-    ).__get__(model, type(model))
-
-    # if torch.__version__ >= "2" and sys.platform != "win32":
-    #     model = torch.compile(model)
 
     trainer.fit(model, datamodule)
     # trainer.test(model, datamodule.test_dataloader())
@@ -110,11 +103,11 @@ def main():
     )
 
     parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--output_dir", type=str, default="./weights")
+    parser.add_argument("--output_dir", type=str, default="./finetuning_output")
     parser.add_argument("--devices", type=list, default=[0])
     parser.add_argument("--accumulate_grad_batches", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--epochs", type=int, default=1)
+    parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--seed", type=int, default=10)
     parser.add_argument("--train_log_step", type=int, default=1)
     parser.add_argument("--max_context_len", type=int, default=1024)
@@ -134,10 +127,11 @@ def main():
     )
 
     args = parser.parse_args()
-    args.output_dir = os.path.join(args.output_dir, args.model_name)
+    # args.output_dir = os.path.join(args.output_dir, args.model_name)
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
+        os.makedirs(f"{args.output_dir}/checkpoints")
 
     train(args)
 

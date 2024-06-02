@@ -2,3 +2,5 @@ wandb
 weights
 *.jsonl
 git_pat.txt
+generated_tomi.json
+generated_tomi_old.json
