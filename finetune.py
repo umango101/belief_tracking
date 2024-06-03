@@ -81,7 +81,7 @@ def train(args):
         accumulate_grad_batches=(args.accumulate_grad_batches // args.batch_size),
         accelerator="gpu",
         enable_checkpointing=False,
-        val_check_interval=0.05,
+        val_check_interval=0.1,
         strategy="ddp",
         log_every_n_steps=args.train_log_step,
         logger=wandb_logger,

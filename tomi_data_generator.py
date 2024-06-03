@@ -299,7 +299,7 @@ def main():
     parser.add_argument("--n_iterations", type=int, default=1)
     parser.add_argument("--n_agents", type=int, default=5)
     parser.add_argument("--n_objects", type=int, default=5)
-    parser.add_argument("--max_movements", type=int, default=1)
+    parser.add_argument("--max_movements", type=int, default=3)
     parser.add_argument("--add_redundant_sentence", action="store_false")
     args = parser.parse_args()
 

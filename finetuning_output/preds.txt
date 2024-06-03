@@ -1,16 +1,16 @@
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  box pantry Unknown bathtub drawer drawer cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
 Output:  crate crate bucket bucket box box bathtub bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
+Output:  drawer bottle Unknown cupboard suitcase suitcase bucket bucket
 Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  box box Unknown bathtub drawer drawer cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket box box bathtub bathtub
+Output:  crate crate Unknown bucket pantry box bathtub bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
 Output:  drawer drawer cupboard cupboard crate crate bucket bucket
@@ -19,106 +19,97 @@ Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 Output:  pantry pantry bathtub bathtub drawer drawer cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket pantry box bathtub bathtub
+Output:  crate crate bucket bucket box pantry Unknown bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
+Output:  drawer drawer Unknown cupboard suitcase suitcase bucket bucket
 Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  bucket bucket bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  suitcase crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate container bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
-Target:  box box bathtub bathtub drawer drawer cupboard cupboard
-
-Output:  crate crate bucket bucket box box bathtub bathtub
-Target:  crate crate bucket bucket box box bathtub bathtub
-
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
-Target:  drawer drawer cupboard cupboard crate crate bucket bucket
-
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  box box bathtub bathtub bottle bottle cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
 Output:  crate crate bucket bucket pantry box bathtub bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
+Output:  bottle bottle cupboard cupboard crate crate bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  pantry pantry bathtub bathtub bottle bottle cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate bucket bucket box pantry bathtub bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  drawer drawer cupboard cupboard suitcase suitcase bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box box Unknown bathtub bottle bottle cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  suitcase suitcase bucket bucket box box bathtub bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  bottle bottle cupboard cupboard crate crate bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer bottle Unknown cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate bucket bucket box box Unknown bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  drawer drawer Unknown cupboard crate crate bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer drawer cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate bucket bucket box box Unknown bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
 Output:  drawer drawer cupboard cupboard crate crate bucket bucket
 Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  box pantry bathtub bathtub bottle bottle cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket box box bathtub bathtub
+Output:  crate crate bucket bucket Unknown box Unknown bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  drawer drawer cupboard cupboard crate crate Unknown bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer drawer cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate suitcase bucket bucket box box Unknown bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  bottle bottle cupboard cupboard crate crate bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer drawer cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate bucket bucket pantry pantry bathtub bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  drawer bottle Unknown cupboard suitcase suitcase bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box box Unknown bathtub drawer bottle cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate Unknown bucket box box Unknown Unknown
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  drawer bottle cupboard cupboard crate crate bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer drawer Unknown cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate crate Unknown bucket box pantry Unknown bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
 Output:  drawer drawer cupboard cupboard crate crate bucket bucket
@@ -127,76 +118,58 @@ Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 Output:  box box bathtub bathtub drawer drawer cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket box box bathtub bathtub
+Output:  crate crate bucket bucket Unknown box Unknown Unknown
 Target:  crate crate bucket bucket box box bathtub bathtub
 
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
+Output:  bottle bottle cupboard cupboard crate crate bucket bucket
 Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  pantry pantry bathtub bathtub drawer bottle cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket box box bathtub bathtub
+Output:  crate suitcase bucket bucket box pantry bathtub bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
-Output:  drawer drawer cupboard cupboard crate crate bucket bucket
+Output:  drawer bottle cupboard cupboard suitcase suitcase bucket bucket
 Target:  drawer drawer cupboard cupboard crate crate bucket bucket
 
-Output:  box box bathtub bathtub drawer drawer cupboard cupboard
+Output:  box box Unknown bathtub Unknown drawer cupboard cupboard
 Target:  box box bathtub bathtub drawer drawer cupboard cupboard
 
-Output:  crate crate bucket bucket box box bathtub bathtub
+Output:  crate crate bucket bucket box box Unknown bathtub
 Target:  crate crate bucket bucket box box bathtub bathtub
 
-Output:  box box box box box box drawer drawer
+Output:  bottle bottle cupboard cupboard suitcase suitcase bucket bucket
+Target:  drawer drawer cupboard cupboard crate crate bucket bucket
+
+Output:  box pantry Unknown bathtub drawer bottle cupboard cupboard
+Target:  box box bathtub bathtub drawer drawer cupboard cupboard
+
+Output:  crate suitcase bucket bucket box box Unknown bathtub
+Target:  crate crate bucket bucket box box bathtub bathtub
+
+Output:  box box pantry box Unknown Unknown drawer drawer
 Target:  box box pantry pantry box box drawer drawer
 
-Output:  drawer drawer drawer drawer crate crate crate crate
+Output:  bottle drawer Unknown drawer crate crate crate crate
 Target:  bottle bottle drawer drawer crate crate suitcase suitcase
 
-Output:  cellar cellar box box box box box box
+Output:  crate cellar box box pantry box box Unknown
 Target:  crate crate box box pantry pantry box box
 
-Output:  drawer drawer drawer drawer drawer drawer crate crate
+Output:  drawer drawer bottle drawer drawer Unknown crate crate
 Target:  drawer drawer bottle bottle drawer drawer crate crate
 
-Output:  crate crate crate crate box box box box
+Output:  crate crate crate crate box box pantry box
 Target:  suitcase suitcase crate crate box box pantry pantry
 
-Output:  box box drawer drawer drawer drawer drawer drawer
+Output:  Unknown box drawer drawer drawer drawer drawer Unknown
 Target:  box box drawer drawer bottle bottle drawer drawer
 
-Output:  crate crate crate crate crate crate box box
+Output:  crate crate crate crate Unknown crate box box
 Target:  crate crate suitcase suitcase crate crate box box
 
-Output:  box box box box drawer drawer drawer drawer
-Target:  pantry pantry box box drawer drawer bottle bottle
-
-Output:  drawer drawer crate crate crate crate crate crate
-Target:  drawer drawer crate crate suitcase suitcase crate crate
-
-Output:  pantry pantry pantry pantry pantry pantry drawer drawer
-Target:  box box pantry pantry box box drawer drawer
-
-Output:  drawer drawer drawer drawer crate crate crate crate
-Target:  bottle bottle drawer drawer crate crate suitcase suitcase
-
-Output:  crate crate box box box box box box
-Target:  crate crate box box pantry pantry box box
-
-Output:  drawer drawer drawer drawer drawer drawer crate crate
-Target:  drawer drawer bottle bottle drawer drawer crate crate
-
-Output:  crate crate crate crate box box box box
-Target:  suitcase suitcase crate crate box box pantry pantry
-
-Output:  box box drawer drawer drawer drawer drawer drawer
-Target:  box box drawer drawer bottle bottle drawer drawer
-
-Output:  crate crate crate crate crate crate box box
-Target:  crate crate suitcase suitcase crate crate box box
-
-Output:  box box box box drawer drawer drawer drawer
+Output:  pantry box box Unknown drawer drawer drawer drawer
 Target:  pantry pantry box box drawer drawer bottle bottle
 
 Output:  drawer drawer crate crate crate crate crate crate
@@ -205,10 +178,145 @@ Target:  drawer drawer crate crate suitcase suitcase crate crate
 Output:  box box box box box box drawer drawer
 Target:  box box pantry pantry box box drawer drawer
 
+Output:  bottle drawer drawer Unknown crate crate crate crate
+Target:  bottle bottle drawer drawer crate crate suitcase suitcase
+
+Output:  crate crate box box pantry box box box
+Target:  crate crate box box pantry pantry box box
+
+Output:  drawer drawer bottle drawer Unknown Unknown crate crate
+Target:  drawer drawer bottle bottle drawer drawer crate crate
+
+Output:  crate crate crate crate box box pantry box
+Target:  suitcase suitcase crate crate box box pantry pantry
+
+Output:  box Unknown drawer drawer drawer drawer Unknown drawer
+Target:  box box drawer drawer bottle bottle drawer drawer
+
+Output:  crate crate suitcase crate Unknown Unknown box box
+Target:  crate crate suitcase suitcase crate crate box box
+
+Output:  pantry box Unknown box drawer drawer drawer drawer
+Target:  pantry pantry box box drawer drawer bottle bottle
+
+Output:  drawer drawer crate crate crate crate crate crate
+Target:  drawer drawer crate crate suitcase suitcase crate crate
+
+Output:  box box pantry pantry box Unknown drawer drawer
+Target:  box box pantry pantry box box drawer drawer
+
 Output:  drawer drawer drawer drawer crate crate crate crate
 Target:  bottle bottle drawer drawer crate crate suitcase suitcase
 
-Output:  Unknown crate box box box box box box
+Output:  Unknown Unknown box box pantry box box Unknown
+Target:  crate crate box box pantry pantry box box
+
+Output:  drawer drawer drawer drawer Unknown drawer crate crate
+Target:  drawer drawer bottle bottle drawer drawer crate crate
+
+Output:  crate crate Unknown crate box box pantry box
+Target:  suitcase suitcase crate crate box box pantry pantry
+
+Output:  Unknown Unknown drawer drawer drawer drawer Unknown drawer
+Target:  box box drawer drawer bottle bottle drawer drawer
+
+Output:  pantry pantry pantry pantry pantry pantry box box
+Target:  crate crate suitcase suitcase crate crate box box
+
+Output:  pantry box box Unknown drawer drawer drawer drawer
+Target:  pantry pantry box box drawer drawer bottle bottle
+
+Output:  drawer Unknown crate crate crate crate crate crate
+Target:  drawer drawer crate crate suitcase suitcase crate crate
+
+Output:  box box pantry pantry Unknown box drawer drawer
+Target:  box box pantry pantry box box drawer drawer
+
+Output:  drawer drawer drawer drawer crate crate crate crate
+Target:  bottle bottle drawer drawer crate crate suitcase suitcase
+
+Output:  crate crate box box pantry box Unknown Unknown
+Target:  crate crate box box pantry pantry box box
+
+Output:  drawer drawer bottle drawer Unknown Unknown crate crate
+Target:  drawer drawer bottle bottle drawer drawer crate crate
+
+Output:  suitcase crate Unknown crate box box box box
+Target:  suitcase suitcase crate crate box box pantry pantry
+
+Output:  box box drawer drawer bottle drawer drawer Unknown
+Target:  box box drawer drawer bottle bottle drawer drawer
+
+Output:  crate crate crate crate crate crate box box
+Target:  crate crate suitcase suitcase crate crate box box
+
+Output:  pantry box box box drawer drawer drawer drawer
+Target:  pantry pantry box box drawer drawer bottle bottle
+
+Output:  drawer drawer crate crate crate crate crate Unknown
+Target:  drawer drawer crate crate suitcase suitcase crate crate
+
+Output:  box Unknown box box Unknown Unknown drawer drawer
+Target:  box box pantry pantry box box drawer drawer
+
+Output:  bottle drawer Unknown drawer crate crate suitcase crate
+Target:  bottle bottle drawer drawer crate crate suitcase suitcase
+
+Output:  crate crate box box pantry box Unknown box
+Target:  crate crate box box pantry pantry box box
+
+Output:  drawer drawer bottle bottle drawer drawer crate crate
+Target:  drawer drawer bottle bottle drawer drawer crate crate
+
+Output:  crate crate crate crate box box pantry pantry
+Target:  suitcase suitcase crate crate box box pantry pantry
+
+Output:  box Unknown drawer drawer drawer drawer drawer drawer
+Target:  box box drawer drawer bottle bottle drawer drawer
+
+Output:  crate crate crate crate crate crate box box
+Target:  crate crate suitcase suitcase crate crate box box
+
+Output:  pantry box box Unknown drawer drawer drawer drawer
+Target:  pantry pantry box box drawer drawer bottle bottle
+
+Output:  drawer drawer crate crate crate crate crate Unknown
+Target:  drawer drawer crate crate suitcase suitcase crate crate
+
+Output:  box box pantry box Unknown Unknown drawer drawer
+Target:  box box pantry pantry box box drawer drawer
+
+Output:  bottle drawer Unknown drawer crate crate suitcase crate
+Target:  bottle bottle drawer drawer crate crate suitcase suitcase
+
+Output:  crate crate box box pantry pantry box Unknown
+Target:  crate crate box box pantry pantry box box
+
+Output:  drawer drawer bottle drawer drawer Unknown crate crate
+Target:  drawer drawer bottle bottle drawer drawer crate crate
+
+Output:  crate crate crate crate box box pantry box
+Target:  suitcase suitcase crate crate box box pantry pantry
+
+Output:  Unknown box drawer drawer drawer drawer drawer Unknown
+Target:  box box drawer drawer bottle bottle drawer drawer
+
+Output:  crate crate crate crate crate crate box box
+Target:  crate crate suitcase suitcase crate crate box box
+
+Output:  pantry box box Unknown drawer drawer drawer drawer
+Target:  pantry pantry box box drawer drawer bottle bottle
+
+Output:  drawer drawer crate crate suitcase crate crate crate
+Target:  drawer drawer crate crate suitcase suitcase crate crate
+
+Output:  box box box box Unknown Unknown drawer drawer
+Target:  box box pantry pantry box box drawer drawer
+
+Output:  bottle drawer drawer drawer crate crate crate crate
+Target:  bottle bottle drawer drawer crate crate suitcase suitcase
+
+Output:  Unknown Unknown box box pantry box box box
 Target:  crate crate box box pantry pantry box box
 
 Output:  drawer drawer drawer drawer drawer drawer crate crate
@@ -217,160 +325,52 @@ Target:  drawer drawer bottle bottle drawer drawer crate crate
 Output:  crate crate crate crate box box box box
 Target:  suitcase suitcase crate crate box box pantry pantry
 
-Output:  box box drawer drawer drawer drawer drawer drawer
+Output:  box Unknown drawer drawer drawer drawer drawer drawer
 Target:  box box drawer drawer bottle bottle drawer drawer
 
-Output:  crate crate crate crate crate crate box box
+Output:  crate crate suitcase crate Unknown Unknown box box
 Target:  crate crate suitcase suitcase crate crate box box
 
-Output:  box box box box drawer drawer drawer drawer
+Output:  pantry box Unknown box drawer drawer drawer drawer
 Target:  pantry pantry box box drawer drawer bottle bottle
 
 Output:  drawer drawer crate crate crate crate crate crate
 Target:  drawer drawer crate crate suitcase suitcase crate crate
 
-Output:  box box box box box box drawer drawer
+Output:  box box pantry pantry box Unknown drawer drawer
 Target:  box box pantry pantry box box drawer drawer
 
-Output:  drawer drawer drawer drawer crate crate crate crate
+Output:  drawer drawer drawer drawer crate crate suitcase crate
 Target:  bottle bottle drawer drawer crate crate suitcase suitcase
 
-Output:  crate crate box box box box box box
+Output:  crate crate box box box box box Unknown
 Target:  crate crate box box pantry pantry box box
 
-Output:  drawer drawer drawer drawer drawer drawer crate crate
+Output:  drawer drawer drawer drawer Unknown drawer crate crate
 Target:  drawer drawer bottle bottle drawer drawer crate crate
 
-Output:  crate crate crate crate box box box box
+Output:  crate crate Unknown Unknown box box pantry box
 Target:  suitcase suitcase crate crate box box pantry pantry
 
-Output:  box box drawer drawer drawer drawer drawer drawer
+Output:  Unknown box drawer drawer bottle bottle Unknown Unknown
 Target:  box box drawer drawer bottle bottle drawer drawer
 
 Output:  crate crate crate crate crate crate box box
 Target:  crate crate suitcase suitcase crate crate box box
 
-Output:  box box box box drawer drawer drawer drawer
+Output:  pantry box box Unknown drawer drawer drawer drawer
 Target:  pantry pantry box box drawer drawer bottle bottle
 
-Output:  drawer drawer crate crate crate crate crate crate
+Output:  Unknown drawer crate crate crate crate crate crate
 Target:  drawer drawer crate crate suitcase suitcase crate crate
 
-Output:  box box box box box box drawer drawer
+Output:  box box pantry pantry Unknown box drawer drawer
 Target:  box box pantry pantry box box drawer drawer
 
 Output:  drawer drawer drawer drawer crate crate crate crate
 Target:  bottle bottle drawer drawer crate crate suitcase suitcase
 
-Output:  crate crate box box box box box box
-Target:  crate crate box box pantry pantry box box
-
-Output:  drawer drawer drawer drawer drawer drawer crate crate
-Target:  drawer drawer bottle bottle drawer drawer crate crate
-
-Output:  crate crate crate crate box box box box
-Target:  suitcase suitcase crate crate box box pantry pantry
-
-Output:  box box drawer drawer drawer drawer drawer drawer
-Target:  box box drawer drawer bottle bottle drawer drawer
-
-Output:  crate crate crate crate crate crate box box
-Target:  crate crate suitcase suitcase crate crate box box
-
-Output:  box box box box drawer drawer drawer drawer
-Target:  pantry pantry box box drawer drawer bottle bottle
-
-Output:  drawer drawer crate crate crate crate crate crate
-Target:  drawer drawer crate crate suitcase suitcase crate crate
-
-Output:  box box box box box box drawer drawer
-Target:  box box pantry pantry box box drawer drawer
-
-Output:  drawer drawer drawer drawer crate crate crate crate
-Target:  bottle bottle drawer drawer crate crate suitcase suitcase
-
-Output:  crate crate box box box box box box
-Target:  crate crate box box pantry pantry box box
-
-Output:  drawer drawer drawer drawer drawer drawer crate crate
-Target:  drawer drawer bottle bottle drawer drawer crate crate
-
-Output:  crate crate crate crate box box box box
-Target:  suitcase suitcase crate crate box box pantry pantry
-
-Output:  box box drawer drawer drawer drawer drawer drawer
-Target:  box box drawer drawer bottle bottle drawer drawer
-
-Output:  crate crate crate crate crate crate box box
-Target:  crate crate suitcase suitcase crate crate box box
-
-Output:  box box box box drawer drawer drawer drawer
-Target:  pantry pantry box box drawer drawer bottle bottle
-
-Output:  drawer drawer crate crate crate crate crate crate
-Target:  drawer drawer crate crate suitcase suitcase crate crate
-
-Output:  box box box box box box drawer drawer
-Target:  box box pantry pantry box box drawer drawer
-
-Output:  drawer drawer drawer drawer crate crate crate crate
-Target:  bottle bottle drawer drawer crate crate suitcase suitcase
-
-Output:  crate crate box box box box box box
-Target:  crate crate box box pantry pantry box box
-
-Output:  drawer drawer drawer drawer drawer drawer crate crate
-Target:  drawer drawer bottle bottle drawer drawer crate crate
-
-Output:  crate crate crate crate box box box box
-Target:  suitcase suitcase crate crate box box pantry pantry
-
-Output:  box box drawer drawer drawer drawer drawer drawer
-Target:  box box drawer drawer bottle bottle drawer drawer
-
-Output:  crate crate crate crate crate crate box box
-Target:  crate crate suitcase suitcase crate crate box box
-
-Output:  box box box box drawer drawer drawer drawer
-Target:  pantry pantry box box drawer drawer bottle bottle
-
-Output:  drawer drawer crate crate crate crate crate crate
-Target:  drawer drawer crate crate suitcase suitcase crate crate
-
-Output:  box box box box box box drawer drawer
-Target:  box box pantry pantry box box drawer drawer
-
-Output:  drawer drawer drawer drawer crate crate crate crate
-Target:  bottle bottle drawer drawer crate crate suitcase suitcase
-
-Output:  crate crate box box box box box box
-Target:  crate crate box box pantry pantry box box
-
-Output:  drawer drawer drawer drawer drawer drawer crate crate
-Target:  drawer drawer bottle bottle drawer drawer crate crate
-
-Output:  crate crate crate crate box box box box
-Target:  suitcase suitcase crate crate box box pantry pantry
-
-Output:  box box drawer drawer drawer drawer drawer drawer
-Target:  box box drawer drawer bottle bottle drawer drawer
-
-Output:  crate crate crate crate crate crate box box
-Target:  crate crate suitcase suitcase crate crate box box
-
-Output:  box box box box drawer drawer drawer drawer
-Target:  pantry pantry box box drawer drawer bottle bottle
-
-Output:  drawer drawer crate crate crate crate crate crate
-Target:  drawer drawer crate crate suitcase suitcase crate crate
-
-Output:  box box box box box box drawer drawer
-Target:  box box pantry pantry box box drawer drawer
-
-Output:  drawer drawer drawer drawer crate crate crate crate
-Target:  bottle bottle drawer drawer crate crate suitcase suitcase
-
-Output:  crate crate box box box box box box
+Output:  crate crate box box box box Unknown Unknown
 Target:  crate crate box box pantry pantry box box
 
 Output:  box box box envelope drawer drawer drawer basket
@@ -379,10 +379,91 @@ Target:  pantry pantry pantry envelope bottle bottle bottle basket
 Output:  crate crate crate container box box box envelope
 Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
 
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
 Output:  drawer drawer drawer basket crate crate crate container
 Target:  bottle bottle bottle basket suitcase suitcase suitcase container
 
 Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container Unknown box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer drawer basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer drawer basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer drawer basket closet closet crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer drawer basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer bottle basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer Unknown cupboard basket
+Target:  pantry pantry pantry envelope bottle bottle bottle basket
+
+Output:  crate crate crate container box box box envelope
+Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
+
+Output:  drawer drawer bottle basket crate crate crate container
+Target:  bottle bottle bottle basket suitcase suitcase suitcase container
+
+Output:  box box box envelope drawer drawer bottle basket
 Target:  pantry pantry pantry envelope bottle bottle bottle basket
 
 Output:  crate crate crate container box box box envelope
@@ -436,88 +517,7 @@ Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
 Output:  drawer drawer drawer basket crate crate crate container
 Target:  bottle bottle bottle basket suitcase suitcase suitcase container
 
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer cupboard
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer basket basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box box envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
-Target:  pantry pantry pantry envelope bottle bottle bottle basket
-
-Output:  crate crate crate container box box pantry envelope
-Target:  suitcase suitcase suitcase container pantry pantry pantry envelope
-
-Output:  drawer drawer drawer basket crate crate crate container
-Target:  bottle bottle bottle basket suitcase suitcase suitcase container
-
-Output:  box box box envelope drawer drawer drawer basket
+Output:  box box box envelope drawer drawer bottle basket
 Target:  pantry pantry pantry envelope bottle bottle bottle basket
 
 Output:  crate crate crate container box box box
