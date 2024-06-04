@@ -57,12 +57,8 @@ class World:
             if world_state[agent_2]["location"][agent_2] == primary_location:
                 for object in ground_truth.keys():
                     # All objects are in the primary location
-                    world_state[agent]["beliefs"][agent_2][object] = ground_truth[
-                        object
-                    ]["current"]
-                    world_state[agent_2]["beliefs"][agent][object] = ground_truth[
-                        object
-                    ]["current"]
+                    world_state[agent]["beliefs"][agent_2][object] = ground_truth[object]["current"]
+                    world_state[agent_2]["beliefs"][agent][object] = ground_truth[object]["current"]
 
             else:
                 for object in ground_truth.keys():
@@ -87,8 +83,8 @@ class World:
                 # An agent's belief about other agents' beliefs is updated only
                 # if both are present in the primary location.
                 elif (
-                    world_state[agent_1]["location"][agent_1] == primary_location
-                    and world_state[agent_2]["location"][agent_2] == primary_location
+                    world_state[agent_1]["location"][agent_1]
+                    == world_state[agent_2]["location"][agent_2]
                 ):
                     world_state[agent_1]["beliefs"][agent_2][object] = container
                 else:
@@ -135,8 +131,7 @@ class World:
                 for agent_2 in world_state.keys():
                     if (
                         world_state[agent_1]["location"][agent_1] == primary_location
-                        and world_state[agent_2]["location"][agent_2]
-                        == primary_location
+                        and world_state[agent_2]["location"][agent_2] == primary_location
                     ):
                         world_state[agent_1]["beliefs"][agent_2][object] = new_container
                         world_state[agent_2]["beliefs"][agent_1][object] = new_container
@@ -154,9 +149,7 @@ class World:
         samples = []
         sample = ""
 
-        while (
-            (n_agents != 0) or (m_agents != 0) or (n_objects != 0) or (m_objects != 0)
-        ):
+        while (n_agents != 0) or (m_agents != 0) or (n_objects != 0) or (m_objects != 0):
             # 0 - 0.25: Agent entry
             # 0.25 - 0.5: Object definition
             # 0.5 - 0.75: Object movement
@@ -235,17 +228,13 @@ class World:
                     if len(agents_in_primary_location) != 0:
                         agent_to_exit = random.choice(agents_in_primary_location)
 
-                        sample = self.agent_exit(
-                            sample, agent_to_exit, PRIMARY_LOC, world_state
-                        )
+                        sample = self.agent_exit(sample, agent_to_exit, PRIMARY_LOC, world_state)
 
                         m_agents -= 1
 
         if self.add_redundant_sentence:
             sentences = sample.split("\n")
-            redundant_sentence = (
-                f"{random.choice(AGENTS)} likes the {random.choice(OBJECTS)}."
-            )
+            redundant_sentence = f"{random.choice(AGENTS)} likes the {random.choice(OBJECTS)}."
             sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
             sample = "\n".join(sentences).replace("\n\n", "\n")
 
@@ -284,9 +273,7 @@ class World:
                             {
                                 "context": sample,
                                 "question": f"Where does {agent_1} think that {agent_2} searches for the {object}?",
-                                "answer": world_state[agent_1]["beliefs"][agent_2][
-                                    object
-                                ],
+                                "answer": world_state[agent_1]["beliefs"][agent_2][object],
                             }
                         )
 

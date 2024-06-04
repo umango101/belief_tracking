@@ -186,9 +186,12 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
-def create_exps(path, data):
-    with open(f"{path}/org_tomi_priming_examples.txt", "r") as f:
-        priming_exps = f.readlines()
+def create_exps(path, data, priming_exps=False):
+    if priming_exps:
+        with open(f"{path}/org_tomi_priming_examples.txt", "r") as f:
+            priming_exps = f.readlines()
+    else:
+        priming_exps = ""
 
     prev_sent_idx = 0
     examples = []
@@ -206,7 +209,7 @@ def create_exps(path, data):
             answer = example[-1].split("\t")[1].strip()
             examples.append(
                 {
-                    "input": f"{priming_exps}Context: {context}\nQuestion: {question}\nAnswer:",
+                    "input": f"Context: {context}\nQuestion: {question}\nAnswer:",
                     "target": " " + answer,
                 }
             )
@@ -217,7 +220,19 @@ def create_exps(path, data):
     return examples
 
 
-def prepare_data(data, traces):
+def create_primings(data, num_exps, category):
+    priming_exps = ""
+    idx = 0
+    while idx < num_exps:
+        example = random.choice(data)
+        if example["category"] == category:
+            priming_exps += f"{example['input']}{example['target']}\n\n"
+            idx += 1
+
+    return priming_exps
+
+
+def prepare_data(data, traces, priming_dist=None):
     processed_data = []
     for example, trace in zip(data, traces):
         trace = trace.split(",")
@@ -240,9 +255,17 @@ def prepare_data(data, traces):
             else:
                 continue
 
+        if priming_dist:
+            priming_exps = create_primings(
+                priming_dist,
+                3,
+                category,
+            )
+        else:
+            priming_exps = ""
         processed_data.append(
             {
-                "input": example["input"],
+                "input": f'{priming_exps}{example["input"]}',
                 "target": example["target"],
                 "category": category,
             }
@@ -295,13 +318,21 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
     data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
     path = f"{current_dir}/{data_path}"
 
+    with open(f"{path}/train.txt", "r") as f:
+        train_data = f.readlines()
+    with open(f"{path}/train.trace", "r") as f:
+        train_trace = f.readlines()
+
     with open(f"{path}/test.txt", "r") as f:
         test_data = f.readlines()
     with open(f"{path}/test.trace", "r") as f:
         test_trace = f.readlines()
 
-    test_data = create_exps(current_dir, test_data)
-    processed_data = prepare_data(test_data, test_trace)
+    train_data = create_exps(current_dir, train_data, False)
+    processed_train_data = prepare_data(train_data, train_trace)
+
+    test_data = create_exps(current_dir, test_data, True)
+    processed_data = prepare_data(test_data, test_trace, processed_train_data)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
