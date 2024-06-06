@@ -1,0 +1,16 @@
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Overall Accuracy: 0.95
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_true_belief | Correct: 873 | Total: 875
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: reality | Correct: 1000 | Total: 1000
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_true_belief | Correct: 666 | Total: 666
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: memory | Correct: 999 | Total: 999
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_false_belief | Correct: 380 | Total: 482
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_false_belief | Correct: 276 | Total: 408
+
+Model Name: meta-llama/Meta-Llama-3-70B | Overall Accuracy: 0.94
+Model Name: meta-llama/Meta-Llama-3-70B | Category: first_order_true_belief | Correct: 872 | Total: 875
+Model Name: meta-llama/Meta-Llama-3-70B | Category: reality | Correct: 1000 | Total: 1000
+Model Name: meta-llama/Meta-Llama-3-70B | Category: second_order_true_belief | Correct: 627 | Total: 666
+Model Name: meta-llama/Meta-Llama-3-70B | Category: memory | Correct: 999 | Total: 999
+Model Name: meta-llama/Meta-Llama-3-70B | Category: second_order_false_belief | Correct: 369 | Total: 482
+Model Name: meta-llama/Meta-Llama-3-70B | Category: first_order_false_belief | Correct: 300 | Total: 408
+

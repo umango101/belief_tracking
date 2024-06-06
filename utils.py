@@ -52,7 +52,9 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
+    indices = [
+        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
+    ]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -64,7 +66,9 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(
+            ",", "dna ", 1
+        )[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -112,7 +116,9 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            question = (
+                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            )
             #             print(question)
             prompt += question
 
@@ -127,15 +133,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = (
-                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
-                )
+                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
+                pred_option_logits = options_token_ids[
+                    logits[options_token_ids].argmax()
+                ]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -186,13 +192,7 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
-def create_exps(path, data, priming_exps=False):
-    if priming_exps:
-        with open(f"{path}/org_tomi_priming_examples.txt", "r") as f:
-            priming_exps = f.readlines()
-    else:
-        priming_exps = ""
-
+def create_exps(data):
     prev_sent_idx = 0
     examples = []
     example = []
@@ -232,8 +232,9 @@ def create_primings(data, num_exps, category):
     return priming_exps
 
 
-def prepare_data(data, traces, priming_dist=None):
+def prepare_data(data, traces, n_priming_eps=3, priming_dist=None):
     processed_data = []
+
     for example, trace in zip(data, traces):
         trace = trace.split(",")
         category = trace[-2]
@@ -258,11 +259,12 @@ def prepare_data(data, traces, priming_dist=None):
         if priming_dist:
             priming_exps = create_primings(
                 priming_dist,
-                3,
+                n_priming_eps,
                 category,
             )
         else:
             priming_exps = ""
+
         processed_data.append(
             {
                 "input": f'{priming_exps}{example["input"]}',
@@ -314,7 +316,7 @@ class Collator(object):
         return inputs
 
 
-def load_tomi_data(config, tokenizer, current_dir, batch_size):
+def load_tomi_data(config, tokenizer, current_dir, batch_size, n_priming_eps=3):
     data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
     path = f"{current_dir}/{data_path}"
 
@@ -328,15 +330,19 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size):
     with open(f"{path}/test.trace", "r") as f:
         test_trace = f.readlines()
 
-    train_data = create_exps(current_dir, train_data, False)
+    train_data = create_exps(train_data)
     processed_train_data = prepare_data(train_data, train_trace)
 
-    test_data = create_exps(current_dir, test_data, True)
-    processed_data = prepare_data(test_data, test_trace, processed_train_data)
+    test_data = create_exps(test_data)
+    processed_data = prepare_data(
+        test_data, test_trace, n_priming_eps, processed_train_data
+    )
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
+    dataloader = DataLoader(
+        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
 
     return dataloader
