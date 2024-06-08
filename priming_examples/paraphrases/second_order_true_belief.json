@@ -1,0 +1,27 @@
+[
+    {
+        "input": "Aria walked into the living room, followed shortly by Hunter. In the living room, there was a drawer that held a pear. Hunter decided to take the pear out of the drawer and placed it into a suitcase that was also in the living room. After that, Aria left the living room, thinking about how much she dislikes asparagus, and headed down to the basement.\nQuestion: Where does Aria think that Hunter searches for the pear?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Lucas walked into the cellar, immediately feeling a sense of distaste as he glanced at the shoes lying around. Shortly after, Charlotte joined him in the dimly lit space, where Aria was already present. Lucas didn't stay long and soon left the cellar. In one corner, a basket held a melon, and the basket itself was situated in the cellar. Aria also stepped out for a moment but then returned. Meanwhile, Charlotte decided to move the melon from the basket to a treasure chest, which was also kept in the cellar.\nQuestion: Where does Charlotte think that Aria searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Mia stepped onto the porch, followed shortly by Chloe, who was frowning at her skirt. Mia, on the other hand, couldn't stand the gloves she was wearing. Inside the porch, there was a drawer, and inside that drawer was some corn. Nathan then joined them on the porch. Chloe left for a moment but soon returned. Nathan, however, decided to leave the porch. Meanwhile, Mia took the corn from the drawer and placed it into a container that was also on the porch.\nQuestion: Where does Mia think that Chloe searches for the corn?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Emily walked into the kitchen, followed closely by Chloe. In an unusual spot, the cap was sitting in the bathtub, which was oddly placed in the kitchen. Emily picked up the cap and secured it onto the bottle that was also in the kitchen. After that, Chloe left the kitchen, while Emily remained, thinking about how much she disliked the skirt she was wearing. Meanwhile, Chloe made her way to the porch.\nQuestion: Where does Emily think that Chloe searches for the cap?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Olivia walked into the closet, followed by Owen. Meanwhile, Carter was admiring a tie he loved. Olivia had a fondness for sweet potatoes. Inside the closet, there was a suitcase, and within that suitcase, a melon. Olivia decided to move the melon from the suitcase to the cupboard, which was also in the closet. After a while, Owen left the closet.\nQuestion: Where does Owen think that Olivia searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    }
+]

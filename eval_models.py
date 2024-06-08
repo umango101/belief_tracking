@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from nnsight import LanguageModel, CONFIG
 
-from utils import load_model_and_tokenizer, load_tomi_data
+from utils import load_model_and_tokenizer, load_tomi_data, load_paraphrase_tomi
 
 CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
 os.environ["HF_TOKEN"] = "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"
@@ -38,6 +38,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ndif", type=bool, default=False)
     parser.add_argument("--n_exps", type=int, default=5)
+    parser.add_argument("--paraphrase", type=bool, default=False)
     args = parser.parse_args()
 
     for model_details in models:
@@ -52,22 +53,32 @@ def main():
 
         if not args.ndif:
             model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
-            dataloader = load_tomi_data(
-                model.config,
-                tokenizer,
-                current_dir,
-                batch_size=batch_size,
-                n_priming_eps=args.n_exps,
-            )
+            if args.paraphrase:
+                dataloader = load_paraphrase_tomi(
+                    model.config, tokenizer, current_dir, batch_size=batch_size
+                )
+            else:
+                dataloader = load_tomi_data(
+                    model.config,
+                    tokenizer,
+                    current_dir,
+                    batch_size=batch_size,
+                    n_priming_eps=args.n_exps,
+                )
         else:
             model = LanguageModel(model_name)
-            dataloader = load_tomi_data(
-                model.config,
-                model.tokenizer,
-                current_dir,
-                batch_size=batch_size,
-                n_priming_eps=args.n_exps,
-            )
+            if args.paraphrase:
+                dataloader = load_paraphrase_tomi(
+                    model.config, model.tokenizer, current_dir, batch_size=batch_size
+                )
+            else:
+                dataloader = load_tomi_data(
+                    model.config,
+                    model.tokenizer,
+                    current_dir,
+                    batch_size=batch_size,
+                    n_priming_eps=args.n_exps,
+                )
 
         print(f"{model_name} and Data loaded successfully")
 
@@ -82,12 +93,8 @@ def main():
                     pred_token_ids = torch.argmax(logits, dim=-1)
 
                 if args.ndif:
-                    with model.trace(
-                        inp["input_ids"], scan=False, validate=False, remote=True
-                    ):
-                        pred_token_ids = torch.argmax(
-                            model.output["logits"][:, -1], dim=-1
-                        ).save()
+                    with model.trace(inp["input_ids"], scan=False, validate=False, remote=True):
+                        pred_token_ids = torch.argmax(model.output["logits"][:, -1], dim=-1).save()
 
                 for i in range(len(inp["category"])):
                     category = inp["category"][i]
@@ -105,16 +112,12 @@ def main():
                         target_text = tokenizer.decode(inp["target"][idx].tolist())
                         pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
                     else:
-                        input_text = model.tokenizer.decode(
-                            inp["input_ids"][idx].tolist()
-                        )
-                        target_text = model.tokenizer.decode(
-                            inp["target"][idx].tolist()
-                        )
+                        input_text = model.tokenizer.decode(inp["input_ids"][idx].tolist())
+                        target_text = model.tokenizer.decode(inp["target"][idx].tolist())
                         pred_text = model.tokenizer.decode(pred_token_ids[idx].tolist())
 
                     with open(
-                        f"{current_dir}/preds/same_shots/5-shots/{model_name.split('/')[-1]}.jsonl",
+                        f"{current_dir}/preds/same_shots/5-shots-paraphrased/{model_name.split('/')[-1]}.jsonl",
                         "a",
                     ) as f:
                         f.write(
@@ -139,12 +142,10 @@ def main():
         overall_accuracy = round(all_corrects / all_totals, 2)
         print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
 
-        with open(f"{current_dir}/preds/same_shots/5-shots/results.txt", "a") as f:
-            f.write(
-                f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n"
-            )
+        with open(f"{current_dir}/preds/same_shots/5-shots-paraphrased/results.txt", "a") as f:
+            f.write(f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n")
 
-        with open(f"{current_dir}/preds/same_shots/5-shots/results.txt", "a") as f:
+        with open(f"{current_dir}/preds/same_shots/5-shots-paraphrased/results.txt", "a") as f:
             for category in total:
                 accuracy = round(correct[category] / total[category], 2)
                 print(f"Category: {category}, Accuracy: {accuracy}")

@@ -52,9 +52,7 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [
-        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
-    ]
+    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -66,9 +64,7 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(
-            ",", "dna ", 1
-        )[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -116,9 +112,7 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = (
-                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
-            )
+            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
             #             print(question)
             prompt += question
 
@@ -133,15 +127,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                question = (
+                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                )
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[
-                    logits[options_token_ids].argmax()
-                ]
+                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -192,6 +186,35 @@ def load_model_and_tokenizer(model_name, precision, device):
     return model, tokenizer
 
 
+def get_story(data):
+    story = []
+    stories = []
+    prev_sent_idx = 0
+
+    for sentence in data:
+        sent_idx = int(sentence.split(" ")[0])
+        sentence = sentence[2:]
+
+        if sent_idx > prev_sent_idx:
+            story.append(sentence)
+        else:
+            context = "".join(story[:-1]).strip()
+            question = story[-1].split("\t")[0].strip()
+            answer = story[-1].split("\t")[1].strip()
+            stories.append(
+                {
+                    "input": f"{context}\n",
+                    "question": question,
+                    "target": " " + answer,
+                }
+            )
+            story = [sentence]
+
+        prev_sent_idx = sent_idx
+
+    return stories
+
+
 def create_exps(data):
     prev_sent_idx = 0
     examples = []
@@ -232,7 +255,7 @@ def create_primings(data, num_exps, category):
     return priming_exps
 
 
-def prepare_data(data, traces, n_priming_eps=3, priming_dist=None):
+def prepare_data(data, traces, n_priming_eps=3, add_question=False):
     processed_data = []
 
     for example, trace in zip(data, traces):
@@ -248,7 +271,7 @@ def prepare_data(data, traces, n_priming_eps=3, priming_dist=None):
             else:
                 continue
 
-        elif "second_order" in category:
+        if "second_order" in category:
             if "no_tom" in category and "true_belief" == question_type:
                 category = "second_order_true_belief"
             elif "tom" in category and "false_belief" == question_type:
@@ -256,22 +279,29 @@ def prepare_data(data, traces, n_priming_eps=3, priming_dist=None):
             else:
                 continue
 
-        if priming_dist:
-            priming_exps = create_primings(
-                priming_dist,
-                n_priming_eps,
-                category,
-            )
-        else:
-            priming_exps = ""
+        with open(f"priming_examples/{category}.txt", "r") as f:
+            priming_exps = f.read().replace("\\n", "\n")
 
-        processed_data.append(
-            {
-                "input": f'{priming_exps}{example["input"]}',
-                "target": example["target"],
-                "category": category,
-            }
-        )
+        if n_priming_eps != 0:
+            processed_data.append(
+                {
+                    "input": f'{priming_exps}{example["input"]}',
+                    "target": example["target"],
+                    "category": category,
+                }
+            )
+
+        else:
+            processed_data.append(
+                {
+                    "input": f'{example["input"]}',
+                    "target": example["target"],
+                    "category": category,
+                }
+            )
+
+        if add_question:
+            processed_data[-1]["question"] = example["question"]
 
     return processed_data
 
@@ -320,29 +350,54 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size, n_priming_eps=3):
     data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
     path = f"{current_dir}/{data_path}"
 
-    with open(f"{path}/train.txt", "r") as f:
-        train_data = f.readlines()
-    with open(f"{path}/train.trace", "r") as f:
-        train_trace = f.readlines()
-
     with open(f"{path}/test.txt", "r") as f:
         test_data = f.readlines()
     with open(f"{path}/test.trace", "r") as f:
         test_trace = f.readlines()
 
-    train_data = create_exps(train_data)
-    processed_train_data = prepare_data(train_data, train_trace)
-
     test_data = create_exps(test_data)
-    processed_data = prepare_data(
-        test_data, test_trace, n_priming_eps, processed_train_data
-    )
+    processed_data = prepare_data(test_data, test_trace, n_priming_eps)
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(
-        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
+
+    return dataloader
+
+
+def add_paraphrased_priming_exps(data):
+    categories = [
+        "first_order_true_belief",
+        "first_order_false_belief",
+        "second_order_true_belief",
+        "second_order_false_belief",
+    ]
+
+    priming_exps = {}
+    for category in categories:
+        with open(f"priming_examples/paraphrases/{category}.json", "r") as f:
+            examples = json.load(f)
+
+        priming_exps[category] = ""
+        for example in examples:
+            priming_exps[category] += f"{example['input']}{example['target']}\n\n"
+
+    for example in data:
+        category = example["category"]
+        example["input"] = f"{priming_exps[category]}{example['input']}"
+        print(example["input"])
+
+    return data
+
+
+def load_paraphrase_tomi(config, tokenizer, current_dir, batch_size):
+    path = f"{current_dir}/data/paraphrased_ToMi/dataset.json"
+
+    with open(path, "r") as f:
+        data = json.load(f)
+    data = add_paraphrased_priming_exps(data)
+    collator = Collator(config, tokenizer)
+    dataloader = DataLoader(data, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader

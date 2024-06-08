@@ -1,0 +1,1002 @@
+[
+    {
+        "input": "Logan walked into the garage, feeling a bit uneasy. He had never been a fan of tangerines. Shortly after, Lucas also entered the garage. Inside, there was a bottle with a persimmon in it. Lucas decided to take the persimmon out of the bottle and place it into a different container, which was also in the garage. With his task complete, Logan decided to leave the garage.\nQuestion: Where will Lucas look for the persimmon?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Hunter despises peas. One day, Mila walked into the front yard, while Hunter made his way up to the attic. Shortly after, James also entered the front yard. In the front yard, there was a treasure chest that contained a melon. After a while, Hunter came down from the attic. Mila, who has a fondness for a particular shirt, decided to leave the front yard and head up to the attic. Meanwhile, James took the melon out of the treasure chest and placed it into an envelope, which was also in the front yard.\nQuestion: Where will James look for the melon?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Jayden and Aiden both crawled into the crawlspace. Inside, there was a cupboard that held a watermelon. Jayden, who isn't fond of peaches, decided to move the watermelon from the cupboard to a drawer, which was also in the crawlspace. After that, Aiden left the crawlspace.\nQuestion: Where will Aiden look for the watermelon?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Lucas stepped into the closet, followed closely by Aria. Inside, there was a crate containing a pair of gloves. The crate itself was also in the closet. Lucas picked up the gloves and placed them into a suitcase, which was also stored in the closet. Meanwhile, Mason, who has a fondness for underclothes but a strong dislike for radishes, entered the closet as well. Shortly after, Aria decided to leave the closet.\nQuestion: Where will Aria look for the gloves?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "James walked into the TV room, followed shortly by Lily. In the corner of the room, there was a suitcase, and inside it was a skirt. Lily took the skirt out of the suitcase and placed it into an envelope that was also in the TV room. Olivia, who adored the skirt, watched as this happened. After a while, James decided to leave the TV room.\nQuestion: Where will James look for the skirt?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "One afternoon, Amelia walked into the study. Shortly after, Emma joined her. In the corner of the room, there was a container holding a pair of pajamas. Not long after, Chloe also entered the study, making it quite a gathering. Emma then left the room but quickly returned. Meanwhile, Amelia decided to move the pajamas from the container to the pantry, which was also located in the study.\nQuestion: Where will Amelia look for the pajamas?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Isabella despised the t-shirt. She walked into the den but soon left. After she exited, Abigail came into the den, followed by Emily. Meanwhile, a pair of underpants was sitting in the pantry, which was located in the den. Emily decided to move the underpants into an envelope, which was also in the den. Unlike the t-shirt, Isabella had a fondness for eggplants. Abigail then left the den and made her way to the porch.\nQuestion: Where will Abigail look for the underpants?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Emily had always been fond of the t-shirt she wore. One day, Logan walked into the living room, followed shortly by Emily. In the living room, there was a bottle that contained some underclothes. Emily decided to move the underclothes from the bottle to a treasure chest that was also in the living room. After a while, Logan left the living room. Meanwhile, Isla entered the hallway, but she didn't stay long and soon exited. Logan then entered the hallway.\nQuestion: Where will Emily look for the underclothes?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Chloe walked into the study, followed shortly by Isla. Inside the study, there was a container holding some broccoli. Isla picked up the broccoli and placed it into a bucket that was also in the study. Meanwhile, James entered the master bedroom. After a while, Chloe left the study, and James exited the master bedroom. Then, Chloe returned to the study.\nQuestion: Where will Chloe look for the broccoli?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Logan walked into the office. Lily, who absolutely adored her slacks, followed him in shortly after. Inside the office, there was a bottle containing some beans. Lily decided to move the beans from the bottle to a basket that was also in the office. After a while, Logan left the office.\nQuestion: Where will Logan look for the beans?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Olivia has never been a fan of carrots. One day, Isla made her way up to the attic, followed shortly by Olivia. In the attic, there was a suitcase that contained a strawberry. Jacob also joined them in the attic. Olivia decided to take the strawberry out of the suitcase and place it into a bucket, which was also in the attic. After a while, Isla left the attic and went down to the den.\nQuestion: Where will Isla look for the strawberry?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Hunter and William both walked into the garden. Hunter, who has a strong dislike for carrots, noticed a pear inside a suitcase that was also in the garden. Meanwhile, Lily, who doesn't care much for belts, was elsewhere. Hunter decided to move the pear from the suitcase to a drawer, which was conveniently located in the garden as well. After a while, William left the garden and headed into the dining room.\nQuestion: Where will Hunter look for the pear?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Owen despised the raincoat. He walked into the cellar, where he soon found himself joined by Isla. In the corner, a bucket sat with some asparagus inside it. Owen decided to move the asparagus from the bucket to a drawer, which was also in the cellar. Meanwhile, Chloe stepped into the front yard, and Isla left the cellar.\nQuestion: Where will Owen look for the asparagus?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Jackson walked into the closet, where Evelyn was already inside. Owen, who has a fondness for the dress, was not far off. Inside the closet, there was a treasure chest that held an undershirt. Evelyn decided to move the undershirt from the treasure chest to the pantry, which was also located in the closet. After a while, Jackson left the closet, and Owen stepped in briefly before exiting again. Finally, Jackson made his way into the hall.\nQuestion: Where will Evelyn look for the undershirt?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "William walked into the kitchen, admiring his shirt as he did so. Meanwhile, Elizabeth made her way into the TV room. Shortly after, Jacob also entered the kitchen. He noticed a tomato sitting in a basket on the counter. Deciding to move it, Jacob picked up the tomato and placed it into a box nearby. With his task complete, William then left the kitchen.\nQuestion: Where will William look for the tomato?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "One day, Alexander walked into the bedroom. Meanwhile, Olivia was enjoying some corn, which she really liked. Shortly after, James also entered the bedroom, followed by Olivia. Alexander had a particular fondness for his undershirt, which he kept in the room. There was a turnip inside a container in the bedroom. James decided to move the turnip from the container to a suitcase, which was also in the bedroom. After a while, Alexander left the bedroom.\nQuestion: Where will Alexander look for the turnip?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "James walked into the den. Evelyn, who absolutely adored her scarf, soon followed him into the room. However, she couldn't stand the sight of celery. Inside the den, there was a box that contained a cap. James decided to take the cap out of the box and place it on a bottle, which was also in the den. After a while, Evelyn left the den.\nQuestion: Where will Evelyn look for the cap?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Isla walked into the TV room but soon left. Meanwhile, Ethan and Hannah both made their way to the staircase. In the staircase, there was a bathtub with a potato inside it. Ethan decided to move the potato from the bathtub to a box that was also in the staircase. Afterward, Hannah briefly left the staircase but then returned.\nQuestion: Where will Ethan look for the potato?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Sophia walked into the garden, followed shortly by Olivia. In the garden, there was a box with a belt inside it. After a while, Olivia left the garden but soon returned. Meanwhile, Sophia took the belt out of the box and placed it into an envelope that was also in the garden. Elsewhere, Mason entered the living room.\nQuestion: Where will Olivia look for the belt?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Lucas has a fondness for cabbage. One day, he walked into the dining room, where Ella soon joined him. Despite his love for cabbage, Lucas also has a particular affection for a certain dress. In the dining room, there was a suitcase that contained a sweater. Lucas decided to take the sweater out of the suitcase and place it into a basket, which was also in the dining room. After a while, Ella left the dining room, leaving Lucas alone with his thoughts and the basket.\nQuestion: Where will Lucas look for the sweater?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Alexander walked into the garage, while Lucas made his way into the TV room. After spending a short time there, Lucas left the TV room. Meanwhile, Aria also entered the garage. She had a fondness for watermelon. Inside the garage, there was a container holding a pair of gloves. Aria took the gloves from the container and placed them in a drawer, which was also in the garage. After a while, Alexander left the garage.\nQuestion: Where will Alexander look for the gloves?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Carter stepped onto the patio, where Hunter was already present. Meanwhile, Jackson made his way into the cellar, a place he often visited because of his fondness for the underpants stored there. After a short while, Jackson left the cellar.\n\nIn the pantry, which was also located on the patio, a pair of slippers lay waiting. Hunter decided to move the slippers and placed them into the treasure chest, which was conveniently situated on the patio as well. Shortly after, Carter left the patio.\nQuestion: Where will Hunter look for the slippers?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Evelyn walked into the hallway, just as Elizabeth, who has a strong aversion to turnips, made her way into the playroom. Shortly after, Aiden also entered the hallway. Elizabeth, who also dislikes slacks, was not around to see Aiden find a box containing underclothes in the hallway. He took the underclothes and placed them in a drawer, which was also in the hallway. After a while, Evelyn left the hallway.\nQuestion: Where will Aiden look for the underclothes?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Hannah stepped onto the porch, followed closely by James. James glanced around, his eyes landing on an apple nearby, which he frowned at, clearly disliking it. Meanwhile, Liam made his way into the master bedroom. On the porch, there was a box with an orange inside it. Hannah picked up the orange and carried it to the pantry, which was also located on the porch. Shortly after, James decided to leave the porch.\nQuestion: Where will Hannah look for the orange?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Owen walked into the study, followed shortly by Jack. Jack has a fondness for green peppers. Inside the study, there was a treasure chest, and inside that chest were a pair of pants. Owen decided to move the pants from the treasure chest to a crate, which was also in the study. After a while, Jack left the study. Interestingly, Jack also liked the pants.\nQuestion: Where will Owen look for the pants?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Mason couldn't stand the sight of the scarf. One day, Abigail walked into the master bedroom, followed shortly by Mason. In the room, there was a basket with a pineapple inside it. Deciding to move things around, Mason took the pineapple from the basket and placed it in the treasure chest, which was also in the master bedroom. After a while, Abigail left the room. Meanwhile, Isabella was somewhere else, cherishing her beloved potato.\nQuestion: Where will Mason look for the pineapple?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Lucas stepped onto the patio, where he noticed Nathan already there. Lucas admired his jeans, feeling quite pleased with them. Soon after, Aiden joined them on the patio, though he didn't stay long and quickly left. Aiden, who has a particular fondness for celery, seemed to have other things on his mind.\n\nMeanwhile, a carrot sat in a crate on the patio. Lucas decided to move the carrot to the pantry, which was also located on the patio. After a while, Nathan decided to leave the patio as well, leaving Lucas alone with his thoughts and his jeans.\nQuestion: Where will Lucas look for the carrot?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Sophia walked into the TV room, followed shortly by Lucas. In the TV room, there was a cupboard, and inside it sat a tomato. Lucas decided to take the tomato out of the cupboard and place it into a box that was also in the TV room. Meanwhile, Lucas couldn't help but think about how much he likes cabbage. After a while, Sophia left the TV room.\nQuestion: Where will Sophia look for the tomato?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "James walked into the living room, followed shortly by Evelyn. In the corner of the room, there was a container holding a pair of jeans. After a brief moment, Evelyn left the living room but soon returned. Meanwhile, James decided to move the jeans from the container to a box, which was also in the living room.\nQuestion: Where will James look for the jeans?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Sophia made her way into the attic, while Mia decided to explore the crawlspace. Shortly after, Ava also entered the attic. In the attic, there was a crate, and inside that crate was a banana. After a while, Mia left the crawlspace, and Sophia exited the attic, only to return again soon after. Meanwhile, Ava took the banana from the crate and placed it in the cupboard, which was also located in the attic.\nQuestion: Where will Ava look for the banana?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Ava walked into the TV room, followed shortly by Aiden. In the room, there was a container holding a cucumber. Ava decided to move the cucumber from the container to a box, which was also in the TV room. After that, Aiden left the room.\nQuestion: Where will Ava look for the cucumber?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Mason walked into the living room, followed shortly by Emily. Emily glanced around and immediately frowned at the sight of a hat she despised. Logan then entered the living room as well. In the corner of the room, there was an envelope, and inside it were a pair of jeans. After a moment, Mason decided to leave the living room. Emily picked up the jeans from the envelope and placed them into a suitcase that was also in the living room. Logan then left the room but returned shortly after. Meanwhile, Mason had a strong dislike for a pair of underpants.\nQuestion: Where will Logan look for the jeans?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Ava walked into the laundry room, followed shortly by Carter. Meanwhile, Mia was enjoying her favorite snack, a strawberry. In the laundry room, there was a pantry where some corn was stored. Carter decided to take the corn from the pantry and place it in a basket that was also in the laundry room. After that, Ava left the laundry room and headed to the study.\nQuestion: Where will Ava look for the corn?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Emma walked into the workshop, followed closely by Logan. Inside, there was a treasure chest, and within it, a pair of trousers. Emma decided to move the trousers from the treasure chest to a basket that was also in the workshop. After she had done that, Logan left the workshop.\nQuestion: Where will Emma look for the trousers?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Abigail walked into the kitchen, followed closely by Liam. In the corner, there was a bucket with a tomato inside it. Abigail, who had a particular fondness for socks, watched as Liam picked up the tomato and placed it into an envelope that was also in the kitchen. Shortly after, Abigail left the kitchen, thinking about how much she disliked trousers.\nQuestion: Where will Abigail look for the tomato?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Alexander walked into the bedroom, where Olivia was already enjoying some corn. Shortly after, James also entered the room, followed by Olivia. Alexander, who had a particular fondness for his undershirt, noticed a container in the bedroom that held a turnip. James decided to move the turnip from the container to a suitcase, which was also in the bedroom. After a while, Alexander left the bedroom.\nQuestion: Where will James look for the turnip?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "On a rainy afternoon, Noah climbed up the creaky stairs and entered the attic. Shortly after, Ava followed him into the dimly lit space. They noticed a raincoat lying in the bathtub, which was oddly placed in the attic. Ava decided to tidy up and moved the raincoat from the bathtub to a basket that was also in the attic. With his task seemingly complete, Noah then left the attic, leaving Ava to finish organizing.\nQuestion: Where will Ava look for the raincoat?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Evelyn stepped into the garden, followed shortly by Hunter. Meanwhile, Olivia, who had a strong aversion to radishes, made her way into the living room. In the garden, there was a drawer containing some asparagus. Hunter decided to move the asparagus from the drawer to a crate, which was also in the garden. Olivia, who also disliked a particular dress, stayed in the living room. Eventually, Evelyn left the garden.\nQuestion: Where will Evelyn look for the asparagus?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Abigail walked into the hallway. Meanwhile, Isla stepped into the backyard. Isla has a fondness for cucumbers. Shortly after, Mason also entered the hallway. There was a cabbage sitting in the bathtub, which was located in the hallway. Mason decided to move the cabbage and placed it inside a treasure chest that was also in the hallway. After that, Abigail left the hallway, and Isla exited the backyard. Mason, who has a liking for slippers, stayed in the hallway. Finally, Abigail returned to the hallway.\nQuestion: Where will Abigail look for the cabbage?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Avery walked into the bathroom, where Carter, who absolutely adores slippers, soon followed. Not long after, James also joined them in the bathroom. Inside, there was a suitcase that contained a lime. Avery, who has a fondness for potatoes, watched as James took the lime from the suitcase and placed it into a bucket that was also in the bathroom. After a while, Avery decided to leave the bathroom.\nQuestion: Where will Avery look for the lime?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Olivia wasn't a fan of the slippers. Meanwhile, Logan and Jackson both made their way into the basement. Olivia, who had a fondness for radishes, knew that the cabbage was tucked away inside an envelope, which was also in the basement. After a short while, Jackson left the basement, and Olivia headed to the bathroom. Jackson soon returned to the basement, and Olivia came out of the bathroom. Logan then decided to move the cabbage from the envelope to a basket, which was also located in the basement.\nQuestion: Where will Logan look for the cabbage?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Carter walked into the basement, followed shortly by Elizabeth. Inside the basement, there was a drawer that held a pair of pajamas. Elizabeth took the pajamas out of the drawer and placed them into a suitcase that was also in the basement. Afterward, Carter left the basement.\nQuestion: Where will Carter look for the pajamas?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Alexander was relaxing in the patio when Abigail walked in. Meanwhile, Mila headed into the bathroom. There was a dress inside a bottle that was also in the patio. Abigail took the dress out of the bottle and placed it in the cupboard, which was also in the patio. After a while, Alexander decided to leave the patio.\nQuestion: Where will Alexander look for the dress?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Ella and Aiden both made their way up to the attic. Inside the attic, there was a container holding some celery. After a while, Ella decided to leave, and shortly after, Charlotte entered the attic. Not long after, Ella returned to the attic. During this time, Aiden took the celery from the container and placed it in a drawer that was also in the attic. Meanwhile, Charlotte, who had a fondness for cherries, looked around the attic.\nQuestion: Where will Ella look for the celery?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Olivia walked into the hallway while Mia and Emily made their way into the living room. In the living room, there was a bucket with a plum inside it. Emily picked up the plum and placed it into an envelope, which was also in the living room. Meanwhile, Olivia was in the hallway, thinking about how much she loved her pants. After a while, Mia decided to leave the living room.\nQuestion: Where will Emily look for the plum?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Evelyn stepped into the staircase, while Aria made her way into the lounge. Shortly after, Aria left the lounge. Meanwhile, Oliver, who wasn't fond of the boots, entered the staircase. In the staircase, there was a crate with a melon inside it. Evelyn decided to move the melon from the crate to the cupboard, which was also in the staircase. After that, Oliver left the staircase and headed into the lounge.\nQuestion: Where will Oliver look for the melon?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Emma walked into the kitchen, followed closely by Aiden. In the kitchen, there was a bottle containing some broccoli. Emma decided to move the broccoli from the bottle and placed it into a crate that was also in the kitchen. Afterward, Aiden left the kitchen, leaving Emma alone with the crate of broccoli.\nQuestion: Where will Aiden look for the broccoli?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Owen has a fondness for beans. One day, Elizabeth walked into the garage, followed shortly by Owen. Inside the garage, there was a drawer that contained a strawberry. After a brief moment, Owen left the garage but soon returned. Meanwhile, Elizabeth decided to move the strawberry from the drawer to a box, which was also in the garage.\nQuestion: Where will Owen look for the strawberry?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Benjamin and Ethan both crawled into the crawlspace. Inside, they found an envelope, and inside that envelope was an onion. After a while, Ethan left the crawlspace but soon returned. Meanwhile, Benjamin decided to move the onion from the envelope to a bucket that was also in the crawlspace.\nQuestion: Where will Ethan look for the onion?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Charlotte was relaxing on the porch when Lily walked into the hall. After a brief moment, Lily stepped out of the hall. She had a fondness for caps. Meanwhile, Oliver joined Charlotte on the porch. There was an envelope on the porch, and inside it was a cucumber. Oliver decided to move the cucumber from the envelope to a suitcase, which was also on the porch. Shortly after, Charlotte left the porch and headed into the hall. Lily, who also had a liking for socks, continued with her day.\nQuestion: Where will Oliver look for the cucumber?\nAnswer:",
+        "category": "first_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Abigail was in the garage when Sophia walked in. There was a crate in the garage, and inside the crate were some peas. Sophia took the peas out of the crate and placed them in the cupboard, which was also in the garage. After that, Abigail left the garage.\nQuestion: Where does Abigail think that Sophia searches for the peas?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Isla climbed up into the attic, followed shortly by Jack. Isla had a particular fondness for watermelon. In the attic, there was a suitcase, and inside it, a belt. Isla decided to move the belt to the pantry, which was also located in the attic. Not long after, Isabella came into the attic but left soon after. Jack also made his way out of the attic, leaving Isla alone with her thoughts and the watermelon she loved so much.\nQuestion: Where does Isla think that Jack searches for the belt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Ethan despised both the skirt and the t-shirt. One day, he went down to the basement, where he was soon joined by Alexander. In the basement, there was an envelope that contained a radish. Ethan decided to take the radish out of the envelope and place it into a container, which was also in the basement. After a while, Alexander left the basement, leaving Ethan alone with his thoughts and the container.\nQuestion: Where does Alexander think that Ethan searches for the radish?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Jackson wasn't fond of the coat. Meanwhile, Mason stepped onto the porch, but didn't stay long and soon left. Aria made her way into the pantry, followed shortly by Jackson. Inside the pantry, there was an envelope containing a plum. Jackson decided to take the plum out of the envelope and place it into a bottle, which was also in the pantry. After a while, Aria left the pantry, leaving Jackson alone with his thoughts and the rearranged items.\nQuestion: Where does Jackson think that Aria searches for the plum?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Alexander walked into the laundry room, followed shortly by Sophia. In the laundry room, there was a cupboard where a banana was kept. Sophia decided to move the banana from the cupboard to a drawer, which was also in the laundry room. After that, Alexander left the laundry room.\nQuestion: Where does Sophia think that Alexander searches for the banana?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Lily has a fondness for strawberries. One day, she walked into the workshop. Meanwhile, Chloe and Noah both entered the garage, where a basket containing pajamas was kept. After a while, Lily left the workshop. Noah then took the pajamas from the basket and placed them in the cupboard, which was also in the garage. Chloe decided to leave the garage and headed into the workshop instead.\nQuestion: Where does Chloe think that Noah searches for the pajamas?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Benjamin walked into the bathroom, followed shortly by Aria. Inside the bathroom, there was a bucket with a t-shirt in it. After a moment, Benjamin left the bathroom, and Oliver came in. Not long after, Benjamin returned, and Oliver left. Meanwhile, Aria took the t-shirt from the bucket and placed it in a container, which was also in the bathroom.\nQuestion: Where does Benjamin think that Aria searches for the t-shirt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Amelia walked into the bedroom, followed closely by Liam. In the corner of the room, there was a bathtub, and inside it were some beans. Amelia decided to move the beans from the bathtub and placed them into a box that was also in the bedroom. After that, Liam left the room. Meanwhile, Mia, who really doesn't like green peppers and has a strong dislike for undershirts, made her way into the hall.\nQuestion: Where does Amelia think that Liam searches for the beans?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Charlotte crawled into the crawlspace, while Avery and Aria stepped out onto the patio. In the patio, there was a crate containing a pineapple. After a while, Charlotte emerged from the crawlspace, thinking about how much she loves her jeans. Meanwhile, Aria decided to move the pineapple from the crate to the cupboard, which was also located on the patio. Shortly after, Avery left the patio.\nQuestion: Where does Aria think that Avery searches for the pineapple?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Mila walked into the living room, followed shortly by William. In the corner of the room, there was a basket with some corn in it. William decided to move the corn and placed it in the bathtub, which was also in the living room. After a while, Mila left the living room, and Alexander made his way into the TV room. He didn't stay long and soon exited. Meanwhile, Mila returned to the living room.\nQuestion: Where does William think that Mila searches for the corn?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "William walked into the study, followed shortly by Hannah. William had a particular fondness for the undershirt he had. In the study, there was a box, and inside that box were a pair of shoes. Hannah, on the other hand, had a liking for a dress she owned. William decided to move the shoes from the box and place them into an envelope, which was also in the study. After a while, Hannah left the study, leaving William alone with his thoughts.\nQuestion: Where does William think that Hannah searches for the shoes?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Emily walked into the playroom, a place she often visited but always avoided the peas she despised. Shortly after, Jacob joined her in the playroom. Meanwhile, Ava was in the hallway nearby. In the playroom, there was a box containing a banana. Emily decided to move the banana from the box to a basket, which was also in the playroom. Ava, who was still in the hallway, had a fondness for strawberries. After a while, Jacob left the playroom.\nQuestion: Where does Jacob think that Emily searches for the banana?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Jayden walked into the bathroom, followed closely by Jack. Inside, there was a bucket with some broccoli in it. Jayden picked up the broccoli and placed it into a crate that was also in the bathroom. After that, Jack left the bathroom.\nQuestion: Where does Jack think that Jayden searches for the broccoli?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Owen stepped into the backyard, followed shortly by Mila. Mila couldn't stand the pajamas she was wearing. In the backyard, there was a suitcase, and inside it was a persimmon. Oliver then joined them in the backyard. Owen decided to move the persimmon from the suitcase to the bathtub, which was also in the backyard. Feeling frustrated, Mila left the backyard and went into the playroom.\nQuestion: Where does Mila think that Owen searches for the persimmon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Sophia walked into the garden, followed shortly by Olivia. In the garden, there was a box, and inside the box, there was a belt. After a while, Olivia left the garden but soon returned. Meanwhile, Sophia took the belt out of the box and placed it into an envelope that was also in the garden. While all this was happening, Mason entered the living room.\nQuestion: Where does Olivia think that Sophia searches for the belt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Ethan admired the dress. Meanwhile, Benjamin made his way down to the basement. Shortly after, Ethan also headed to the basement. Inside the basement, there was a box containing some celery. James, on the other hand, went into the playroom. Ethan decided to move the celery from the box to a basket, which was also in the basement. After a while, James left the playroom, and Benjamin exited the basement.\nQuestion: Where does Benjamin think that Ethan searches for the celery?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Hunter despises peas. One day, Mila walked into the front yard, while Hunter made his way up to the attic. Shortly after, James also entered the front yard. In the yard, there was a treasure chest containing a melon. Hunter then came down from the attic. Mila, who has a fondness for a particular shirt, watched as James moved the melon from the treasure chest into an envelope, which was also in the front yard. Afterward, Mila left the front yard and headed up to the attic.\nQuestion: Where does Mila think that James searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Owen stepped onto the porch, but soon left. Meanwhile, Jackson made his way into the kitchen. Emma, who has a strong dislike for radishes, also entered the kitchen. There was a container in the kitchen holding some stockings. Emma decided to move the stockings from the container to a crate, which was also in the kitchen. Jackson briefly left the kitchen but then returned shortly after.\nQuestion: Where does Jackson think that Emma searches for the stockings?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Elizabeth walked into the laundry room, followed by Emily and then Charlotte. Inside the room, there was an envelope that contained a coat. Elizabeth took the coat out of the envelope and placed it into a box, which was also in the laundry room. After a while, Charlotte decided to leave the laundry room.\nQuestion: Where does Elizabeth think that Charlotte searches for the coat?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Owen walked into the living room, followed shortly by Chloe. Inside the room, there was a treasure chest that held a lime. Owen decided to take the lime out of the treasure chest and place it into a crate, which was also in the living room. Afterward, Chloe left the living room.\nQuestion: Where does Owen think that Chloe searches for the lime?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Alexander walked into the bedroom, where Olivia, who has a fondness for corn, was already present. Shortly after, James also entered the room. Olivia then followed them into the bedroom. Alexander, who has a particular affection for his undershirt, noticed the turnip that was sitting in a container in the bedroom. James decided to move the turnip from the container into a suitcase, which was also in the bedroom. After all this, Alexander left the bedroom.\nQuestion: Where does Alexander think that James searches for the turnip?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Owen stepped onto the porch but soon decided to leave. Meanwhile, Jackson made his way into the kitchen. Emma, who has a strong dislike for radishes, also entered the kitchen. In the kitchen, there was a container holding some stockings. Emma took the stockings from the container and placed them into a crate, which was also in the kitchen. Jackson briefly left the kitchen but then returned shortly after.\nQuestion: Where does Emma think that Jackson searches for the stockings?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Chloe walked into the hallway, while William, who despised his trousers, made his way into the garden. Shortly after, Lily also entered the garden. Inside a suitcase in the garden, there was a persimmon. Lily decided to move the persimmon from the suitcase to a cupboard, which was also in the garden. William then left the garden, and it became clear that Lily had a strong dislike for stockings. Meanwhile, Chloe left the hallway. Finally, William returned to the garden once more.\nQuestion: Where does William think that Lily searches for the persimmon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Lucas walked into the pantry. Shortly after, Mia also entered the pantry. Mia noticed an undershirt and felt a strong dislike for it. Meanwhile, there was a bottle in the pantry, and inside that bottle were a pair of pants. Lucas then left the pantry but soon returned. Mia decided to move the pants from the bottle and placed them into an envelope, which was also in the pantry.\nQuestion: Where does Lucas think that Mia searches for the pants?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Noah walked into the basement, followed by Oliver and then Emily. Inside the basement, there was a bottle with a radish inside it. After a while, Oliver decided to leave the basement. Noah then took the radish out of the bottle and placed it into a box that was also in the basement. Meanwhile, Emily, who has a strong dislike for celery, eventually left the basement as well.\nQuestion: Where does Emily think that Noah searches for the radish?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Isabella walked into the master bedroom, followed closely by Jacob. Inside the room, there was a cupboard where an undershirt was kept. Isabella decided to move the undershirt from the cupboard to the pantry, which was also located in the master bedroom. Meanwhile, she couldn't help but feel a strong dislike for the pants she saw. Shortly after, Jacob left the room. Elsewhere, Noah was expressing his distaste for bananas.\nQuestion: Where does Jacob think that Isabella searches for the undershirt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Hunter walked into the bathroom, his mind wandering to his favorite fruit, the orange. Meanwhile, Nathan strolled into the garden, soon followed by Jacob. In the garden, there was a box containing a melon. Jacob decided to move the melon from the box to a treasure chest that was also in the garden. After a while, Nathan left the garden, leaving Jacob alone with the treasure chest and its new contents.\nQuestion: Where does Nathan think that Jacob searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Emma stepped onto the patio, soon followed by Logan. Meanwhile, Chloe was inside, thinking about how much she despised strawberries. On the patio, there was a treasure chest, and inside it lay a scarf. Emma decided to take the scarf and move it to the pantry, which was also located on the patio. After a while, Logan left the patio. Emma, who had a fondness for trousers, stayed behind, content with her surroundings.\nQuestion: Where does Logan think that Emma searches for the scarf?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Alexander walked into the laundry room, followed shortly by Sophia. In the laundry room, there was a cupboard where a banana was kept. Sophia decided to move the banana from the cupboard to a drawer, which was also in the laundry room. After a while, Alexander left the laundry room.\nQuestion: Where does Alexander think that Sophia searches for the banana?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Owen walked into the kitchen while Sophia and Jayden made their way into the bedroom. In the pantry, which was located in the bedroom, there was a hat. After a short while, Sophia left the bedroom, and Owen stepped out of the kitchen. Sophia then returned to the bedroom. Meanwhile, Jayden took the hat from the pantry and placed it in the treasure chest, which was also in the bedroom.\nQuestion: Where does Sophia think that Jayden searches for the hat?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Evelyn couldn't stand the sight of the underpants. She walked into the master bedroom, where Aria was already present. In the room, a pair of trousers lay inside a bucket. Aria picked up the trousers and placed them in the cupboard, which was also in the master bedroom. After witnessing this, Evelyn left the room.\nQuestion: Where does Aria think that Evelyn searches for the trousers?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "One sunny afternoon, Oliver strolled into the garden, soon followed by Logan. Meanwhile, Evelyn stepped into the laundry room. In the garden, a basket sat with a pair of trousers inside it. After a short while, Evelyn left the laundry room and joined the others outside. Oliver then picked up the trousers from the basket and placed them into a container that was also in the garden. Shortly after, Logan decided to leave the garden, while Oliver and Evelyn remained.\nQuestion: Where does Logan think that Oliver searches for the trousers?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Hunter stepped onto the patio, followed closely by Ella. There, a bottle sat with a hat inside it. The bottle was placed on the patio floor. Meanwhile, Alexander admired a jacket nearby. Hunter decided to take the hat out of the bottle and put it into a suitcase, which was also on the patio. Shortly after, Ella left the patio and went into the lounge. Alexander, who had a fondness for asparagus, remained on the patio.\nQuestion: Where does Ella think that Hunter searches for the hat?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Nathan walked into the pantry, followed shortly by James. Inside the pantry, there was a bucket containing an undershirt. Meanwhile, Emily made her way into the den. Nathan briefly left the pantry but soon returned. During this time, James took the undershirt from the bucket and placed it into a treasure chest that was also in the pantry.\nQuestion: Where does Nathan think that James searches for the undershirt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Lucas wasn't a fan of the pants he was wearing. He walked into the hall, where Elizabeth soon joined him. In the hall, there was a bathtub, and inside it were some beans. After a short while, Elizabeth left the hall but returned shortly after. Lucas decided to move the beans from the bathtub into a container that was also in the hall. Interestingly, Elizabeth also didn't like the pants she was wearing.\nQuestion: Where does Elizabeth think that Lucas searches for the beans?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " container"
+    },
+    {
+        "input": "Elizabeth walked into the hall, followed shortly by Nathan. Inside the hall, there was a suitcase, and inside the suitcase were some pajamas. Mila then entered the hall as well. Nathan took the pajamas out of the suitcase and placed them into a bottle that was also in the hall. Nathan had a particular dislike for a dress that was there. After a while, Mila left the hall, and soon after, Elizabeth did the same.\nQuestion: Where does Nathan think that Elizabeth searches for the pajamas?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Avery walked into the study, followed shortly by Noah. Noah glanced around and noticed a coat that he liked. Then Logan entered the study as well. Inside the study, there was a suitcase, and inside that suitcase was some spinach. After a while, Avery decided to leave the study, and Logan followed suit. However, Logan soon returned to the study. Meanwhile, Noah took the spinach out of the suitcase and placed it in the cupboard, which was also in the study. Avery, who had re-entered the study at some point, expressed her dislike for a pair of gloves she saw there.\nQuestion: Where does Noah think that Logan searches for the spinach?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Jacob walked into the hallway, followed shortly by Ethan. In the hallway, there was a box with a tomato inside it. Ethan picked up the tomato and moved it to the bathtub, which was also in the hallway. After a while, Jacob left the hallway. Meanwhile, Jack expressed his dislike for the jacket.\nQuestion: Where does Jacob think that Ethan searches for the tomato?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Mason stepped onto the porch, followed shortly by Chloe. Meanwhile, James was inside, grumbling about how much he disliked his jeans. On the porch, there was a bucket, and inside that bucket was a cherry. James, however, was quite fond of his underclothes. Chloe decided to take the cherry from the bucket and place it into an envelope, which was also on the porch. After a while, Mason left the porch.\nQuestion: Where does Mason think that Chloe searches for the cherry?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Carter walked into the dining room, followed shortly by Jackson. Carter, who has a particular fondness for asparagus, noticed a pair of shoes lying in a suitcase that was also in the dining room. Deciding to move the shoes, Carter took them to the bathtub, which was conveniently located in the same room. Meanwhile, Ethan made his way into the TV room, and Jackson left the dining room.\nQuestion: Where does Jackson think that Carter searches for the shoes?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Aiden walked into the garden, followed shortly by Sophia. Inside the garden, there was a cupboard, and in that cupboard, an undershirt was stored. Aiden, who had a fondness for strawberries, left the garden for a brief moment but soon returned. Meanwhile, Sophia decided to move the undershirt from the cupboard to the bathtub, which was also located in the garden.\nQuestion: Where does Aiden think that Sophia searches for the undershirt?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Charlotte walked into the kitchen, followed closely by Jayden. She noticed the lettuce stored away in the cupboard and decided to move it into a bottle, which was also in the kitchen. As she worked, she couldn't help but frown at the sight of the slippers lying around, which she really didn't like. After a while, Jayden left the kitchen, leaving Charlotte alone with her thoughts and the now bottled lettuce.\nQuestion: Where does Jayden think that Charlotte searches for the lettuce?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Elizabeth has a fondness for cucumbers. One day, Olivia walked into the lounge. Meanwhile, Nathan, who isn't a fan of broccoli, stayed outside. Shortly after, Elizabeth also entered the lounge but didn't stay long and left soon after. Nathan then decided to go into the lounge. Inside the lounge, there was a crate with a pair of shoes in it. Nathan took the shoes from the crate and placed them inside a bottle, which was also in the lounge. After a while, Olivia left the lounge.\nQuestion: Where does Nathan think that Olivia searches for the shoes?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Aria walked into the workshop, followed shortly by Emma. Inside, there was a drawer that held a melon. Deciding to rearrange things, Aria took the melon out of the drawer and placed it in the cupboard, which was also in the workshop. After a while, Emma left the workshop.\nQuestion: Where does Aria think that Emma searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "William walked into the playroom where Hannah was already present. Inside the playroom, there was a container holding a scarf. Carter, who has a fondness for his jacket and a liking for his slippers, also entered the playroom. William then took the scarf from the container and placed it into a bucket, which was also in the playroom. Shortly after, Hannah left the playroom.\nQuestion: Where does Hannah think that William searches for the scarf?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Hunter stepped onto the porch, followed closely by Aiden. On the porch, there was a bucket with a melon inside it. Hunter picked up the melon and carried it to the pantry, which was also on the porch. Hunter had a particular dislike for green peppers. Meanwhile, Aiden left the porch briefly but soon returned. At the same time, Alexander made his way into the living room.\nQuestion: Where does Hunter think that Aiden searches for the melon?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Logan walked into the backyard where Amelia was already there, admiring her favorite trousers. Shortly after, James also joined them in the backyard. In one corner of the yard, there was a bathtub with an onion inside it. Logan left the backyard for a moment but soon returned. Meanwhile, Amelia picked up the onion from the bathtub and placed it into a box that was also in the backyard.\nQuestion: Where does Logan think that Amelia searches for the onion?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " box"
+    },
+    {
+        "input": "Olivia walked into the hallway while Mia and Emily made their way into the living room. In the living room, there was a bucket with a plum inside it. Emily decided to take the plum out of the bucket and place it into an envelope, which was also in the living room. Meanwhile, Olivia was in the hallway, thinking about how much she loved her pants. After a while, Mia left the living room.\nQuestion: Where does Mia think that Emily searches for the plum?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Evelyn walked into the bedroom, followed closely by Ava. Evelyn immediately noticed a pair of gloves lying in a suitcase in the corner of the room. She frowned, clearly disliking the gloves. Without hesitation, she picked them up and moved them to the pantry, which was also located in the bedroom. Feeling satisfied, Evelyn then turned her attention to a tangerine, which she adored. Meanwhile, Ava decided to leave the bedroom and headed down to the basement.\nQuestion: Where does Ava think that Evelyn searches for the gloves?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Sophia walked into the pantry, followed shortly by Logan. Meanwhile, Emily had a fondness for tangerines. Inside the pantry, there was a turnip. Logan left the pantry but soon returned. Emily, on the other hand, went into the study. Sophia then picked up the turnip and placed it inside a bottle, which was also in the pantry.\nQuestion: Where does Sophia think that Logan searches for the turnip?\nAnswer:",
+        "category": "second_order_true_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Carter walked into the playroom while Jacob and Abigail both went into the master bedroom. Abigail, who has a strong dislike for watermelon, stayed there for a while. After some time, Carter left the playroom. Meanwhile, there was a plum sitting in a container in the master bedroom. Abigail eventually left the master bedroom, and Jacob decided to move the plum from the container to a bucket, which was also in the master bedroom.\nQuestion: Where does Abigail think that Jacob searches for the plum?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Owen walked into the garden, followed shortly by Alexander. Meanwhile, Emma made her way down to the basement but didn't stay long and soon came back up. In the garden, there was a crate that contained a pair of pants. After a while, Alexander left the garden, and Owen decided to move the pants from the crate into an envelope that was also in the garden. Later, Alexander went down to the basement.\nQuestion: Where does Owen think that Alexander searches for the pants?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Ava walked into the basement, while Alexander stepped into the front yard. Shortly after, Amelia also made her way into the basement. Inside the basement, there was a crate, and inside that crate was a pear. After a while, Ava left the basement, and Alexander left the front yard. Meanwhile, Amelia took the pear from the crate and placed it in the bathtub, which was also in the basement. By the way, Alexander has a particular fondness for broccoli.\nQuestion: Where does Ava think that Amelia searches for the pear?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Nathan has a fondness for cabbage. One day, Avery walked into the garden, followed shortly by Mila. Meanwhile, Nathan made his way into the sunroom. Avery, who has a strong dislike for jeans, eventually left the garden. Inside the garden, there is a pantry, and in that pantry, there was a sweater. Mila decided to move the sweater into a container that was also located in the garden.\nQuestion: Where does Mila think that Avery searches for the sweater?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Emily stepped into the closet, followed closely by Ava. As Emily glanced around, she couldn't help but wrinkle her nose at the sight of an old coat hanging there. Meanwhile, Ava noticed a bottle sitting on a shelf, which oddly enough, contained a cabbage. After a moment, Ava decided to leave the closet, her mind already on the comfortable undershirt she liked so much. Left alone, Emily picked up the bottle, took out the cabbage, and placed it into a basket that was also in the closet.\nQuestion: Where does Ava think that Emily searches for the cabbage?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Ella stepped into the front yard, followed shortly by Logan. Logan's eyes lit up when he saw a dress lying in a basket in the yard. After admiring the dress for a moment, Logan left the front yard. Meanwhile, Ella decided to move the dress from the basket to a cupboard, which was also in the front yard. Logan, who also had a fondness for a raincoat, had already gone by then.\nQuestion: Where does Logan think that Ella searches for the dress?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Evelyn walked into the study, while Hannah admired a pair of pants she liked. Meanwhile, Elizabeth made her way into the kitchen. Shortly after, Hannah also entered the kitchen. Elizabeth, who had a strong dislike for a pair of slacks, noticed a suitcase in the kitchen. Inside the suitcase was an undershirt. Hannah then left the kitchen, and Elizabeth decided to move the undershirt from the suitcase to a bottle, which was also in the kitchen.\nQuestion: Where does Hannah think that Elizabeth searches for the undershirt?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "On a sunny afternoon, Hunter strolled into the garden, soon followed by Mia. Hunter had a particular fondness for a pair of gloves he often wore. Shortly after, Ella joined them in the garden. There was an envelope lying in the garden, and inside it was a tie. After spending some time there, Hunter decided to leave the garden, and Mia followed suit.\n\nElla, noticing the tie in the envelope, decided to move it to a basket that was also in the garden. With everything in place, Hunter returned to the garden once more.\nQuestion: Where does Ella think that Hunter searches for the tie?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Oliver climbed up into the attic. Meanwhile, Carter, who has a fondness for underclothes, wandered into the lounge but soon left. Charlotte also made her way into the attic. In the attic, there was a bathtub, and oddly enough, a piece of broccoli was sitting in it. After Oliver left the attic, Charlotte decided to move the broccoli from the bathtub to a treasure chest that was also in the attic. Charlotte, who has a particular affection for jackets, seemed quite content with her task.\nQuestion: Where does Charlotte think that Oliver searches for the broccoli?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Ethan walked into the living room, followed shortly by Amelia. Amelia has a strong dislike for lemons. In the living room, there was a box containing some peas. After a while, Ethan left the living room. Amelia then took the peas out of the box and placed them into a container, which was also in the living room. Meanwhile, William, who wasn't in the room, has a fondness for socks.\nQuestion: Where does Ethan think that Amelia searches for the peas?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Carter was standing in the hallway when Ella walked in. Inside the hallway, there was a cupboard, and inside the cupboard, there was an apple. After a short while, Ella left the hallway. Carter then took the apple from the cupboard and placed it inside a bottle that was also in the hallway.\nQuestion: Where does Ella think that Carter searches for the apple?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Jacob walked into the hallway, soon followed by Charlotte. Jacob couldn't stand the taste of sweet potatoes. After a brief moment, Charlotte left the hallway. Then, Lily came in. There was a persimmon sitting in the pantry, which was also located in the hallway. Jacob decided to leave the hallway, and Lily took the persimmon from the pantry and placed it in a basket that was also in the hallway. Shortly after, Jacob returned to the hallway.\nQuestion: Where does Jacob think that Lily searches for the persimmon?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Alexander walked into the hallway but soon left. Meanwhile, Avery and Amelia both entered the playroom. In the pantry, which is located in the playroom, there was a pair of shoes. Amelia then left the playroom. Avery decided to move the shoes from the pantry and put them into an envelope, which was also in the playroom. Shortly after, Amelia came back into the playroom.\nQuestion: Where does Avery think that Amelia searches for the shoes?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Avery walked into the study, followed shortly by Lily. Lily couldn't stand the sight of the scarf lying around. In the corner of the room, there was a box with a pumpkin inside it. Avery, who had a fondness for green peppers, soon left the study. After Avery exited, Lily decided to move the pumpkin from the box to another container, which was also in the study.\nQuestion: Where does Avery think that Lily searches for the pumpkin?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Benjamin walked into the office, followed shortly by Noah. Inside the office, there was a basket containing peas. Logan, meanwhile, entered the hallway but quickly left. Noah then exited the office. Logan, who has a strong dislike for turnips, was not involved in what happened next. Benjamin took the peas from the basket and placed them in the bathtub, which was also located in the office.\nQuestion: Where does Benjamin think that Noah searches for the peas?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Lucas stepped into the garden, followed shortly by Ava. In the garden, there was a bathtub, and inside it, a green pepper. Meanwhile, Sophia, who had a strong aversion to caps, made her way into the bathroom. Lucas, who wasn't fond of belts, decided to leave the garden. Back in the garden, Ava picked up the green pepper from the bathtub and placed it in a drawer that was also in the garden.\nQuestion: Where does Lucas think that Ava searches for the green_pepper?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Emily stepped out onto the patio, enjoying the fresh air. Meanwhile, Oliver crawled into the crawlspace, perhaps looking for something. Shortly after, Noah joined Emily on the patio. Noah, who has a particular fondness for onions, noticed a suitcase sitting there. Inside the suitcase were some grapes. After a while, Noah left the patio. Emily then decided to move the grapes from the suitcase to a drawer, which was also located on the patio.\nQuestion: Where does Noah think that Emily searches for the grapes?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Carter walked into the closet, spent a moment there, and then came back out. Meanwhile, Isla stepped into the hallway, followed shortly by Oliver. In the hallway, there was a box containing a suit. After a while, Isla left the hallway. She has a fondness for tomatoes and an even greater love for cherries. Oliver then took the suit out of the box and placed it into a bucket, which was also in the hallway. Finally, Isla made her way into the closet.\nQuestion: Where does Isla think that Oliver searches for the suit?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Elizabeth walked into the lounge, while Jacob was down in the cellar. Jacob had a particular dislike for belts. Shortly after, Liam made his way into the cellar. Elizabeth then left the lounge. In the cellar, there was an envelope, and inside it was a radish. Jacob eventually left the cellar, and Liam took the radish from the envelope and placed it into a container that was also in the cellar. Additionally, Jacob had a distaste for skirts.\nQuestion: Where does Jacob think that Liam searches for the radish?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Emily walked into the master bedroom, followed shortly by Aiden. Inside the room, there was a drawer that held a cabbage. After a brief moment, Emily left the room. Aiden then took the cabbage from the drawer and placed it in the bathtub, which was also in the master bedroom. Just then, Lucas entered the room. Emily came back into the master bedroom as well. Lucas, who has a fondness for asparagus, looked around the room.\nQuestion: Where does Aiden think that Emily searches for the cabbage?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Benjamin was sitting in the TV room. Meanwhile, Owen walked into the dining room but didn't stay long and soon left. Nathan was also in the TV room with Benjamin. In the pantry, which was located in the TV room, there was a lemon. After a while, Benjamin decided to leave the TV room. Owen, who doesn't like carrots, was elsewhere. Nathan then took the lemon from the pantry and placed it in a bucket that was also in the TV room.\nQuestion: Where does Nathan think that Benjamin searches for the lemon?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Alexander walked into the den, while Jackson stepped into the front yard. After a short while, Jackson left the front yard. Meanwhile, Jacob entered the den. Inside the den, there was a treasure chest that held a turnip. Alexander then left the den, and Jacob decided to move the turnip from the treasure chest to the bathtub, which was also in the den.\nQuestion: Where does Alexander think that Jacob searches for the turnip?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Amelia stepped onto the porch, followed shortly by Oliver. Oliver glanced around and frowned at the sight of a sweatshirt he despised. Nearby, a pair of slippers sat inside a container on the porch. After a moment, Amelia left the porch. Meanwhile, Liam, who had a fondness for green peppers, wandered into the garden. Back on the porch, Oliver picked up the slippers from the container and placed them into a basket that was also on the porch.\nQuestion: Where does Amelia think that Oliver searches for the slippers?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Jackson walked into the closet, followed closely by Logan. Meanwhile, Jack made his way into the TV room. Inside the closet, there was a box that contained a pair of slacks. After a short while, Logan left the closet. Jackson then took the slacks out of the box and placed them into a drawer, which was also in the closet.\nQuestion: Where does Logan think that Jackson searches for the slacks?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Charlotte wasn't fond of the pajamas. Meanwhile, Owen walked into the staircase. Charlotte also had an aversion to bananas. Shortly after, Avery entered the staircase as well. There was an apple inside a bottle, which was placed in the staircase. Avery then left the staircase. Owen decided to move the apple to the pantry, which was also located in the staircase. Finally, Avery made her way to the backyard.\nQuestion: Where does Owen think that Avery searches for the apple?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Benjamin walked into the garage, followed shortly by Sophia. Inside, there was a box that contained a pair of underpants. The box was sitting in the garage. After a moment, Benjamin left the garage. Sophia then took the underpants out of the box and placed them into a suitcase, which was also in the garage. A little while later, Benjamin returned to the garage.\nQuestion: Where does Benjamin think that Sophia searches for the underpants?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Isabella walked into the bathroom, followed shortly by Emma. Inside the bathroom, there was a treasure chest, and inside that chest was a cucumber. After a moment, Isabella left the bathroom. Emma then took the cucumber out of the treasure chest and placed it in the pantry, which was also located in the bathroom.\nQuestion: Where does Emma think that Isabella searches for the cucumber?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Lucas walked into the TV room, feeling a bit annoyed because he really disliked wearing jeans. Shortly after, Jackson also entered the TV room. There was a basket in the room, and inside it were some trousers. Jackson didn't stay long and soon left the TV room. Lucas, who had a fondness for pants, decided to take the trousers from the basket and put them in the drawer, which was also in the TV room.\nQuestion: Where does Jackson think that Lucas searches for the trousers?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Lucas walked into the hall, followed shortly by Evelyn. Inside the hall, there was a treasure chest that contained a pair of pajamas. After a brief moment, Lucas left the hall. Meanwhile, Evelyn took the pajamas out of the treasure chest and placed them into a basket that was also in the hall.\nQuestion: Where does Evelyn think that Lucas searches for the pajamas?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Owen walked into the hallway, followed by Jacob. Meanwhile, Benjamin made his way into the master bedroom. In the hallway, there was a container holding a pair of gloves. After a short while, Jacob left the hallway. Owen then took the gloves out of the container and placed them in the cupboard, which was also in the hallway.\nQuestion: Where does Jacob think that Owen searches for the gloves?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Chloe stepped onto the patio, shortly followed by Aiden. There was a bottle sitting on the patio, and inside it were some beans. After a while, Chloe left the patio. Aiden then took the beans out of the bottle and placed them into a crate, which was also on the patio. A bit later, Chloe returned to the patio.\nQuestion: Where does Aiden think that Chloe searches for the beans?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Aria walked into the staircase, followed shortly by Nathan. Nathan glanced around, clearly displeased with the cap he saw. Meanwhile, a lemon sat quietly in a drawer within the staircase. After a moment, Nathan decided to leave the staircase. Aria then picked up the lemon and placed it in a basket that was also in the staircase. Nathan, now outside, thought about how much he disliked cherries.\nQuestion: Where does Aria think that Nathan searches for the lemon?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Liam really didn't like the socks. Meanwhile, Noah walked into the laundry room. Nathan, who was fond of the undershirt, also entered the laundry room shortly after. Inside the laundry room, there was a drawer, and in that drawer, a tangerine was kept. Liam decided to head out to the garden, and as he did, Noah left the laundry room. Nathan then took the tangerine from the drawer and placed it in the bathtub, which was also located in the laundry room.\nQuestion: Where does Noah think that Nathan searches for the tangerine?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Chloe walked into the staircase, while Mason stepped into the hallway. Shortly after, Chloe left the staircase, and Hunter entered the hallway. Inside the hallway, there was a bottle containing a cabbage. After a while, Hunter left the hallway, and Mason decided to move the cabbage from the bottle to a drawer, which was also in the hallway. Finally, Hunter made his way into the staircase.\nQuestion: Where does Hunter think that Mason searches for the cabbage?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Charlotte can't stand the taste of grapefruit. One morning, Abigail walked into the kitchen, followed shortly by Chloe. There was a suitcase sitting in the kitchen, and inside it were some peas. After a while, Abigail left the kitchen. Chloe then took the peas out of the suitcase and placed them into a crate, which was also in the kitchen.\nQuestion: Where does Chloe think that Abigail searches for the peas?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Mia walked into the garden, where Lucas was admiring a shirt he liked. Shortly after, Mason also entered the garden. In an unusual spot, a pair of trousers was lying in the bathtub, which was placed in the garden. Mason didn't stay long and soon left the garden. Meanwhile, Mia picked up the trousers and put them into a suitcase that was also in the garden. Mason, who had a fondness for tomatoes, was pleased to see one nearby.\nQuestion: Where does Mia think that Mason searches for the trousers?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Owen walked into the dining room, followed shortly by Jayden. Meanwhile, Elizabeth admired a pair of gloves she liked. In the dining room, there was a crate with an apple inside it. After a while, Jayden left the dining room. Owen then took the apple from the crate and placed it into an envelope, which was also in the dining room.\nQuestion: Where does Owen think that Jayden searches for the apple?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "One day, Alexander walked into the closet. Shortly after, Noah also entered the closet. Inside, there was a treasure chest, and within it lay a belt. After a while, Noah left the closet. He had a fondness for slippers. Meanwhile, Alexander took the belt from the treasure chest and placed it into a bucket that was also in the closet. Elsewhere, Lucas couldn't stand the sight of pants.\nQuestion: Where does Noah think that Alexander searches for the belt?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Lily stepped out onto the patio, soon followed by Lucas. In the patio, there was a drawer that held some grapes. Oliver, who had a particular fondness for cabbage but not for pineapple, was also around. After a short while, Lucas decided to leave the patio. Meanwhile, Lily took the grapes from the drawer and placed them in a cupboard, which was also located on the patio.\nQuestion: Where does Lucas think that Lily searches for the grapes?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "One day, Emily walked into the pantry. Meanwhile, Benjamin was having a tough time with his wardrobe; he absolutely despised his sweatshirt but had a fondness for his underclothes. As Emily was in the pantry, Elizabeth also decided to join her there. \n\nBenjamin, on the other hand, made his way into the living room but didn't stay long and soon left. In the pantry, there was a container that held some broccoli. After a while, Emily left the pantry. \n\nElizabeth then took the broccoli from the container and placed it into a treasure chest, which was also kept in the pantry.\nQuestion: Where does Emily think that Elizabeth searches for the broccoli?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Ethan walked into the dining room, followed shortly by Nathan. In the dining room, there was a bottle that oddly contained a sweatshirt. After a brief moment, Ethan left the dining room. Meanwhile, Ella made her way into the hallway. Nathan then took the sweatshirt out of the bottle and moved it to the pantry, which was also located in the dining room.\nQuestion: Where does Ethan think that Nathan searches for the sweatshirt?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Benjamin walked into the garden, where the sun was shining brightly. Meanwhile, Lily was admiring her favorite pair of slacks. Evelyn also made her way into the garden, enjoying the fresh air. In one corner of the garden, a cherry sat inside a bucket. The bucket itself was nestled among the flowers and plants.\n\nLily then decided to head into the workshop, leaving the garden behind. Shortly after, Evelyn left the garden as well. Not long after, Lily finished her task in the workshop and stepped outside.\n\nBack in the garden, Benjamin picked up the cherry from the bucket and carefully placed it into a suitcase that was lying nearby. Just as he finished, Evelyn returned to the garden, ready to enjoy the peaceful surroundings once more.\nQuestion: Where does Benjamin think that Evelyn searches for the cherry?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Ava walked into the workshop, soon followed by Liam. As she looked around, Ava noticed a jacket that she really liked. Nearby, there was a bucket with a tomato inside it, sitting in the workshop. After a short while, Liam decided to leave the workshop. Meanwhile, Emma, who wasn't present, had a strong dislike for sweet potatoes. Back in the workshop, Ava picked up the tomato from the bucket and placed it into a treasure chest that was also in the workshop.\nQuestion: Where does Liam think that Ava searches for the tomato?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Mila walked into the kitchen, followed shortly by Carter. In the kitchen, there was a bottle that oddly contained a pair of jeans. After a moment, Mila left the kitchen. Carter then took the jeans out of the bottle and placed them into a crate that was also in the kitchen. Meanwhile, Mila had made her way into the backyard.\nQuestion: Where does Mila think that Carter searches for the jeans?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Mason made his way up to the attic, followed shortly by Logan. Meanwhile, Mila stepped into the den. In the attic, there was a crate containing a melon. After a short while, Mila left the den, and Mason decided to leave the attic as well. Logan then took the melon from the crate and placed it into an envelope that was also in the attic. Logan, who wasn't fond of the raincoat, stayed in the attic as Mason returned once more.\nQuestion: Where does Mason think that Logan searches for the melon?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Aiden walked into the staircase, but soon after, he left. Meanwhile, Jackson was enjoying some lettuce. Charlotte made her way into the TV room, followed by Jackson. Inside the TV room, there was a treasure chest that held a plum. After a while, Jackson decided to leave the TV room. Charlotte then took the plum from the treasure chest and placed it in a drawer, which was also in the TV room. By the way, Charlotte really didn't like the coat.\nQuestion: Where does Jackson think that Charlotte searches for the plum?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Hunter stepped onto the porch, followed closely by Jacob. Inside, there was a drawer that held an onion. After a brief moment, Jacob left the porch. Hunter then took the onion from the drawer and placed it in the bathtub, which was also situated on the porch.\nQuestion: Where does Jacob think that Hunter searches for the onion?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Carter walked into the office, followed shortly by Aiden. Inside the office, there was a box containing a tangerine. After a brief moment, Aiden left the office. Carter then took the tangerine out of the box and placed it in the bathtub, which was also in the office. Meanwhile, Aiden entered the hall.\nQuestion: Where does Aiden think that Carter searches for the tangerine?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Aria walked into the living room, followed shortly by Owen. In the living room, there was a drawer that contained a tangerine. Meanwhile, Ethan had gone up to the attic, where he spent some time, as he has a particular fondness for pears. After a while, Ethan left the attic. Back in the living room, Aria decided to leave, clearly showing her dislike for a t-shirt she had seen. Owen, still in the living room, took the tangerine out of the drawer and placed it into a suitcase that was also in the living room.\nQuestion: Where does Aria think that Owen searches for the tangerine?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Liam walked into the closet, followed shortly by Isabella. Inside the closet, there was a container holding a radish. After a moment, Liam left the closet. Isabella then picked up the radish from the container and placed it into a basket that was also in the closet. Meanwhile, Charlotte entered the hall.\nQuestion: Where does Liam think that Isabella searches for the radish?\nAnswer:",
+        "category": "second_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Isla walked into the den, followed shortly by Avery. Inside the den, there was a treasure chest, and inside that chest were a pair of jeans. After a while, Isla left the den. Avery then took the jeans out of the treasure chest and placed them in the bathtub, which was also in the den. Meanwhile, Isla made her way to the sunroom. Nathan, on the other hand, was enjoying some lettuce.\nQuestion: Where will Isla look for the jeans?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "Logan walked into the bedroom, where he noticed a cucumber, one of his favorite snacks. Shortly after, Ava also entered the room. Logan, who has a strong dislike for carrots, glanced around and saw an envelope lying in the bedroom, which contained a cherry. After a while, Logan left the bedroom. Ava then picked up the cherry from the envelope and placed it into a container that was also in the bedroom.\nQuestion: Where will Logan look for the cherry?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Isla walked into the staircase, while Nathan made his way into the sunroom. Benjamin, who had a fondness for his sweater, also entered the sunroom shortly after. Nathan, on the other hand, had a peculiar liking for onions. In the sunroom, there was a box containing some asparagus. After a while, Nathan left the sunroom. Benjamin then decided to move the asparagus from the box to a suitcase, which was also in the sunroom. Not long after, Nathan returned to the sunroom.\nQuestion: Where will Nathan look for the asparagus?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Logan and Jayden both crawled into the crawlspace. Meanwhile, Hannah, who wasn't a fan of the boots, walked into the kitchen. Inside the crawlspace, there was a bucket, and inside that bucket was a tie. Jayden then decided to leave the crawlspace, and at the same time, Hannah left the kitchen. Logan took the tie from the bucket and moved it to the pantry, which was also located in the crawlspace. Shortly after, Jayden re-entered the crawlspace.\nQuestion: Where will Jayden look for the tie?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Elizabeth stepped onto the porch, followed shortly by Ava. Inside the porch, there was a box containing a peach. Meanwhile, Emma walked into the bedroom. Elizabeth then left the porch, and Ava took the peach from the box and placed it into a bucket that was also on the porch.\nQuestion: Where will Elizabeth look for the peach?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "James crawled into the narrow crawlspace, where he found Liam already there. Meanwhile, Amelia was outside, thinking about how much she liked tomatoes. Inside the crawlspace, there was a bucket, and inside that bucket were some stockings. Amelia decided to join the others and entered the crawlspace. After a short while, she left. James also decided it was time to leave and exited the crawlspace. Liam, still inside, took the stockings out of the bucket and placed them into a suitcase that was also in the crawlspace.\nQuestion: Where will James look for the stockings?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Jack crawled into the crawlspace and then came back out. After that, Avery went into the crawlspace, followed by Ava. Inside the crawlspace, there was a suitcase, and inside the suitcase were some pajamas. Avery then left the crawlspace, while Ava took the pajamas out of the suitcase and placed them in a drawer that was also in the crawlspace.\nQuestion: Where will Avery look for the pajamas?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Amelia was in the basement when Elizabeth walked in. Meanwhile, Jacob made his way to the staircase. In the basement, there was a container holding a tie. After a short while, Elizabeth left the basement, and Jacob exited the staircase. Amelia then took the tie from the container and placed it in a drawer, which was also in the basement.\nQuestion: Where will Elizabeth look for the tie?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Chloe walked into the kitchen, while Ethan made his way into the hallway. Shortly after, Ava also entered the kitchen. There was a lemon sitting in a container on the counter. Chloe then left the kitchen, and Ava decided to move the lemon from the container to a box, which was also in the kitchen. Meanwhile, Ethan left the hallway. Finally, Chloe returned to the kitchen.\nQuestion: Where will Chloe look for the lemon?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Hannah really dislikes the shirt. Meanwhile, Liam walked into the staircase, followed shortly by Olivia. Inside the staircase, there was a treasure chest that contained a pineapple. After a brief moment, Olivia left the staircase. Liam then took the pineapple from the treasure chest and moved it to the pantry, which was also located in the staircase.\nQuestion: Where will Olivia look for the pineapple?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " treasure_chest"
+    },
+    {
+        "input": "James walked into the TV room, followed shortly by Logan. Inside the room, there was an envelope that contained a lemon. After a brief moment, Logan left the TV room. James then took the lemon out of the envelope and placed it into a crate that was also in the TV room.\nQuestion: Where will Logan look for the lemon?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "Isabella has a fondness for corn. One day, she walked into the study. Shortly after, Elizabeth also entered the study. Inside the study, there was a suitcase containing peas. Elizabeth, who has a particular liking for trousers, noticed the suitcase. After a while, Isabella left the study. Elizabeth then decided to move the peas from the suitcase to a basket that was also in the study.\nQuestion: Where will Isabella look for the peas?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Benjamin walked into the kitchen. Jack, who really likes broccoli, also came into the kitchen shortly after. There was a box in the kitchen, and inside it were some stockings. After a while, Jack left the kitchen. Benjamin then took the stockings from the box and moved them to the pantry, which was also in the kitchen.\nQuestion: Where will Jack look for the stockings?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Emily walked into the hall, followed shortly by Jacob. In the hall, there was a crate containing a persimmon. Emily, who has a fondness for broccoli, decided to move the persimmon from the crate to a treasure chest that was also in the hall. Meanwhile, Jacob, who prefers lettuce, left the hall.\nQuestion: Where will Jacob look for the persimmon?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Ella walked into the dining room, while William made his way into the living room. After a short while, Ella left the dining room. Then, Owen entered the living room. There was a container in the living room that held a pair of slacks. William, who had a fondness for a particular scarf, decided to move the slacks from the container to the cupboard, which was also in the living room. Shortly after, Owen left the living room.\nQuestion: Where will Owen look for the slacks?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Isabella stepped onto the patio, followed shortly by Noah. Isabella wrinkled her nose at the sight of a grapefruit nearby, clearly not a fan. Meanwhile, the beans were stored in the pantry, which was also located on the patio. After a brief moment, Noah decided to leave the patio. Isabella then took the beans from the pantry and placed them into a bucket that was sitting on the patio.\nQuestion: Where will Noah look for the beans?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Elizabeth walked into the cellar, her eyes immediately falling on a jacket she couldn't stand. Shortly after, Chloe joined her in the dimly lit space. There was a box in the cellar, and inside it lay a scarf. Meanwhile, Aiden was somewhere else, harboring a strong dislike for turnips.\n\nElizabeth soon left the cellar, and Chloe took the opportunity to move the scarf from the box to the pantry, which was also located in the cellar. After a short while, Elizabeth returned to the cellar once more.\nQuestion: Where will Chloe look for the scarf?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Hannah walked into the garden where Hunter was already spending time. Nearby, there was a box containing a cucumber. After a while, Hannah left the garden just as James arrived. Hunter then took the cucumber from the box and placed it in the pantry, which was also located in the garden. By the way, Hunter really dislikes socks.\nQuestion: Where will Hannah look for the cucumber?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "One day, Olivia walked into the closet. Shortly after, James and Amelia also entered the closet. Inside the closet, there was a treasure chest, and inside that chest was a sweater. After a while, James and Amelia left the closet. James, who despised the sweater, didn't stay away for long. Meanwhile, Olivia took the sweater out of the treasure chest and placed it into another container within the closet. Finally, James returned to the closet.\nQuestion: Where will James look for the sweater?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " container"
+    },
+    {
+        "input": "Mason walked into the garden, followed shortly by Liam. In the garden, there was a crate filled with corn. After a while, Mason decided to leave the garden. Meanwhile, Charlotte went into the closet. Liam then transferred the corn from the crate into a bottle, which he left in the garden. Mason, who has a strong dislike for gloves, saw Charlotte come out of the closet. He then made his way into the closet himself.\nQuestion: Where will Mason look for the corn?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Nathan walked into the playroom, followed shortly by Isla. Nathan has a strong dislike for melons. In the playroom, there was a box containing a green pepper. After a while, Nathan left the playroom, still harboring his dislike for sweaters as well. Meanwhile, Isla took the green pepper from the box and placed it into another container, which was also in the playroom.\nQuestion: Where will Nathan look for the green_pepper?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "William isn't fond of cucumbers. One day, Avery walked into the den, followed by William. Meanwhile, James went into the pantry. William, who has a liking for pajamas, noticed an eggplant inside a treasure chest in the den. After a while, James left the pantry, and Avery stepped out of the den. William then decided to move the eggplant from the treasure chest into a bottle, which was also in the den. Shortly after, Avery came back into the den.\nQuestion: Where will William look for the eggplant?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "William wasn't a fan of grapes. One day, Avery walked into the office, followed shortly by Alexander. After a brief moment, Avery left the office. Then, William came in. There was a pair of boots in the pantry, which was located within the office. Avery also had a dislike for apples. After some time, Alexander decided to leave the office. Meanwhile, William took the boots from the pantry and moved them to the bathtub, which was also in the office.\nQuestion: Where will Alexander look for the boots?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Abigail walked into the playroom, followed shortly by Hannah. Hannah, who has a strong dislike for socks, seemed a bit uncomfortable. Then Ava came into the playroom but didn't stay long; she left almost immediately. Inside the playroom, there was a drawer that contained a turnip. After a while, Hannah decided to leave the playroom. Abigail then took the turnip out of the drawer and placed it into a box, which was also in the playroom.\nQuestion: Where will Hannah look for the turnip?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Benjamin walked into the playroom, followed shortly by Lily. Inside the playroom, there was a bottle with a lemon inside it. Benjamin noticed a shirt that he liked, but after a while, he decided to leave the playroom. Unlike the shirt, he wasn't fond of grapefruits. Meanwhile, Lily took the lemon out of the bottle and moved it to the pantry, which was also located in the playroom.\nQuestion: Where will Benjamin look for the lemon?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "Lucas walked into the dining room, followed shortly by Logan. Inside the room, there was a drawer that held a green pepper. After a moment, Lucas left the dining room. Logan then took the green pepper from the drawer and placed it in the bathtub, which was also in the dining room. A little later, Lucas returned to the dining room.\nQuestion: Where will Logan look for the green_pepper?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Benjamin walked into the closet, followed closely by Lucas. Inside the closet, there was a cupboard, and inside that cupboard was a sweatshirt. Meanwhile, Chloe stepped onto the porch. After a moment, Benjamin left the closet. Lucas then took the sweatshirt from the cupboard and placed it into an envelope, which was also in the closet.\nQuestion: Where will Benjamin look for the sweatshirt?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " cupboard"
+    },
+    {
+        "input": "Noah, Amelia, and Evelyn all made their way down to the basement one after the other. Inside the basement, there was a bathtub with a shirt in it. After a while, Noah and Amelia left the basement, leaving Evelyn behind. Evelyn then took the shirt from the bathtub and placed it in a drawer that was also in the basement.\nQuestion: Where will Amelia look for the shirt?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Benjamin stepped onto the porch, followed by Nathan and then William. Benjamin noticed a banana and felt a fondness for it. Meanwhile, a pair of slippers lay inside a crate, which was also on the porch. After a short while, Nathan left the porch. Benjamin, who disliked turnips, decided to move the slippers from the crate to the pantry, which was conveniently located on the porch as well. Shortly after, Nathan returned to the porch.\nQuestion: Where will Benjamin look for the slippers?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Jayden walked into the pantry, followed by Mason. Inside, there was a drawer that held a turnip. After a while, Jayden left the pantry. Mason then took the turnip from the drawer and placed it into a treasure chest that was also in the pantry.\nQuestion: Where will Jayden look for the turnip?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Aria walked into the den, followed shortly by Jayden. Inside the den, there was a box containing some socks. Aria, who doesn't like tomatoes, soon left the room. Meanwhile, Jayden, who isn't fond of watermelon, decided to move the socks from the box to the pantry, which was also located in the den. After a while, Aria came back into the den.\nQuestion: Where will Jayden look for the socks?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "Evelyn walked into the hall, shortly followed by Olivia. In the hall, there was a bottle that oddly contained a pair of boots. Evelyn noticed an undershirt she didn't like and decided to leave the hall. After Evelyn left, Olivia took the boots out of the bottle and placed them into a basket that was also in the hall.\nQuestion: Where will Evelyn look for the boots?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bottle"
+    },
+    {
+        "input": "James wasn't fond of the suit. He walked into the staircase, where he soon encountered Noah. In the staircase, there was a basket containing a pair of slacks. After a brief moment, Noah left the staircase. James then took the slacks from the basket and placed them into a treasure chest, which was also in the staircase.\nQuestion: Where will Noah look for the slacks?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Benjamin walked into the garage, followed shortly by Sophia. Inside, there was a box that contained a pair of underpants. The box was sitting in the garage. After a moment, Benjamin left the garage. Sophia then took the underpants out of the box and placed them into a suitcase, which was also in the garage. A little while later, Benjamin returned to the garage.\nQuestion: Where will Benjamin look for the underpants?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " suitcase"
+    },
+    {
+        "input": "Jack has a fondness for gloves and an even greater love for his scarf. One day, Nathan walked into the dining room, followed shortly by Jayden. In the dining room, there was a box containing some asparagus. After a while, Nathan left the room. Jayden then decided to move the asparagus from the box to the pantry, which was also located in the dining room. Not long after, Nathan returned to the dining room.\nQuestion: Where will Nathan look for the asparagus?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " pantry"
+    },
+    {
+        "input": "James walked into the lounge, while Logan stepped into the den. After a short while, Logan left the den. Meanwhile, Carter entered the lounge, where a coat was placed inside a bucket. The bucket was also in the lounge. Carter soon left the lounge. James then took the coat from the bucket and placed it into a crate, which was also in the lounge.\nQuestion: Where will Carter look for the coat?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Sophia walked into the master bedroom, followed shortly by Ava. Inside the room, there was a bottle containing a pair of underpants. After a moment, Sophia left the room. Ava then took the underpants out of the bottle and placed them in the bathtub, which was also in the master bedroom. Soon after, Sophia returned to the master bedroom.\nQuestion: Where will Sophia look for the underpants?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Carter walked into the cellar, followed shortly by Lily. Ava, who has a fondness for tomatoes, also made her way into the cellar but didn't stay long and soon left. Inside the cellar, there was a crate containing corn. Ava, who also has a liking for slippers, was not present when Lily decided to move the corn from the crate into an envelope, which was also kept in the cellar. After a while, Carter left the cellar but returned again later.\nQuestion: Where will Carter look for the corn?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " envelope"
+    },
+    {
+        "input": "One sunny afternoon, Amelia stepped into the backyard, followed closely by Aria and Olivia. In the corner of the yard, there was an old bathtub, and inside it lay a pair of socks. After a while, Amelia decided to leave the backyard. Meanwhile, Aria picked up the socks from the bathtub and placed them into a drawer that was also in the backyard.\nQuestion: Where will Amelia look for the socks?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Benjamin had always disliked radishes. One sunny afternoon, Sophia strolled into the garden, followed by Benjamin and Isabella. In the garden, there was a treasure chest, and inside it was a cap. After a while, Isabella decided to leave the garden, and soon after, Sophia did the same.\n\nBenjamin, who had a fondness for underpants, took the cap from the treasure chest and placed it in a basket that was also in the garden. Just as he finished, Sophia returned to the garden.\nQuestion: Where will Benjamin look for the cap?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " basket"
+    },
+    {
+        "input": "Jacob walked into the sunroom, while Oliver made his way into the office. Shortly after, Aria also stepped into the sunroom. In the sunroom, there was a bathtub, and inside it lay a pair of underpants. Jacob then left the sunroom. Aria picked up the underpants from the bathtub and placed them into an envelope that was also in the sunroom.\nQuestion: Where will Jacob look for the underpants?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Chloe walked into the hall while Mila and Jacob stepped into the patio. Inside the patio, there was a box containing a scarf. After a while, Mila left the patio. Jacob then took the scarf from the box and placed it in the bathtub, which was also in the patio. By the way, Jacob isn't a fan of celery.\nQuestion: Where will Mila look for the scarf?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Hannah walked into the playroom, followed shortly by Mason. Inside the playroom, there was an envelope, and inside that envelope was a sweatshirt. After a while, Mason left the playroom. Hannah then took the sweatshirt out of the envelope and placed it into a bucket that was also in the playroom. Later, Mason came back into the playroom.\nQuestion: Where will Mason look for the sweatshirt?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bucket"
+    },
+    {
+        "input": "Jackson walked into the office, followed shortly by Charlotte. Inside the office, there was a container holding a scarf. After a brief moment, Jackson left the office. Meanwhile, Jayden stepped into the garden, but didn't stay long and soon exited. Back in the office, Charlotte took the scarf from the container and placed it in a drawer. After some time, Jackson returned to the office.\nQuestion: Where will Charlotte look for the scarf?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Aria walked into the lounge, followed shortly by Jacob. Meanwhile, Hannah stepped into the hall but quickly left. In the lounge, there was a crate containing a pair of jeans. After some time, Jacob left the lounge. Aria then took the jeans from the crate and placed them into another container, which was also in the lounge.\nQuestion: Where will Jacob look for the jeans?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Lucas walked into the dining room, followed shortly by Logan. Inside the room, there was a drawer that held a green pepper. After a while, Lucas left the dining room. Logan then took the green pepper from the drawer and placed it in the bathtub, which was also in the dining room. Not long after, Lucas returned to the dining room.\nQuestion: Where will Lucas look for the green_pepper?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " bathtub"
+    },
+    {
+        "input": "Jackson stepped into the garden where Mia was already present. In the garden, there was a basket containing a persimmon. After a while, Mia left the garden. Jackson then took the persimmon from the basket and placed it in a drawer that was also in the garden. Meanwhile, Lucas expressed his dislike for cucumbers. Later, Mia returned to the garden.\nQuestion: Where will Mia look for the persimmon?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " drawer"
+    },
+    {
+        "input": "Elizabeth walked into the basement, followed shortly by Mason. Meanwhile, Benjamin stepped onto the staircase but quickly decided to leave. Mason, who had a strong dislike for the raincoat, noticed an undershirt lying in a crate in the basement. After a while, Elizabeth left the basement. Mason then took the undershirt from the crate and placed it into an envelope, which was also in the basement.\nQuestion: Where will Elizabeth look for the undershirt?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " crate"
+    },
+    {
+        "input": "Alexander walked into the lounge, followed shortly by William. Inside the lounge, there was a cupboard, and inside that cupboard was a carrot. William, who had a strong dislike for boots, soon left the lounge. He also had a particular hatred for oranges. Meanwhile, Jayden made his way into the study. Back in the lounge, Alexander took the carrot from the cupboard and placed it into a box that was also in the lounge. After some time, Jayden left the study, and William returned to the lounge.\nQuestion: Where will William look for the carrot?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " box"
+    },
+    {
+        "input": "Alexander walked into the study, followed shortly by Aria. Inside the study, there was a drawer that held a grapefruit. After a brief moment, Aria left the room. Alexander then took the grapefruit out of the drawer and placed it into a box that was also in the study.\nQuestion: Where will Aria look for the grapefruit?\nAnswer:",
+        "category": "first_order_false_belief",
+        "target": " drawer"
+    }
+]

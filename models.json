@@ -1,6 +1,6 @@
 [
     {
-        "model_name": "meta-llama/Meta-Llama-3-70B-Instruct",
+        "model_name": "meta-llama/Meta-Llama-3-70B",
         "precision": "int4",
         "batch_size": 1
     },
