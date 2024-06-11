@@ -57,8 +57,12 @@ class World:
             if world_state[agent_2]["location"][agent_2] == primary_location:
                 for object in ground_truth.keys():
                     # All objects are in the primary location
-                    world_state[agent]["beliefs"][agent_2][object] = ground_truth[object]["current"]
-                    world_state[agent_2]["beliefs"][agent][object] = ground_truth[object]["current"]
+                    world_state[agent]["beliefs"][agent_2][object] = ground_truth[
+                        object
+                    ]["current"]
+                    world_state[agent_2]["beliefs"][agent][object] = ground_truth[
+                        object
+                    ]["current"]
 
             else:
                 for object in ground_truth.keys():
@@ -131,7 +135,8 @@ class World:
                 for agent_2 in world_state.keys():
                     if (
                         world_state[agent_1]["location"][agent_1] == primary_location
-                        and world_state[agent_2]["location"][agent_2] == primary_location
+                        and world_state[agent_2]["location"][agent_2]
+                        == primary_location
                     ):
                         world_state[agent_1]["beliefs"][agent_2][object] = new_container
                         world_state[agent_2]["beliefs"][agent_1][object] = new_container
@@ -149,7 +154,9 @@ class World:
         samples = []
         sample = ""
 
-        while (n_agents != 0) or (m_agents != 0) or (n_objects != 0) or (m_objects != 0):
+        while (
+            (n_agents != 0) or (m_agents != 0) or (n_objects != 0) or (m_objects != 0)
+        ):
             # 0 - 0.25: Agent entry
             # 0.25 - 0.5: Object definition
             # 0.5 - 0.75: Object movement
@@ -228,13 +235,17 @@ class World:
                     if len(agents_in_primary_location) != 0:
                         agent_to_exit = random.choice(agents_in_primary_location)
 
-                        sample = self.agent_exit(sample, agent_to_exit, PRIMARY_LOC, world_state)
+                        sample = self.agent_exit(
+                            sample, agent_to_exit, PRIMARY_LOC, world_state
+                        )
 
                         m_agents -= 1
 
         if self.add_redundant_sentence:
             sentences = sample.split("\n")
-            redundant_sentence = f"{random.choice(AGENTS)} likes the {random.choice(OBJECTS)}."
+            redundant_sentence = (
+                f"{random.choice(AGENTS)} likes the {random.choice(OBJECTS)}."
+            )
             sentences.insert(random.randint(0, len(sentences)), redundant_sentence)
             sample = "\n".join(sentences).replace("\n\n", "\n")
 
@@ -273,7 +284,9 @@ class World:
                             {
                                 "context": sample,
                                 "question": f"Where does {agent_1} think that {agent_2} searches for the {object}?",
-                                "answer": world_state[agent_1]["beliefs"][agent_2][object],
+                                "answer": world_state[agent_1]["beliefs"][agent_2][
+                                    object
+                                ],
                             }
                         )
 
@@ -292,13 +305,15 @@ def main():
 
     print(args)
 
-    samples = []
     world = World(args.world_file)
-    for _ in range(args.n_iterations):
-        for n_agents in range(2, args.n_agents + 1):
-            for m_agents in range(0, n_agents):
-                for n_objects in range(1, args.n_objects + 1):
-                    for m_objects in range(0, n_objects):
+    for n_agents in range(2, args.n_agents + 1):
+        for m_agents in range(0, n_agents):
+            for n_objects in range(1, args.n_objects + 1):
+                for m_objects in range(0, n_objects + 1):
+                    count = 0
+                    samples = []
+
+                    while count < 100:
                         samples += world.generate_sample(
                             n_agents=n_agents,
                             m_agents=m_agents,
@@ -306,12 +321,17 @@ def main():
                             m_objects=m_objects,
                             max_movements=args.max_movements,
                         )
-                        print(
-                            f"Generated {len(samples)} samples for n_agents={n_agents}, m_agents={m_agents}, n_objects={n_objects}, m_objects={m_objects}"
-                        )
+                        count += 1
 
-    with open("generated_tomi.json", "a") as f:
-        json.dump(samples, f, indent=4)
+                    with open(
+                        f"generated_tomi_data/{n_agents}_{m_agents}_{n_objects}_{m_objects}.json",
+                        "a",
+                    ) as f:
+                        json.dump(samples, f, indent=4)
+
+                    print(
+                        f"Generated {n_agents}_{m_agents}_{n_objects}_{m_objects}.json"
+                    )
 
 
 if __name__ == "__main__":

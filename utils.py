@@ -52,7 +52,9 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
+    indices = [
+        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
+    ]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -64,7 +66,9 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(
+            ",", "dna ", 1
+        )[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -112,7 +116,9 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            question = (
+                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
+            )
             #             print(question)
             prompt += question
 
@@ -127,15 +133,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = (
-                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
-                )
+                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
+                pred_option_logits = options_token_ids[
+                    logits[options_token_ids].argmax()
+                ]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -255,53 +261,48 @@ def create_primings(data, num_exps, category):
     return priming_exps
 
 
-def prepare_data(data, traces, n_priming_eps=3, add_question=False):
+def create_combined_primings(data):
+    priming_exps = ""
+    categories = [
+        "first_order_true_belief",
+        "first_order_false_belief",
+        "second_order_true_belief",
+        "second_order_false_belief",
+    ]
+
+    for category in categories:
+        priming_exps += create_primings(data, 1, category)
+
+    return priming_exps
+
+
+def create_order_based_primings(data):
+    priming_exps = {
+        "first_order": "",
+        "second_order": "",
+    }
+
+    for key in priming_exps.keys():
+        priming_exps[key] += create_primings(data, 2, f"{key}_true_belief")
+        priming_exps[key] += create_primings(data, 2, f"{key}_false_belief")
+
+    return priming_exps
+
+
+def prepare_data(data, traces):
     processed_data = []
 
     for example, trace in zip(data, traces):
         trace = trace.split(",")
-        category = trace[-2]
-        question_type = trace[-1][:-1]
+        category = trace[-1].strip()
 
-        if "first_order" in category:
-            if "no_tom" in category and "true_belief" == question_type:
-                category = "first_order_true_belief"
-            elif "tom" in category and "false_belief" == question_type:
-                category = "first_order_false_belief"
-            else:
-                continue
-
-        if "second_order" in category:
-            if "no_tom" in category and "true_belief" == question_type:
-                category = "second_order_true_belief"
-            elif "tom" in category and "false_belief" == question_type:
-                category = "second_order_false_belief"
-            else:
-                continue
-
-        with open(f"priming_examples/{category}.txt", "r") as f:
-            priming_exps = f.read().replace("\\n", "\n")
-
-        if n_priming_eps != 0:
-            processed_data.append(
-                {
-                    "input": f'{priming_exps}{example["input"]}',
-                    "target": example["target"],
-                    "category": category,
-                }
-            )
-
-        else:
-            processed_data.append(
-                {
-                    "input": f'{example["input"]}',
-                    "target": example["target"],
-                    "category": category,
-                }
-            )
-
-        if add_question:
-            processed_data[-1]["question"] = example["question"]
+        processed_data.append(
+            {
+                "input": f'{example["input"]}',
+                "target": example["target"],
+                "category": category,
+            }
+        )
 
     return processed_data
 
@@ -347,21 +348,34 @@ class Collator(object):
 
 
 def load_tomi_data(config, tokenizer, current_dir, batch_size, n_priming_eps=3):
-    data_path = "data/SymbolicToM Datasets/Fixed and Unambiguous ToMi/"
-    path = f"{current_dir}/{data_path}"
+    path = "/home/local_nikhil/Projects/ToMi/data"
 
-    with open(f"{path}/test.txt", "r") as f:
+    with open(f"{path}/train.txt", "r") as f:
         test_data = f.readlines()
-    with open(f"{path}/test.trace", "r") as f:
+    with open(f"{path}/train.trace", "r") as f:
         test_trace = f.readlines()
 
     test_data = create_exps(test_data)
-    processed_data = prepare_data(test_data, test_trace, n_priming_eps)
+    processed_data = prepare_data(test_data, test_trace)
+
+    priming_exps = create_order_based_primings(processed_data)
+    for example in processed_data:
+        if "first_order" in example["category"]:
+            example["input"] = f"{priming_exps['first_order']}{example['input']}"
+        elif "second_order" in example["category"]:
+            example["input"] = f"{priming_exps['second_order']}{example['input']}"
+
+    for example in processed_data:
+        instructions = "Instructions: You are doing Sally-Anne test. Keep track of people's knowledge and object location defined in the context. People's knowledge will get updated only when an action is taken in their presence. Use this information to answer the question in a single word.\n"
+        example["input"] = f"{instructions}{example['input']}"
+
     print("Total dataset size: ", len(processed_data))
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
+    dataloader = DataLoader(
+        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
 
     return dataloader
 
@@ -398,6 +412,8 @@ def load_paraphrase_tomi(config, tokenizer, current_dir, batch_size):
         data = json.load(f)
     data = add_paraphrased_priming_exps(data)
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(data, collate_fn=collator, batch_size=batch_size, shuffle=False)
+    dataloader = DataLoader(
+        data, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
 
     return dataloader

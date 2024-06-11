@@ -93,8 +93,12 @@ def main():
                     pred_token_ids = torch.argmax(logits, dim=-1)
 
                 if args.ndif:
-                    with model.trace(inp["input_ids"], scan=False, validate=False, remote=True):
-                        pred_token_ids = torch.argmax(model.output["logits"][:, -1], dim=-1).save()
+                    with model.trace(
+                        inp["input_ids"], scan=False, validate=False, remote=True
+                    ):
+                        pred_token_ids = torch.argmax(
+                            model.output["logits"][:, -1], dim=-1
+                        ).save()
 
                 for i in range(len(inp["category"])):
                     category = inp["category"][i]
@@ -112,12 +116,16 @@ def main():
                         target_text = tokenizer.decode(inp["target"][idx].tolist())
                         pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
                     else:
-                        input_text = model.tokenizer.decode(inp["input_ids"][idx].tolist())
-                        target_text = model.tokenizer.decode(inp["target"][idx].tolist())
+                        input_text = model.tokenizer.decode(
+                            inp["input_ids"][idx].tolist()
+                        )
+                        target_text = model.tokenizer.decode(
+                            inp["target"][idx].tolist()
+                        )
                         pred_text = model.tokenizer.decode(pred_token_ids[idx].tolist())
 
                     with open(
-                        f"{current_dir}/preds/same_shots/5-shots-paraphrased/{model_name.split('/')[-1]}.jsonl",
+                        f"{current_dir}/preds/simple_tomi/4-shot-order-based/{model_name.split('/')[-1]}.jsonl",
                         "a",
                     ) as f:
                         f.write(
@@ -142,10 +150,12 @@ def main():
         overall_accuracy = round(all_corrects / all_totals, 2)
         print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
 
-        with open(f"{current_dir}/preds/same_shots/5-shots-paraphrased/results.txt", "a") as f:
-            f.write(f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n")
+        with open(f"{current_dir}/preds/simple_tomi/results.txt", "a") as f:
+            f.write(
+                f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n"
+            )
 
-        with open(f"{current_dir}/preds/same_shots/5-shots-paraphrased/results.txt", "a") as f:
+        with open(f"{current_dir}/preds/simple_tomi/results.txt", "a") as f:
             for category in total:
                 accuracy = round(correct[category] / total[category], 2)
                 print(f"Category: {category}, Accuracy: {accuracy}")
