@@ -1,0 +1,26 @@
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Overall Accuracy: 0.64
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_false_belief | Correct: 75 | Total: 99
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_true_belief | Correct: 82 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_false_belief | Correct: 68 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_true_belief | Correct: 32 | Total: 100
+
+4-shot (all categories)
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Overall Accuracy: 0.78
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_false_belief | Correct: 99 | Total: 99
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_true_belief | Correct: 80 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_false_belief | Correct: 100 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_true_belief | Correct: 33 | Total: 100
+
+2-shot (order-based)
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Overall Accuracy: 0.75
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_false_belief | Correct: 99 | Total: 99
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_true_belief | Correct: 81 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_false_belief | Correct: 100 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_true_belief | Correct: 19 | Total: 100
+
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Overall Accuracy: 0.78
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_false_belief | Correct: 99 | Total: 99
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: first_order_true_belief | Correct: 81 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_false_belief | Correct: 100 | Total: 100
+Model Name: meta-llama/Meta-Llama-3-70B-Instruct | Category: second_order_true_belief | Correct: 32 | Total: 100
+

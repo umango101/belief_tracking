@@ -358,6 +358,10 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size, n_priming_eps=3):
     test_data = create_exps(test_data)
     processed_data = prepare_data(test_data, test_trace)
 
+    # priming_exps = create_combined_primings(processed_data)
+    # for example in processed_data:
+    #     example["input"] = f"{priming_exps}{example['input']}"
+
     priming_exps = create_order_based_primings(processed_data)
     for example in processed_data:
         if "first_order" in example["category"]:
