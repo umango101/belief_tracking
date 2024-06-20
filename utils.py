@@ -1,4 +1,5 @@
 import os
+import csv
 import random
 import json
 import torch
@@ -307,6 +308,46 @@ def prepare_data(data, traces):
     return processed_data
 
 
+class BigTomCollator(object):
+
+    def __init__(self, config, tokenizer, method_name):
+        self.config = config
+        self.tokenizer = tokenizer
+        self.method_name = method_name
+
+        with open(f"prompt_instructions/{self.method_name}.txt", "r") as f:
+            self.instructions = f.read()
+
+    def __call__(self, examples):
+        prompts, targets = [], []
+        for example in examples:
+            story, question, correct_answer, wrong_answer = example
+            answers = [correct_answer, wrong_answer]
+            random.shuffle(answers)
+
+            question = question = (
+                f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+            )
+
+            prompt = f"Instructions: {self.instructions}\nStory: {story}\nQuestion {question}\nAnswer:"
+            prompts.append(prompt)
+
+            if answers[0] == correct_answer:
+                targets.append("a")
+            else:
+                targets.append("b")
+
+        inputs = self.tokenizer(
+            prompts,
+            return_tensors="pt",
+            padding=True,
+        )
+
+        inputs["target"] = torch.tensor([self.tokenizer.encode(t)[1] for t in targets])
+
+        return inputs
+
+
 class Collator(object):
     def __init__(self, config, tokenizer):
         self.config = config
@@ -416,6 +457,23 @@ def load_paraphrase_tomi(config, tokenizer, current_dir, batch_size):
         data = json.load(f)
     data = add_paraphrased_priming_exps(data)
     collator = Collator(config, tokenizer)
+    dataloader = DataLoader(
+        data, collate_fn=collator, batch_size=batch_size, shuffle=False
+    )
+
+    return dataloader
+
+
+def load_bigtom(
+    config, tokenizer, current_dir, batch_size, method_name, variable, condition
+):
+    path = f"{current_dir}/data/bigtom/{variable}_{condition}/stories.csv"
+
+    with open(path, "r") as f:
+        reader = csv.reader(f, delimiter=";")
+        data = list(reader)
+
+    collator = BigTomCollator(config, tokenizer, method_name)
     dataloader = DataLoader(
         data, collate_fn=collator, batch_size=batch_size, shuffle=False
     )

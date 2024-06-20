@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from nnsight import LanguageModel, CONFIG
 
-from utils import load_model_and_tokenizer, load_tomi_data, load_paraphrase_tomi
+from utils import load_model_and_tokenizer, load_bigtom
 
 CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
 os.environ["HF_TOKEN"] = "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"
@@ -26,157 +26,104 @@ print(f"Current directory: {current_dir}")
 with open(f"{current_dir}/models.json", "r") as f:
     models = json.load(f)
 
-# with open(f"{current_dir}/tomi_results.txt", "r") as f:
-#     evaluated_models = f.read().split("\n")
-
-# # Remove already evaluated models from models list using evaluated_models dict
-# for model_name in evaluated_models:
-#     models = [model for model in models if model_name not in model["model_name"]]
-
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-70B")
+    parser.add_argument("--precision", type=str, default="int4")
     parser.add_argument("--ndif", type=bool, default=False)
-    parser.add_argument("--n_exps", type=int, default=5)
-    parser.add_argument("--paraphrase", type=bool, default=False)
+    parser.add_argument("--method_name", type=str, default="0shot")
+    parser.add_argument("--variable", type=str, default="0_forward_belief")
+    parser.add_argument("--condition", type=str, default="true_belief")
+    parser.add_argument("--batch_size", type=int, default=4)
     args = parser.parse_args()
 
-    for model_details in models:
-        if "model" in locals():
-            del model
-        if "tokenizer" in locals():
-            del tokenizer
+    os.makedirs(
+        f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}",
+        exist_ok=True,
+    )
 
-        model_name = model_details["model_name"]
-        precision = model_details["precision"]
-        batch_size = model_details["batch_size"]
+    if not args.ndif:
+        model, tokenizer = load_model_and_tokenizer(
+            args.model_name, args.precision, device
+        )
+    else:
+        model = LanguageModel(args.model_name)
 
-        if not args.ndif:
-            model, tokenizer = load_model_and_tokenizer(model_name, precision, device)
-            if args.paraphrase:
-                dataloader = load_paraphrase_tomi(
-                    model.config, tokenizer, current_dir, batch_size=batch_size
-                )
-            else:
-                dataloader = load_tomi_data(
-                    model.config,
-                    tokenizer,
-                    current_dir,
-                    batch_size=batch_size,
-                    n_priming_eps=args.n_exps,
-                )
-        else:
-            model = LanguageModel(model_name)
-            if args.paraphrase:
-                dataloader = load_paraphrase_tomi(
-                    model.config, model.tokenizer, current_dir, batch_size=batch_size
-                )
-            else:
-                dataloader = load_tomi_data(
-                    model.config,
-                    model.tokenizer,
-                    current_dir,
-                    batch_size=batch_size,
-                    n_priming_eps=args.n_exps,
-                )
+    if "tokenizer" not in locals():
+        tokenizer = model.tokenizer
 
-        print(f"{model_name} and Data loaded successfully")
+    dataloader = load_bigtom(
+        model.config,
+        tokenizer,
+        current_dir,
+        batch_size=args.batch_size,
+        method_name=args.method_name,
+        variable=args.variable,
+        condition=args.condition,
+    )
+    print(f"{args.model_name} and Data loaded successfully")
 
-        correct, total = {}, {}
-        with torch.no_grad():
-            for batch_idx, inp in tqdm(enumerate(dataloader), total=len(dataloader)):
-                if not args.ndif:
-                    inp["input_ids"] = inp["input_ids"].to(device)
-                    inp["target"] = inp["target"].to(device)
-                    outputs = model(inp["input_ids"])
-                    logits = outputs.logits[:, -1]
-                    pred_token_ids = torch.argmax(logits, dim=-1)
+    correct, total = 0, 0
+    with torch.no_grad():
+        for batch_idx, inp in tqdm(enumerate(dataloader), total=len(dataloader)):
+            if not args.ndif:
+                inp["input_ids"] = inp["input_ids"].to(device)
+                inp["target"] = inp["target"].to(device)
+                outputs = model(inp["input_ids"])
+                logits = outputs.logits[:, -1]
+                pred_token_ids = torch.argmax(logits, dim=-1)
 
-                if args.ndif:
-                    with model.trace(
-                        inp["input_ids"], scan=False, validate=False, remote=True
-                    ):
-                        pred_token_ids = torch.argmax(
-                            model.output["logits"][:, -1], dim=-1
-                        ).save()
+            if args.ndif:
+                with model.trace(
+                    inp["input_ids"], scan=False, validate=False, remote=True
+                ):
+                    pred_token_ids = torch.argmax(
+                        model.output["logits"][:, -1], dim=-1
+                    ).save()
 
-                for i in range(len(inp["category"])):
-                    category = inp["category"][i]
-                    if category in correct:
-                        correct[category] += int(pred_token_ids[i] == inp["target"][i])
-                        total[category] += 1
-                    else:
-                        correct[category] = int(pred_token_ids[i] == inp["target"][i])
-                        total[category] = 1
+            for idx in range(len(inp["target"])):
+                input_text = tokenizer.decode(inp["input_ids"][idx].tolist()).strip()
+                target_text = tokenizer.decode(inp["target"][idx].tolist()).strip()
+                pred_text = tokenizer.decode(pred_token_ids[idx].tolist()).strip()
 
-                for idx in range(len(inp["target"])):
-                    category = inp["category"][idx]
-                    if not args.ndif:
-                        input_text = tokenizer.decode(inp["input_ids"][idx].tolist())
-                        target_text = tokenizer.decode(inp["target"][idx].tolist())
-                        pred_text = tokenizer.decode(pred_token_ids[idx].tolist())
-                    else:
-                        input_text = model.tokenizer.decode(
-                            inp["input_ids"][idx].tolist()
+                if pred_text == target_text:
+                    correct += 1
+                total += 1
+
+                with open(
+                    f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}/{args.model_name.split('/')[-1]}.jsonl",
+                    "a",
+                ) as f:
+                    f.write(
+                        json.dumps(
+                            {
+                                "pred": pred_text,
+                                "target": target_text,
+                                "input": input_text,
+                            }
                         )
-                        target_text = model.tokenizer.decode(
-                            inp["target"][idx].tolist()
-                        )
-                        pred_text = model.tokenizer.decode(pred_token_ids[idx].tolist())
+                        + "\n"
+                    )
 
-                    with open(
-                        f"{current_dir}/preds/simple_tomi/Meta-Llama-3-70B-Instruct/4-shot-order-based/{model_name.split('/')[-1]}.jsonl",
-                        "a",
-                    ) as f:
-                        f.write(
-                            json.dumps(
-                                {
-                                    "pred": pred_text,
-                                    "target": target_text,
-                                    "category": category,
-                                    "input": input_text,
-                                }
-                            )
-                            + "\n"
-                        )
+            del inp, outputs, logits, pred_token_ids
+            torch.cuda.empty_cache()
 
-                del inp, pred_token_ids
-                torch.cuda.empty_cache()
+    print(f"Accuracy: {round(correct/total, 2)}")
 
-        all_corrects, all_totals = 0, 0
-        for category in total:
-            all_corrects += correct[category]
-            all_totals += total[category]
-        overall_accuracy = round(all_corrects / all_totals, 2)
-        print(f"Model Name: {model_name}, Overall Accuracy: {overall_accuracy}")
+    with open(
+        f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}/results.txt",
+        "a",
+    ) as f:
+        f.write(f"Model: {args.model_name}\nAccuracy: {round(correct/total, 2)}\n\n")
 
-        with open(
-            f"{current_dir}/preds/simple_tomi/Meta-Llama-3-70B-Instruct/results.txt",
-            "a",
-        ) as f:
-            f.write(
-                f"Model Name: {model_name} | Overall Accuracy: {overall_accuracy}\n"
-            )
+    del model
+    torch.cuda.empty_cache()
 
-        with open(
-            f"{current_dir}/preds/simple_tomi/Meta-Llama-3-70B-Instruct/results.txt",
-            "a",
-        ) as f:
-            for category in total:
-                accuracy = round(correct[category] / total[category], 2)
-                print(f"Category: {category}, Accuracy: {accuracy}")
-                f.write(
-                    f"Model Name: {model_name} | Category: {category} | Correct: {correct[category]} | Total: {total[category]}\n"
-                )
-            f.write("\n")
-
-        del model
-        torch.cuda.empty_cache()
-
-        # home_dir = str(Path.home())
-        # shutil.rmtree(
-        #     f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
-        # )
+    # home_dir = str(Path.home())
+    # shutil.rmtree(
+    #     f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
+    # )
 
 
 if __name__ == "__main__":
