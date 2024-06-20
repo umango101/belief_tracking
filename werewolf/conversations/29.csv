@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-David,Troublemaker,Troublemaker,Heidi,{'Heidi': 'Heidi', 'Eve': 'Heidi'}
-Heidi,Villager,Werewolf,Heidi,{'David': 'Heidi', 'Eve': 'David'}
-Eve,Werewolf,Villager,Eve,{'David': 'Eve', 'Heidi': 'David'}

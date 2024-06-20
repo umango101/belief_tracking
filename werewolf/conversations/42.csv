@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Heidi,Villager,Werewolf,Ivan,{'Ivan': 'Ivan', 'David': 'Ivan'}
-Ivan,Werewolf,Villager,Ivan,{'Heidi': 'Ivan', 'David': 'Heidi'}
-David,Troublemaker,Troublemaker,Ivan,{'Heidi': 'Ivan', 'Ivan': 'Ivan'}

@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Grace,Villager,Werewolf,Grace,{'Charlie': 'Grace', 'Heidi': 'Charlie'}
-Charlie,Troublemaker,Troublemaker,Grace,{'Grace': 'Grace', 'Heidi': 'Grace'}
-Heidi,Werewolf,Villager,Heidi,{'Grace': 'Heidi', 'Charlie': 'Grace'}

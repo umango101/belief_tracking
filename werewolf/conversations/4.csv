@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Ivan,Villager,Werewolf,Ivan,{'Frank': 'Ivan', 'Bob': 'Frank'}
-Frank,Troublemaker,Troublemaker,Ivan,{'Ivan': 'Ivan', 'Bob': 'Ivan'}
-Bob,Werewolf,Villager,Bob,{'Ivan': 'Bob', 'Frank': 'Ivan'}

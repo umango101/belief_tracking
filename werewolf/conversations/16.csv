@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Eve,Troublemaker,Troublemaker,Alice,{'Charlie': 'Alice', 'Alice': 'Alice'}
-Charlie,Villager,Werewolf,Alice,{'Eve': 'Alice', 'Alice': 'Alice'}
-Alice,Werewolf,Villager,Eve,{'Eve': 'Eve', 'Charlie': 'Eve'}

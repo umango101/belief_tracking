@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Judy,Troublemaker,Troublemaker,Eve,{'Frank': 'Eve', 'Eve': 'Eve'}
-Frank,Villager,Werewolf,Judy,{'Judy': 'Judy', 'Eve': 'Judy'}
-Eve,Werewolf,Villager,Eve,{'Judy': 'Eve', 'Frank': 'Judy'}

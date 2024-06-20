@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Frank,Werewolf,Villager,Frank,{'Ivan': 'Frank', 'Grace': 'Ivan'}
-Ivan,Villager,Werewolf,Ivan,{'Frank': 'Ivan', 'Grace': 'Frank'}
-Grace,Troublemaker,Troublemaker,Frank,{'Frank': 'Frank', 'Ivan': 'Frank'}

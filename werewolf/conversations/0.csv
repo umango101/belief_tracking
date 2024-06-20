@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Alice,Werewolf,Villager,Alice,{'Charlie': 'Alice', 'Judy': 'Charlie'}
-Charlie,Troublemaker,Troublemaker,Charlie,{'Alice': 'Charlie', 'Judy': 'Alice'}
-Judy,Villager,Werewolf,Alice,{'Alice': 'Alice', 'Charlie': 'Alice'}

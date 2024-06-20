@@ -1,4 +1,0 @@
-Name,Role,Final Role,Own Vote,Other Votes
-Grace,Villager,Werewolf,Grace,{'Frank': 'Grace', 'Judy': 'Frank'}
-Frank,Troublemaker,Troublemaker,Grace,{'Grace': 'Grace', 'Judy': 'Grace'}
-Judy,Werewolf,Villager,Judy,{'Grace': 'Judy', 'Frank': 'Grace'}
