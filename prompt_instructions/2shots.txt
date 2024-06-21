@@ -1,0 +1,18 @@
+Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag.
+
+Story: Kofi is a fisherman from a small village in Ghana. He wants to catch enough fish today to provide for his family and sell the surplus at the market. Kofi repaired his fishing net last night. While Kofi is away from his boat, a group of monkeys comes and plays with the fishing net, tearing it apart. Kofi does not see the monkeys damaging his fishing net.
+Question: Does Kofi believe his fishing net is in good condition or torn apart?
+Choose one of the following:
+a)Kofi believes his fishing net is in good condition.
+b)Kofi believes his fishing net is torn apart.
+Answer: a
+
+
+Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag.
+
+Story: Noor is working as a barista at a busy coffee shop. Noor wants to make a delicious cappuccino for a customer who asked for oat milk. Noor grabs a milk pitcher and fills it with oat milk. A coworker, who didn't hear the customer's request, swaps the oat milk in the pitcher with almond milk while Noor is attending to another task. Noor sees her coworker swapping the milk.
+Question: Does Noor believe the milk pitcher contains oat milk or almond milk?
+Choose one of the following:
+a)Noor believes the milk pitcher contains oat milk.
+b)Noor believes the milk pitcher contains almond milk.
+Answer: b

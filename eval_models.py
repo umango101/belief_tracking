@@ -1,17 +1,17 @@
 import os
 import json
-import shutil
 import torch
 import argparse
+import warnings
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
-
 from nnsight import LanguageModel, CONFIG
-
 from utils import load_model_and_tokenizer, load_bigtom
+
+warnings.filterwarnings("ignore")
 
 CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
 os.environ["HF_TOKEN"] = "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"
@@ -23,20 +23,26 @@ if "mind" not in current_dir:
     current_dir = f"{current_dir}/mind"
 print(f"Current directory: {current_dir}")
 
-with open(f"{current_dir}/models.json", "r") as f:
-    models = json.load(f)
-
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-70B")
-    parser.add_argument("--precision", type=str, default="int4")
+    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B")
+    parser.add_argument("--precision", type=str, default="fp32")
     parser.add_argument("--ndif", type=bool, default=False)
-    parser.add_argument("--method_name", type=str, default="0shot")
+    parser.add_argument("--method_name", type=str, default="2shots")
     parser.add_argument("--variable", type=str, default="0_forward_belief")
     parser.add_argument("--condition", type=str, default="true_belief")
     parser.add_argument("--batch_size", type=int, default=4)
     args = parser.parse_args()
+
+    # Print arguments
+    print(f"Model name: {args.model_name}")
+    print(f"Precision: {args.precision}")
+    print(f"NDIF: {args.ndif}")
+    print(f"Method name: {args.method_name}")
+    print(f"Variable: {args.variable}")
+    print(f"Condition: {args.condition}")
+    print(f"Batch size: {args.batch_size}")
 
     os.makedirs(
         f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}",

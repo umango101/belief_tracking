@@ -1,6 +1,12 @@
 Model: meta-llama/Meta-Llama-3-70B-Instruct
-Accuracy: 0.85
+Accuracy: 0.94
 
 Model: meta-llama/Meta-Llama-3-70B
+Accuracy: 0.53
+
+Model: meta-llama/Meta-Llama-3-8B
 Accuracy: 0.58
+
+Model: meta-llama/Meta-Llama-3-8B-Instruct
+Accuracy: 0.42
 
