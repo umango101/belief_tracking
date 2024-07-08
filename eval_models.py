@@ -26,12 +26,14 @@ print(f"Current directory: {current_dir}")
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="meta-llama/Meta-Llama-3-8B")
-    parser.add_argument("--precision", type=str, default="fp32")
+    parser.add_argument(
+        "--model_name", type=str, default="meta-llama/Meta-Llama-3-70B-Instruct"
+    )
+    parser.add_argument("--precision", type=str, default="int4")
     parser.add_argument("--ndif", type=bool, default=False)
-    parser.add_argument("--method_name", type=str, default="2shots")
+    parser.add_argument("--method_name", type=str, default="0shot")
     parser.add_argument("--variable", type=str, default="0_forward_belief")
-    parser.add_argument("--condition", type=str, default="true_belief")
+    parser.add_argument("--condition", type=str, default="false_control")
     parser.add_argument("--batch_size", type=int, default=4)
     args = parser.parse_args()
 
