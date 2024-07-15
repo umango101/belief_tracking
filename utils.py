@@ -543,12 +543,12 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
 
         if answers[0] == org_correct_answer:
             clean_target = " a"
-            corrupt_target = " a"
-            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_correct_answer}\nb){control_wrong_answer}"
-        else:
-            clean_target = " b"
             corrupt_target = " b"
             corrupt_question = f"{control_question}\nChoose one of the following:\na){control_wrong_answer}\nb){control_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_correct_answer}\nb){control_wrong_answer}"
 
         clean_prompt = f"Instructions: {instructions}\nStory: {org_story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
