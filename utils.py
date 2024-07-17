@@ -586,12 +586,12 @@ def get_data_pp(data, n_samples, method_name="0shot"):
 
         if answers[0] == correct_answer:
             clean_target = " a"
-            corrupt_target = " x"
-            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_correct_answer}\ny){control_wrong_answer}"
-        else:
-            clean_target = " b"
             corrupt_target = " y"
             corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_wrong_answer}\ny){control_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " x"
+            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_correct_answer}\ny){control_wrong_answer}"
 
         clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
