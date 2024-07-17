@@ -519,6 +519,95 @@ def get_both_stories(tb_samples, fb_samples, n_samples, method_name="0shot"):
     return samples
 
 
+def get_altered_option_letters_data(data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+
+        clean_question = (
+            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
+        corrupt_question = (
+            f"{question}\nChoose one of the following:\nx){answers[1]}\ny){answers[0]}"
+        )
+
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " y"
+        else:
+            clean_target = " b"
+            corrupt_target = " x"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "clean_target": clean_target,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+            }
+        )
+
+    return samples
+
+
+def get_data_pp(data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    random.shuffle(data)
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+        clean_question = (
+            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
+
+        random_idx = random.randint(0, len(data) - 1)
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
+        (
+            control_story,
+            control_question,
+            control_correct_answer,
+            control_wrong_answer,
+        ) = data[random_idx]
+
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " x"
+            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_correct_answer}\ny){control_wrong_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " y"
+            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_wrong_answer}\ny){control_correct_answer}"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "clean_target": clean_target,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+            }
+        )
+
+    return samples
+
+
 def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
     samples = []
 
