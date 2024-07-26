@@ -55,9 +55,7 @@ def compute_final_roles(players: List[Dict[str, str]]):
     for player in players:
         player["final_role"] = player["role"]
 
-    indices = [
-        idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"
-    ]
+    indices = [idx for idx, player in enumerate(players) if player["role"] != "Troublemaker"]
     idx1, idx2 = random.sample(indices, 2)
     players[idx1]["final_role"] = players[idx2]["role"]
     players[idx2]["final_role"] = players[idx1]["role"]
@@ -69,9 +67,7 @@ def compute_role_description(players: List[Dict[str, str]]):
     for idx, player in enumerate(players):
         other_players = [p["name"] for p in players if p["name"] != player["name"]]
         concatenated_other_players = ", ".join(other_players)
-        concatenated_other_players = concatenated_other_players[::-1].replace(
-            ",", "dna ", 1
-        )[::-1]
+        concatenated_other_players = concatenated_other_players[::-1].replace(",", "dna ", 1)[::-1]
         if player["role"] != "Troublemaker":
             role_description = f"You are {player['name']}. You are playing Werewolf card game with your friends {concatenated_other_players}. Initially, you've been given the role of {player['role']}. First, understand the goals and actions of each player, then speak accordingly to increase your chances of winning."
         else:
@@ -119,9 +115,7 @@ def ask_mental_state_questions(
                 conversation = ""
 
             prompt += f"DAY PHASE:\n{conversation}\n"
-            question = (
-                f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
-            )
+            question = f"QUESTION: Who would you vote for?\nOptions: {options_str}\nAnswer:"
             #             print(question)
             prompt += question
 
@@ -136,15 +130,15 @@ def ask_mental_state_questions(
                 #                 options = {f"{chr(65+i)}": p for i, p in enumerate(all_players)}
                 #                 options_str = ", ".join([f"{k}: {v}" for k, v in options.items()])
 
-                question = f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                question = (
+                    f"QUESTION: Who would {other_player} vote for?\nOptions: {options_str}\nAnswer:"
+                )
                 #                 print(question)
                 prompt += question
 
                 outputs = model(**inputs)
                 logits = outputs.logits[0, -1]
-                pred_option_logits = options_token_ids[
-                    logits[options_token_ids].argmax()
-                ]
+                pred_option_logits = options_token_ids[logits[options_token_ids].argmax()]
                 others_vote[player["name"]][other_player] = options[
                     tokenizer.decode(pred_option_logits)
                 ]
@@ -329,7 +323,9 @@ class BigTomCollator(object):
 
             question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
 
-            prompt = f"Instructions: {self.instructions}\nStory: {story}\nQuestion: {question}\nAnswer:"
+            prompt = (
+                f"Instructions: {self.instructions}\nStory: {story}\nQuestion: {question}\nAnswer:"
+            )
             prompts.append(prompt)
 
             if answers[0] == correct_answer:
@@ -418,9 +414,7 @@ def load_tomi_data(config, tokenizer, current_dir, batch_size, n_priming_eps=3):
 
     dataset = Dataset.from_list(processed_data).with_format("torch")
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(
-        dataset, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(dataset, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader
 
@@ -457,16 +451,12 @@ def load_paraphrase_tomi(config, tokenizer, current_dir, batch_size):
         data = json.load(f)
     data = add_paraphrased_priming_exps(data)
     collator = Collator(config, tokenizer)
-    dataloader = DataLoader(
-        data, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(data, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader
 
 
-def load_bigtom(
-    config, tokenizer, current_dir, batch_size, method_name, variable, condition
-):
+def load_bigtom(config, tokenizer, current_dir, batch_size, method_name, variable, condition):
     path = f"{current_dir}/data/bigtom/{variable}_{condition}/stories.csv"
 
     with open(path, "r") as f:
@@ -474,9 +464,7 @@ def load_bigtom(
         data = list(reader)
 
     collator = BigTomCollator(config, tokenizer, method_name)
-    dataloader = DataLoader(
-        data, collate_fn=collator, batch_size=batch_size, shuffle=False
-    )
+    dataloader = DataLoader(data, collate_fn=collator, batch_size=batch_size, shuffle=False)
 
     return dataloader
 
@@ -493,7 +481,9 @@ def get_both_stories(tb_samples, fb_samples, n_samples, method_name="0shot"):
         answers = [tb_correct_answer, tb_wrong_answer]
         random.shuffle(answers)
 
-        clean_question = f"{tb_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        clean_question = (
+            f"{tb_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
 
         if answers[0] == tb_correct_answer:
             clean_target = " a"
@@ -504,7 +494,9 @@ def get_both_stories(tb_samples, fb_samples, n_samples, method_name="0shot"):
             corrupt_target = " a"
             corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_correct_answer}\nb){fb_wrong_answer}"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {tb_story}\nQuestion: {clean_question}\nAnswer:"
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {tb_story}\nQuestion: {clean_question}\nAnswer:"
+        )
         corrupt_prompt = f"Instructions: {instructions}\nStory: {fb_story}\nQuestion: {corrupt_question}\nAnswer:"
 
         samples.append(
@@ -530,9 +522,7 @@ def get_altered_option_letters_data(data, n_samples, method_name="0shot"):
         answers = [correct_answer, wrong_answer]
         random.shuffle(answers)
 
-        clean_question = (
-            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
-        )
+        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         corrupt_question = (
             f"{question}\nChoose one of the following:\nx){answers[1]}\ny){answers[0]}"
         )
@@ -544,8 +534,54 @@ def get_altered_option_letters_data(data, n_samples, method_name="0shot"):
             clean_target = " b"
             corrupt_target = " x"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
-        corrupt_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {corrupt_question}\nAnswer:"
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        )
+        corrupt_prompt = (
+            f"Instructions: {instructions}\nStory: {story}\nQuestion: {corrupt_question}\nAnswer:"
+        )
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "clean_target": clean_target,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+            }
+        )
+
+    return samples
+
+
+def get_tb_fb_data(tb_data, fb_data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    for idx in range(n_samples):
+        tb_story, tb_question, tb_correct_answer, tb_wrong_answer = tb_data[idx]
+        fb_story, fb_question, fb_correct_answer, fb_wrong_answer = fb_data[idx]
+        answers = [tb_correct_answer, tb_wrong_answer]
+        random.shuffle(answers)
+
+        clean_question = (
+            f"{tb_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
+
+        if answers[0] == tb_correct_answer:
+            clean_target = " a"
+            corrupt_target = " a"
+            corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_correct_answer}\nb){fb_wrong_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " b"
+            corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_wrong_answer}\nb){fb_correct_answer}"
+
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {tb_story}\nQuestion: {clean_question}\nAnswer:"
+        )
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {fb_story}\nQuestion: {corrupt_question}\nAnswer:"
 
         samples.append(
             {
@@ -570,9 +606,7 @@ def get_options_reversed_data(data, n_samples, method_name="0shot"):
         answers = [correct_answer, wrong_answer]
         random.shuffle(answers)
 
-        clean_question = (
-            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
-        )
+        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         corrupt_question = (
             f"{question}\nChoose one of the following:\na){answers[1]}\nb){answers[0]}"
         )
@@ -584,8 +618,12 @@ def get_options_reversed_data(data, n_samples, method_name="0shot"):
             clean_target = " b"
             corrupt_target = " a"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
-        corrupt_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {corrupt_question}\nAnswer:"
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        )
+        corrupt_prompt = (
+            f"Instructions: {instructions}\nStory: {story}\nQuestion: {corrupt_question}\nAnswer:"
+        )
 
         samples.append(
             {
@@ -610,9 +648,7 @@ def get_data_pp(data, n_samples, method_name="0shot"):
         story, question, correct_answer, wrong_answer = data[idx]
         answers = [correct_answer, wrong_answer]
         random.shuffle(answers)
-        clean_question = (
-            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
-        )
+        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
 
         random_idx = random.randint(0, len(data) - 1)
         while random_idx == idx:
@@ -633,7 +669,9 @@ def get_data_pp(data, n_samples, method_name="0shot"):
             corrupt_target = " a"
             corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_correct_answer}\ny){control_wrong_answer}"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        )
         corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
 
         samples.append(
@@ -668,18 +706,22 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
         answers = [org_correct_answer, org_wrong_answer]
         random.shuffle(answers)
 
-        clean_question = f"{org_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        clean_question = (
+            f"{org_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
 
         if answers[0] == org_correct_answer:
             clean_target = " a"
-            corrupt_target = " b"
-            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_wrong_answer}\nb){control_correct_answer}"
-        else:
-            clean_target = " b"
             corrupt_target = " a"
             corrupt_question = f"{control_question}\nChoose one of the following:\na){control_correct_answer}\nb){control_wrong_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " b"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_wrong_answer}\nb){control_correct_answer}"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {org_story}\nQuestion: {clean_question}\nAnswer:"
+        clean_prompt = (
+            f"Instructions: {instructions}\nStory: {org_story}\nQuestion: {clean_question}\nAnswer:"
+        )
         corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
 
         samples.append(
