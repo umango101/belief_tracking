@@ -637,7 +637,104 @@ def get_options_reversed_data(data, n_samples, method_name="0shot"):
     return samples
 
 
-def get_data_pp(data, n_samples, method_name="0shot"):
+def get_option_pairs(data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+
+        random_idx = random.randint(0, len(data) - 1)
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
+        (
+            random_story,
+            random_question,
+            random_correct_answer,
+            random_wrong_answer,
+        ) = data[random_idx]
+
+        clean_question = f"{question}\nChoose one of the following:\na){random_correct_answer}\nb){random_wrong_answer}"
+        if answers[0] == correct_answer:
+            target = " a"
+            corrupt_question = f"{random_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        else:
+            target = " b"
+            corrupt_question = f"{random_question}\nChoose one of the following:\na){answers[1]}\nb){answers[0]}"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {random_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "corrupt_prompt": corrupt_prompt,
+                "target": target,
+            }
+        )
+
+    return samples
+
+
+def get_agent_perspective_pairs(tb_data, fb_data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = tb_data[idx]
+        (
+            fb_story,
+            _,
+            _,
+            _,
+        ) = fb_data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+
+        clean_question = (
+            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
+
+        random_idx = random.randint(0, len(tb_data) - 1)
+        while random_idx == idx:
+            random_idx = random.randint(0, len(tb_data) - 1)
+        (
+            _,
+            random_question,
+            random_correct_answer,
+            random_wrong_answer,
+        ) = tb_data[random_idx]
+
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " b"
+            corrupt_question = f"{random_question}\nChoose one of the following:\na){random_wrong_answer}\nb){random_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+            corrupt_question = f"{random_question}\nChoose one of the following:\na){random_correct_answer}\nb){random_wrong_answer}"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {fb_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "corrupt_prompt": corrupt_prompt,
+                "target": corrupt_target,
+            }
+        )
+
+    return samples
+
+
+def get_data_pp_old(data, n_samples, method_name="0shot"):
     samples = []
 
     with open(f"prompt_instructions/{method_name}.txt", "r") as f:
@@ -682,6 +779,83 @@ def get_data_pp(data, n_samples, method_name="0shot"):
                 "corrupt_target": corrupt_target,
             }
         )
+
+    return samples
+
+
+def get_data_pp(model, data, n_samples, method_name="0shot"):
+    samples = []
+
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    random.shuffle(data)
+    while len(samples) < n_samples:
+        idx = random.randint(0, len(data) - 1)
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [wrong_answer, correct_answer]
+        random.shuffle(answers)
+        clean_question = (
+            f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        )
+
+        random_idx = random.randint(0, len(data) - 1)
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
+        (
+            control_story,
+            control_question,
+            control_correct_answer,
+            control_wrong_answer,
+        ) = data[random_idx]
+
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " b"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_wrong_answer}\nb){control_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_correct_answer}\nb){control_wrong_answer}"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        with torch.no_grad():
+            with model.trace(clean_prompt, scan=False, validate=False):
+                clean_output = model.lm_head.output[0, -1].save()
+            with model.trace(corrupt_prompt, scan=False, validate=False):
+                corrupt_output = model.lm_head.output[0, -1].save()
+
+            if (
+                clean_output[model.tokenizer.encode(clean_target)[1]]
+                - clean_output[model.tokenizer.encode(corrupt_target)[1]]
+                > 5
+            ) and (
+                corrupt_output[model.tokenizer.encode(corrupt_target)[1]]
+                - corrupt_output[model.tokenizer.encode(clean_target)[1]]
+                > 5
+            ):
+                samples.append(
+                    {
+                        "clean_prompt": clean_prompt,
+                        "clean_target": clean_target,
+                        "corrupt_prompt": corrupt_prompt,
+                        "corrupt_target": corrupt_target,
+                    }
+                )
+                print(f"Samples len: {len(samples)}")
+            else:
+                print(
+                    f"{clean_output[model.tokenizer.encode(clean_target)[1]] - clean_output[model.tokenizer.encode(corrupt_target)[1]]}"
+                )
+                print(
+                    f"{corrupt_output[model.tokenizer.encode(corrupt_target)[1]] - corrupt_output[model.tokenizer.encode(clean_target)[1]]}"
+                )
+                continue
+
+            del clean_output, corrupt_output
+            torch.cuda.empty_cache()
 
     return samples
 
@@ -749,8 +923,8 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
             control_correct_answer,
             control_wrong_answer,
         ) = control
-        answers = [org_correct_answer, org_wrong_answer]
-        random.shuffle(answers)
+        answers = [org_wrong_answer, org_correct_answer]
+        # random.shuffle(answers)
 
         clean_question = f"{org_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
 
