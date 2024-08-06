@@ -55,15 +55,14 @@ with open(f"data/bigtom/{variable}_false_control/stories.csv", "r") as f:
 
 n_samples = 48
 batch_size = 16
-samples = get_data_pp_old(tb_data + fb_data, n_samples)
-
-dataset = Dataset.from_list(samples)
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
-print("Data loaded...")
 
 accs = defaultdict(list)
 
 for iter in range(10):
+    samples = get_data_pp_old(tb_data + fb_data, n_samples)
+    dataset = Dataset.from_list(samples)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+
     for layer_idx in range(0, 42, 2):
         correct, total = 0, 0
         for bi, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
@@ -100,7 +99,7 @@ for iter in range(10):
                         correct += 1
                     total += 1
 
-            #print(f"CUDA Memory: {torch.cuda.memory_summary()}")
+            # print(f"CUDA Memory: {torch.cuda.memory_summary()}")
             del preds
             torch.cuda.empty_cache()
 

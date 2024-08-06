@@ -575,12 +575,12 @@ def get_tb_fb_data(tb_data, fb_data, n_samples, method_name="0shot"):
 
         if answers[0] == tb_correct_answer:
             clean_target = " a"
-            corrupt_target = " a"
-            corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_correct_answer}\nb){fb_wrong_answer}"
-        else:
-            clean_target = " b"
             corrupt_target = " b"
             corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_wrong_answer}\nb){fb_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+            corrupt_question = f"{fb_question}\nChoose one of the following:\na){fb_correct_answer}\nb){fb_wrong_answer}"
 
         clean_prompt = f"Instructions: {instructions}\nStory: {tb_story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {fb_story}\nQuestion: {corrupt_question}\nAnswer:"
@@ -690,9 +690,9 @@ def get_agent_perspective_pairs(tb_data, fb_data, n_samples, method_name="0shot"
         story, question, correct_answer, wrong_answer = tb_data[idx]
         (
             fb_story,
-            _,
-            _,
-            _,
+            fb_question,
+            fb_correct_answer,
+            fb_wrong_answer,
         ) = fb_data[idx]
         answers = [correct_answer, wrong_answer]
         random.shuffle(answers)
@@ -705,7 +705,7 @@ def get_agent_perspective_pairs(tb_data, fb_data, n_samples, method_name="0shot"
         while random_idx == idx:
             random_idx = random.randint(0, len(tb_data) - 1)
         (
-            _,
+            random_story,
             random_question,
             random_correct_answer,
             random_wrong_answer,
@@ -714,13 +714,13 @@ def get_agent_perspective_pairs(tb_data, fb_data, n_samples, method_name="0shot"
         if answers[0] == correct_answer:
             clean_target = " a"
             corrupt_target = " b"
-            corrupt_question = f"{random_question}\nChoose one of the following:\na){random_wrong_answer}\nb){random_correct_answer}"
+            corrupt_question = f"{fb_question}\nChoose one of the following:\na){correct_answer}\nb){wrong_answer}"
         else:
             clean_target = " b"
             corrupt_target = " a"
-            corrupt_question = f"{random_question}\nChoose one of the following:\na){random_correct_answer}\nb){random_wrong_answer}"
+            corrupt_question = f"{fb_question}\nChoose one of the following:\na){wrong_answer}\nb){correct_answer}"
 
-        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        clean_prompt = f"Instructions: {instructions}\nStory: {random_story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {fb_story}\nQuestion: {corrupt_question}\nAnswer:"
 
         samples.append(
@@ -924,7 +924,7 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
             control_wrong_answer,
         ) = control
         answers = [org_wrong_answer, org_correct_answer]
-        # random.shuffle(answers)
+        random.shuffle(answers)
 
         clean_question = f"{org_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
 
