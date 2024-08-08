@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from nnsight import LanguageModel
 from collections import defaultdict
 from tqdm import tqdm
-from utils import get_data_pp_old
+from utils import get_control_corrupt_data
 
 
 def find_period_token_indices(input_tokens):
@@ -27,7 +27,7 @@ def find_period_token_indices(input_tokens):
 
 
 model = LanguageModel(
-    "/data/public_models/huggingface/meta-llama/Meta-Llama-3-70B-Instruct",
+    "meta-llama/Meta-Llama-3-70B-Instruct",
     device_map="auto",
     load_in_4bit=True,
     torch_dtype=torch.float16,
@@ -59,7 +59,7 @@ batch_size = 16
 accs = defaultdict(list)
 
 for iter in range(10):
-    samples = get_data_pp_old(tb_data + fb_data, n_samples)
+    samples = get_control_corrupt_data(tb_data, fb_control, n_samples)
     dataset = Dataset.from_list(samples)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
@@ -108,5 +108,5 @@ for iter in range(10):
         print(f"Iteration: {iter} | Layer: {layer_idx} | Accuracy: {acc}")
 
         # Save accs in a json file
-        with open(f"correctness_variable_accs.json", "w") as f:
+        with open(f"agent_perspective_variable_accs.json", "w") as f:
             json.dump(accs, f)
