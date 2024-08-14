@@ -734,30 +734,30 @@ def get_agent_perspective_pairs(tb_data, fb_data, n_samples, method_name="0shot"
     return samples
 
 
-def get_data_pp_old(data, n_samples, method_name="0shot"):
+def get_diff_exps(clean_data, corrupt_data, n_samples, method_name="0shot"):
     samples = []
 
     with open(f"prompt_instructions/{method_name}.txt", "r") as f:
         instructions = f.read()
 
-    random.shuffle(data)
+    random.shuffle(clean_data)
     for idx in range(n_samples):
-        story, question, correct_answer, wrong_answer = data[idx]
+        story, question, correct_answer, wrong_answer = clean_data[idx]
         answers = [correct_answer, wrong_answer]
         random.shuffle(answers)
         clean_question = (
             f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         )
 
-        random_idx = random.randint(0, len(data) - 1)
+        random_idx = random.randint(0, len(corrupt_data) - 1)
         while random_idx == idx:
-            random_idx = random.randint(0, len(data) - 1)
+            random_idx = random.randint(0, len(corrupt_data) - 1)
         (
             control_story,
             control_question,
             control_correct_answer,
             control_wrong_answer,
-        ) = data[random_idx]
+        ) = corrupt_data[random_idx]
 
         if answers[0] == correct_answer:
             clean_target = " a"
@@ -783,31 +783,31 @@ def get_data_pp_old(data, n_samples, method_name="0shot"):
     return samples
 
 
-def get_data_pp(model, data, n_samples, method_name="0shot"):
+def get_data_pp(model, clean_data, corrupt_data, n_samples, method_name="0shot"):
     samples = []
 
     with open(f"prompt_instructions/{method_name}.txt", "r") as f:
         instructions = f.read()
 
-    random.shuffle(data)
+    random.shuffle(clean_data)
     while len(samples) < n_samples:
-        idx = random.randint(0, len(data) - 1)
-        story, question, correct_answer, wrong_answer = data[idx]
+        idx = random.randint(0, len(clean_data) - 1)
+        story, question, correct_answer, wrong_answer = clean_data[idx]
         answers = [wrong_answer, correct_answer]
         random.shuffle(answers)
         clean_question = (
             f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         )
 
-        random_idx = random.randint(0, len(data) - 1)
+        random_idx = random.randint(0, len(corrupt_data) - 1)
         while random_idx == idx:
-            random_idx = random.randint(0, len(data) - 1)
+            random_idx = random.randint(0, len(corrupt_data) - 1)
         (
             control_story,
             control_question,
             control_correct_answer,
             control_wrong_answer,
-        ) = data[random_idx]
+        ) = corrupt_data[random_idx]
 
         if answers[0] == correct_answer:
             clean_target = " a"
@@ -828,10 +828,6 @@ def get_data_pp(model, data, n_samples, method_name="0shot"):
                 corrupt_output = model.lm_head.output[0, -1].save()
 
             if (
-                clean_output[model.tokenizer.encode(clean_target)[1]]
-                - clean_output[model.tokenizer.encode(corrupt_target)[1]]
-                > 5
-            ) and (
                 corrupt_output[model.tokenizer.encode(corrupt_target)[1]]
                 - corrupt_output[model.tokenizer.encode(clean_target)[1]]
                 > 5
@@ -923,6 +919,7 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
             control_correct_answer,
             control_wrong_answer,
         ) = control
+        # control_story = ". ".join(control_story.split(". ")[:-2]) + '.'
         answers = [org_wrong_answer, org_correct_answer]
         random.shuffle(answers)
 
@@ -950,3 +947,15 @@ def get_control_corrupt_data(orgs, controls, n_samples, method_name="0shot"):
         )
 
     return samples
+
+
+def get_example(data, method_name="0shot"):
+    with open(f"prompt_instructions/{method_name}.txt", "r") as f:
+        instructions = f.read()
+
+    story, question, correct_answer, wrong_answer = data
+    answers = [correct_answer, wrong_answer]
+
+    exp = f"Instructions: {instructions}\nStory: {story}\nQuestion: {question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}\nAnswer:"
+
+    return exp
