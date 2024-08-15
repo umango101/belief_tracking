@@ -959,3 +959,60 @@ def get_example(data, method_name="0shot"):
     exp = f"Instructions: {instructions}\nStory: {story}\nQuestion: {question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}\nAnswer:"
 
     return exp
+
+
+def get_event_observation_data(
+    clean_data, corrupt_data, n_samples, method_name="0shot"
+):
+    with open("prompt_instructions/0shot.txt", "r") as f:
+        instructions = f.read()
+
+    samples = []
+
+    for idx in range(n_samples):
+        clean_story, clean_question, clean_correct_answer, clean_wrong_answer = (
+            clean_data[idx]
+        )
+        (
+            corrupt_story,
+            corrupt_question,
+            corrupt_correct_answer,
+            corrupt_wrong_answer,
+        ) = corrupt_data[idx]
+        clean_story = (
+            ". ".join(clean_story.split(". ")[:-1])
+            + ". "
+            + clean_story.split(". ")[-1].split(" ")[0]
+            + " observes this event occurring."
+        )
+        corrupt_story = (
+            ". ".join(corrupt_story.split(". ")[:-1])
+            + ". "
+            + corrupt_story.split(". ")[-1].split(" ")[0]
+            + " does not observe this event occurring."
+        )
+        answers = [corrupt_correct_answer, corrupt_wrong_answer]
+        random.shuffle(answers)
+
+        corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        clean_question = f"{clean_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        if answers[0] == corrupt_correct_answer:
+            corrupt_target = " a"
+            clean_target = " b"
+        else:
+            corrupt_target = " b"
+            clean_target = " a"
+
+        clean_prompt = f"Instructions: {instructions}\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+                "clean_target": clean_target,
+            }
+        )
+
+    return samples
