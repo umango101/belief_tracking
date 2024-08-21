@@ -740,7 +740,7 @@ def get_diff_exps(clean_data, corrupt_data, n_samples, method_name="0shot"):
     with open(f"prompt_instructions/{method_name}.txt", "r") as f:
         instructions = f.read()
 
-    # random.shuffle(clean_data)
+    random.shuffle(clean_data)
     for idx in range(n_samples):
         story, question, correct_answer, wrong_answer = clean_data[idx]
         answers = [correct_answer, wrong_answer]
@@ -762,11 +762,11 @@ def get_diff_exps(clean_data, corrupt_data, n_samples, method_name="0shot"):
         if answers[0] == correct_answer:
             clean_target = " a"
             corrupt_target = " b"
-            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_wrong_answer}\ny){control_correct_answer}"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_wrong_answer}\nb){control_correct_answer}"
         else:
             clean_target = " b"
             corrupt_target = " a"
-            corrupt_question = f"{control_question}\nChoose one of the following:\nx){control_correct_answer}\ny){control_wrong_answer}"
+            corrupt_question = f"{control_question}\nChoose one of the following:\na){control_correct_answer}\nb){control_wrong_answer}"
 
         clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {control_story}\nQuestion: {corrupt_question}\nAnswer:"
