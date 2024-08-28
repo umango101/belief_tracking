@@ -167,3 +167,10 @@ def maybe_prefix_bos(tokenizer, prompt: str) -> str:
         if not prompt.startswith(prefix):
             prompt = prefix + " " + prompt
     return prompt
+
+
+def get_module_nnsight(model, layer_name):
+    layer = model
+    for name in layer_name.split("."):
+        layer = layer[int(name)] if name.isdigit() else getattr(layer, name)
+    return layer
