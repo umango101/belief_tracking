@@ -1,3 +1,4 @@
+import math
 import os
 import csv
 import random
@@ -8,6 +9,7 @@ from typing import List, Dict, Any
 from transformers import StoppingCriteria
 from datasets import Dataset
 from torch.utils.data import DataLoader
+from einops import einsum
 
 random.seed(10)
 
@@ -1016,3 +1018,214 @@ def get_event_observation_data(
         )
 
     return samples
+
+def get_event_type_data(clean_data, corrupt_data, n_samples, method_name="0shot"):
+    with open("prompt_instructions/0shot.txt", "r") as f:
+        instructions = f.read()
+
+    samples = []
+
+    for idx in range(n_samples):
+        clean_story, clean_question, clean_correct_answer, clean_wrong_answer = (
+            clean_data[idx]
+        )
+        (
+            corrupt_story,
+            corrupt_question,
+            corrupt_correct_answer,
+            corrupt_wrong_answer,
+        ) = corrupt_data[idx]
+        
+        if "does not" in clean_story.split(". ")[-1]:
+            clean_story = (
+                ". ".join(clean_story.split(". ")[:-1])
+                + ". "
+                + clean_story.split(". ")[-1].split(" ")[0]
+                + " does not observe this event occurring."
+            )
+        else:
+            clean_story = (
+                ". ".join(clean_story.split(". ")[:-1])
+                + ". "
+                + clean_story.split(". ")[-1].split(" ")[0]
+                + " observes this event occurring."
+            )
+        
+        if "does not" in corrupt_story.split(". ")[-1]:
+            corrupt_story = (
+                ". ".join(corrupt_story.split(". ")[:-1])
+                + ". "
+                + corrupt_story.split(". ")[-1].split(" ")[0]
+                + " does not observe this event occurring."
+            )
+        else:
+            corrupt_story = (
+                ". ".join(corrupt_story.split(". ")[:-1])
+                + ". "
+                + corrupt_story.split(". ")[-1].split(" ")[0]
+                + " observes this event occurring."
+            )
+        
+        answers = [clean_correct_answer, clean_wrong_answer]
+        random.shuffle(answers)
+
+        corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        clean_question = f"{clean_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        if answers[0] == clean_correct_answer:
+            clean_target = " a"
+            corrupt_target = " b"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+        
+        clean_prompt = f"Instructions: {instructions}\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+                "clean_target": clean_target,
+            }
+        )
+
+    return samples
+
+def rotate_half(x):
+    """Rotates half the hidden dims of the input."""
+    x1 = x[..., : x.shape[-1] // 2]
+    x2 = x[..., x.shape[-1] // 2 :]
+    return torch.cat((-x2, x1), dim=-1)
+
+
+def apply_rotary_pos_emb(q, k, cos, sin, position_ids=None, unsqueeze_dim=1):
+    """Applies Rotary Position Embedding to the query and key tensors.
+
+    Args:
+        q (`torch.Tensor`): The query tensor.
+        k (`torch.Tensor`): The key tensor.
+        cos (`torch.Tensor`): The cosine part of the rotary embedding.
+        sin (`torch.Tensor`): The sine part of the rotary embedding.
+        position_ids (`torch.Tensor`, *optional*):
+            Deprecated and unused.
+        unsqueeze_dim (`int`, *optional*, defaults to 1):
+            The 'unsqueeze_dim' argument specifies the dimension along which to unsqueeze cos[position_ids] and
+            sin[position_ids] so that they can be properly broadcasted to the dimensions of q and k. For example, note
+            that cos[position_ids] and sin[position_ids] have the shape [batch_size, seq_len, head_dim]. Then, if q and
+            k have the shape [batch_size, heads, seq_len, head_dim], then setting unsqueeze_dim=1 makes
+            cos[position_ids] and sin[position_ids] broadcastable to the shapes of q and k. Similarly, if q and k have
+            the shape [batch_size, seq_len, heads, head_dim], then set unsqueeze_dim=2.
+    Returns:
+        `tuple(torch.Tensor)` comprising of the query and key tensors rotated using the Rotary Position Embedding.
+    """
+    cos = cos.unsqueeze(unsqueeze_dim)
+    sin = sin.unsqueeze(unsqueeze_dim)
+    q_embed = (q * cos) + (rotate_half(q) * sin)
+    k_embed = (k * cos) + (rotate_half(k) * sin)
+    return q_embed, k_embed
+
+
+def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
+    """
+    This is the equivalent of torch.repeat_interleave(x, dim=1, repeats=n_rep). The hidden states go from (batch,
+    num_key_value_heads, seqlen, head_dim) to (batch, num_attention_heads, seqlen, head_dim)
+    """
+    batch, num_key_value_heads, slen, head_dim = hidden_states.shape
+    if n_rep == 1:
+        return hidden_states
+    hidden_states = hidden_states[:, :, None, :, :].expand(
+        batch, num_key_value_heads, n_rep, slen, head_dim
+    )
+    return hidden_states.reshape(batch, num_key_value_heads * n_rep, slen, head_dim)
+
+
+def apply_causal_mask(attn_scores):
+    ignore = torch.tensor(torch.finfo(attn_scores.dtype).min)
+    mask = torch.triu(
+        torch.ones(
+            attn_scores.size(-2), attn_scores.size(-1), device=attn_scores.device
+        ),
+        diagonal=1,
+    ).bool()
+    attn_scores.masked_fill_(mask, ignore)
+
+    return attn_scores
+
+def get_attn_score(model, prompt, layer_idx):
+    n_rep = 8
+    n_heads = model.config.num_attention_heads
+    head_dim = model.config.hidden_size // model.config.num_attention_heads
+
+    input_tokens = model.tokenizer(prompt, return_tensors="pt").input_ids
+    bsz, q_len = input_tokens.size()
+    positions = torch.arange(q_len)
+    positions = torch.tensor(positions).unsqueeze(0).repeat(bsz, 1).to(model.device)
+    scaled_attn = torch.zeros(bsz, n_heads, q_len, q_len)
+
+    with torch.no_grad():
+        with model.trace(prompt, scan=False, validate=False) as tracer:
+            query_states = model.model.layers[layer_idx].self_attn.q_proj.output
+            key_states = model.model.layers[layer_idx].self_attn.k_proj.output
+            value_states = model.model.layers[layer_idx].self_attn.v_proj.output
+
+            query_states = query_states.view(
+                bsz, q_len, n_heads, head_dim
+            ).transpose(1, 2)
+            key_states = key_states.view(
+                bsz, q_len, n_heads // n_rep, head_dim
+            ).transpose(1, 2)
+            value_states = value_states.view(
+                bsz, q_len, n_heads // n_rep, head_dim
+            ).transpose(1, 2)
+
+            X = model.model.layers[layer_idx].self_attn.rotary_emb(
+                value_states, positions
+            )
+            cos, sin = X[0], X[1]
+            X = tracer.apply(
+                apply_rotary_pos_emb,
+                q=query_states,
+                k=key_states,
+                cos=cos,
+                sin=sin,
+                validate=False,
+            )
+            query_states, key_states = X[0], X[1]
+
+            key_states = tracer.apply(
+                repeat_kv, key_states, n_rep, validate=False
+            )
+            value_states = (
+                tracer.apply(repeat_kv, value_states, n_rep, validate=False)
+                .transpose(1, 2)
+                .save()
+            )
+
+            attn_weights = torch.matmul(
+                query_states, key_states.transpose(2, 3)
+            ) / math.sqrt(head_dim)
+            attn_weights = tracer.apply(
+                apply_causal_mask,
+                attn_scores=attn_weights,
+                validate=False,
+            )
+
+            attn_weights = torch.nn.functional.softmax(attn_weights, dim=-1).to(
+                query_states.dtype
+            )
+            attn_weights = torch.nn.functional.dropout(
+                attn_weights, p=model.config.attention_dropout, training=False
+            ).save()
+
+            # value_vectors_norm = torch.norm(value_states, dim=-1)
+            # scaled_attn = einsum(
+            #     value_vectors_norm,
+            #     attn_weights,
+            #     "batch k_seq_len n_heads, batch n_heads q_seq_len k_seq_len -> batch n_heads q_seq_len k_seq_len",
+            # ).save()
+
+            del query_states, key_states, value_states, X, cos, sin
+            torch.cuda.empty_cache()
+
+    return attn_weights
