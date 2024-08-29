@@ -100,6 +100,7 @@ class PatchSpec:
     clean: Optional[torch.Tensor] = None
 
 
+@torch.inference_mode()
 def get_hs(
     lm: LanguageModel,
     input: str | TokenizerOutput,
@@ -158,6 +159,7 @@ def predict_next_token(
     input: str | TokenizerOutput,
     patches: Optional[PatchSpec | list[PatchSpec]] = None,
     k: int = 5,
+    interested_tokens: list[int] = [],
 ):
     free_gpu_cache()
     if isinstance(input, str):
@@ -170,7 +172,8 @@ def predict_next_token(
         locations=location,
         patches=patches,
     )
-    return logit_lens(lm=lm, h=hs, k=k)
+    free_gpu_cache()
+    return logit_lens(lm=lm, h=hs, k=k, interested_tokens=interested_tokens)
 
 
 def get_dummy_input(
