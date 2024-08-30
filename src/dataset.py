@@ -1,6 +1,7 @@
 import os
 import random
 from dataclasses import dataclass
+from typing import Literal, Optional
 
 import pandas as pd
 from dataclasses_json import DataClassJsonMixin
@@ -27,12 +28,19 @@ class Dataset(DataClassJsonMixin):
     def __len__(self) -> int:
         return len(self.samples)
 
-    def __getitem__(self, idx: int, tags: tuple[int, int] = ["a", "b"]) -> Sample:
+    def __getitem__(
+        self,
+        idx: int,
+        tags: tuple[int, int] = ["a", "b"],
+        correct_ans_idx: Literal[0, 1] = None,
+    ) -> Sample:
         question = f"Instruction: {self.instruction.strip().replace('<op1>', tags[0]).replace('<op2>', tags[1])}\n\n"
         question += f"Story: {self.samples[idx].story.strip()}\n\n"
         question += f"Question: {self.samples[idx].question.strip()}\n"
 
-        correct_ans_idx = random.choice([0, 1])
+        correct_ans_idx = (
+            random.choice([0, 1]) if correct_ans_idx is None else correct_ans_idx
+        )
         distractor_idx = 1 - correct_ans_idx
         option_dict = {
             tags[correct_ans_idx]: self.samples[idx].answer,
