@@ -981,18 +981,35 @@ def get_event_observation_data(
             corrupt_correct_answer,
             corrupt_wrong_answer,
         ) = corrupt_data[idx]
-        clean_story = (
-            ". ".join(clean_story.split(". ")[:-1])
-            + ". "
-            + clean_story.split(". ")[-1].split(" ")[0]
-            + " observes this event occurring."
-        )
-        corrupt_story = (
-            ". ".join(corrupt_story.split(". ")[:-1])
-            + ". "
-            + corrupt_story.split(". ")[-1].split(" ")[0]
-            + " does not observe this event occurring."
-        )
+        if "does not" in clean_story.split(". ")[-1]:
+            clean_story = (
+                ". ".join(clean_story.split(". ")[:-1])
+                + ". "
+                + clean_story.split(". ")[-1].split(" ")[0]
+                + " does not observe this event occurring."
+            )
+        else:
+            clean_story = (
+                ". ".join(clean_story.split(". ")[:-1])
+                + ". "
+                + clean_story.split(". ")[-1].split(" ")[0]
+                + " observes this event occurring."
+            )
+        
+        if "does not" in corrupt_story.split(". ")[-1]:
+            corrupt_story = (
+                ". ".join(corrupt_story.split(". ")[:-1])
+                + ". "
+                + corrupt_story.split(". ")[-1].split(" ")[0]
+                + " does not observe this event occurring."
+            )
+        else:
+            corrupt_story = (
+                ". ".join(corrupt_story.split(". ")[:-1])
+                + ". "
+                + corrupt_story.split(". ")[-1].split(" ")[0]
+                + " observes this event occurring."
+            )
         answers = [corrupt_correct_answer, corrupt_wrong_answer]
         random.shuffle(answers)
 
@@ -1069,14 +1086,15 @@ def get_event_type_data(clean_data, corrupt_data, n_samples, method_name="0shot"
         answers = [clean_correct_answer, clean_wrong_answer]
         random.shuffle(answers)
 
-        corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         clean_question = f"{clean_question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
         if answers[0] == clean_correct_answer:
             clean_target = " a"
             corrupt_target = " b"
+            corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){corrupt_wrong_answer}\nb){corrupt_correct_answer}"
         else:
             clean_target = " b"
             corrupt_target = " a"
+            corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){corrupt_correct_answer}\nb){corrupt_wrong_answer}"
         
         clean_prompt = f"Instructions: {instructions}\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:"
         corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:"
