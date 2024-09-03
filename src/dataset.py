@@ -22,8 +22,11 @@ class Sample(DataClassJsonMixin):
 class Dataset(DataClassJsonMixin):
     samples: list[Sample]
     instruction: str = (
-        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option (either <op1> or <op2>) after the "Answer:" tag."""
+        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag."""
     )
+    # instruction: str = (
+    #     """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag."""
+    # )
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -48,6 +51,7 @@ class Dataset(DataClassJsonMixin):
         }
         question += f"{tags[0]}) {option_dict[tags[0]].strip()}\n"
         question += f"{tags[1]}) {option_dict[tags[1]].strip()}\n"
+        question += "Choose one of the following:\n"
         question += f"Answer:"
 
         return question, tags[correct_ans_idx]
@@ -57,10 +61,10 @@ def load_worldstate_dataset():
     ws_csv = pd.read_csv(
         os.path.join(
             env_utils.DEFAULT_DATA_DIR,
-            # "bigtom_worldstate.csv",
-            "bigtom/0_forward_belief_false_belief/stories.csv",
+            "bigtom_worldstate.csv",
+            # "bigtom/0_forward_belief_false_control/stories.csv",
         ),
-        delimiter=";",
+        # delimiter=";",
     )
     samples: list[Sample] = []
     for idx, row in ws_csv.iterrows():
