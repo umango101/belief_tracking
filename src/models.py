@@ -13,6 +13,30 @@ from src.utils.typing import Tokenizer, TokenizerOutput
 
 logger = logging.getLogger(__name__)
 
+CACHEABLE_FUNCS = [
+    "forward",
+    # "ssm", "selective_scan" , # specific to Mamba models
+]
+
+_cached_forwards: dict = {}
+
+
+def cache_forwards(lm: LanguageModel):
+    global _cached_forwards
+    _cached_forwards = {}
+    for name, module in lm._model.named_modules():
+        _cached_forwards[name] = {}
+        for func_name in CACHEABLE_FUNCS:
+            if hasattr(module, func_name):
+                _cached_forwards[name][func_name] = getattr(module, func_name)
+
+
+def reset_forwards(lm: LanguageModel):
+    for name, module in lm._model.named_modules():
+        for func_name in CACHEABLE_FUNCS:
+            if hasattr(module, func_name):
+                setattr(module, func_name, _cached_forwards[name][func_name])
+
 
 def load_LM(model_key: str, **kwargs) -> LanguageModel:
     model_key = get_full_model_path(model_key)
@@ -20,6 +44,7 @@ def load_LM(model_key: str, **kwargs) -> LanguageModel:
     kwargs["dispatch"] = True
     lm = LanguageModel(model_key=model_key, **kwargs)
     lm._model.eval()
+    cache_forwards(lm)
     print(f"loaded {model_key} | size: {get_model_size(lm._model)}")
     return lm
 

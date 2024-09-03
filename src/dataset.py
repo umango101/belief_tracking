@@ -55,7 +55,12 @@ class Dataset(DataClassJsonMixin):
 
 def load_worldstate_dataset():
     ws_csv = pd.read_csv(
-        os.path.join(env_utils.DEFAULT_DATA_DIR, "bigtom_worldstate.csv")
+        os.path.join(
+            env_utils.DEFAULT_DATA_DIR,
+            # "bigtom_worldstate.csv",
+            "bigtom/0_forward_belief_false_belief/stories.csv",
+        ),
+        delimiter=";",
     )
     samples: list[Sample] = []
     for idx, row in ws_csv.iterrows():
