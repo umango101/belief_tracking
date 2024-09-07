@@ -1170,6 +1170,7 @@ def apply_causal_mask(attn_scores):
 
     return attn_scores
 
+
 def get_attn_score(model, prompt, layer_idx):
     n_rep = 8
     n_heads = model.config.num_attention_heads
@@ -1247,3 +1248,111 @@ def get_attn_score(model, prompt, layer_idx):
             torch.cuda.empty_cache()
 
     return attn_weights
+
+
+def get_imp_indices(input_tokens):
+    period_token_indices = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 627]
+    instruction_end_index = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 382][0]
+    story_period_indices = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 13 and i > instruction_end_index and i < period_token_indices[0]]
+    option_a = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 64][-1]
+    option_b = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 65][-1]
+    question_token = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 5380][-1]
+    # or_token = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 477][-1]
+    colon_token = [i for i, x in enumerate(input_tokens[0]) if input_tokens[0][i] == 25]
+
+    return period_token_indices, instruction_end_index, story_period_indices, option_a, option_b, question_token, colon_token
+
+
+def get_plain_exps(data, n_samples):
+    with open("prompt_instructions/0shot.txt", "r") as f:
+        instructions = f.read()
+    
+    samples = []
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+
+        random_idx = random.randint(0, len(data) - 1)
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
+        
+        corrupt_story, corrupt_question, corrupt_correct_answer, corrupt_wrong_answer = data[random_idx]
+
+        story = ". ".join(story.split(". ")[:-2]) + "."
+        corrupt_story = ". ".join(corrupt_story.split(". ")[:-2]) + "."
+
+        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " b"
+            corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){corrupt_wrong_answer}\nb){corrupt_correct_answer}"
+        else:
+            clean_target = " b"
+            corrupt_target = " a"
+            corrupt_question = f"{corrupt_question}\nChoose one of the following:\na){corrupt_correct_answer}\nb){corrupt_wrong_answer}"
+        
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": clean_prompt,
+                "clean_target": clean_target,
+                "corrupt_prompt": corrupt_prompt,
+                "corrupt_target": corrupt_target,
+            }
+        )
+    
+    return samples
+
+
+def get_diff_name(data, n_samples, model):
+    with open("prompt_instructions/0shot.txt", "r") as f:
+        instructions = f.read()
+
+    samples = []
+    for idx in range(n_samples):
+        story, question, correct_answer, wrong_answer = data[idx]
+        answers = [correct_answer, wrong_answer]
+        random.shuffle(answers)
+
+        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
+        if answers[0] == correct_answer:
+            clean_target = " a"
+            corrupt_target = " a"
+        else:
+            clean_target = " b"
+            corrupt_target = " b"
+
+        story = ". ".join(story.split(". ")[:-2]) + "."
+        agent_name = " " + story.split(' ', maxsplit=1)[0]
+
+        if len(model.tokenizer.encode(agent_name)) - 1 == 1:
+            corrupt_agent_name = " Sally"
+        elif len(model.tokenizer.encode(agent_name)) - 1 == 2:
+            corrupt_agent_name = " Nikhil"
+        elif len(model.tokenizer.encode(agent_name)) - 1 == 3:
+            corrupt_agent_name = " Koyena"
+        else:
+            raise ValueError("Agent name not found")
+
+        story = story.replace("He", agent_name.strip())
+        story = story.replace("She", agent_name.strip())
+
+        corrupt_story = story.replace(agent_name.strip(), corrupt_agent_name.strip())
+        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
+        corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {clean_question}\nAnswer:"
+
+        samples.append(
+            {
+                "clean_prompt": corrupt_prompt,
+                "clean_target": corrupt_target,
+                "corrupt_prompt": clean_prompt,
+                "corrupt_target": clean_target,
+                "clean_agent_name": model.tokenizer.encode(corrupt_agent_name)[1:],
+                "corrupt_agent_name": model.tokenizer.encode(agent_name)[1:],
+            }
+        )
+
+    return samples
