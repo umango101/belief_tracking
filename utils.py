@@ -1110,6 +1110,7 @@ def get_event_type_data(clean_data, corrupt_data, n_samples, method_name="0shot"
 
     return samples
 
+
 def rotate_half(x):
     """Rotates half the hidden dims of the input."""
     x1 = x[..., : x.shape[-1] // 2]
@@ -1308,24 +1309,12 @@ def get_plain_exps(data, n_samples):
 
 
 def get_diff_name(data, n_samples, model):
-    with open("prompt_instructions/0shot.txt", "r") as f:
-        instructions = f.read()
-
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
     samples = []
+
     for idx in range(n_samples):
-        story, question, correct_answer, wrong_answer = data[idx]
-        answers = [correct_answer, wrong_answer]
-        random.shuffle(answers)
-
-        clean_question = f"{question}\nChoose one of the following:\na){answers[0]}\nb){answers[1]}"
-        if answers[0] == correct_answer:
-            clean_target = " a"
-            corrupt_target = " a"
-        else:
-            clean_target = " b"
-            corrupt_target = " b"
-
-        story = ". ".join(story.split(". ")[:-2]) + "."
+        story, _, correct_answer, wrong_answer = data[idx]
+        # story = ". ".join(story.split(". ")[:-2]) + "."
         agent_name = " " + story.split(' ', maxsplit=1)[0]
 
         if len(model.tokenizer.encode(agent_name)) - 1 == 1:
@@ -1339,20 +1328,74 @@ def get_diff_name(data, n_samples, model):
 
         story = story.replace("He", agent_name.strip())
         story = story.replace("She", agent_name.strip())
-
         corrupt_story = story.replace(agent_name.strip(), corrupt_agent_name.strip())
-        clean_prompt = f"Instructions: {instructions}\nStory: {story}\nQuestion: {clean_question}\nAnswer:"
-        corrupt_prompt = f"Instructions: {instructions}\nStory: {corrupt_story}\nQuestion: {clean_question}\nAnswer:"
+        question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
 
-        samples.append(
-            {
-                "clean_prompt": corrupt_prompt,
-                "clean_target": corrupt_target,
-                "corrupt_prompt": clean_prompt,
-                "corrupt_target": clean_target,
-                "clean_agent_name": model.tokenizer.encode(corrupt_agent_name)[1:],
-                "corrupt_agent_name": model.tokenizer.encode(agent_name)[1:],
-            }
-        )
+        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {question}\nAnswer:'
+        wrong_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {question}\nAnswer:'
 
+        samples.append({
+            'correct_prompt': correct_prompt,
+            'wrong_prompt': wrong_prompt,
+            "agent_name_len": len(model.tokenizer.encode(agent_name)) - 1,
+        })
+
+    return samples
+
+
+def get_yes_no_exps(data, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        story, _, correct_answer, wrong_answer = data[idx]
+        correct_question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
+        wrong_question = f'Does {wrong_answer.replace("believes", "believe").replace(".", "?")}'
+        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
+        wrong_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {wrong_question}\nAnswer:'
+        samples.append({
+            'correct_prompt': correct_prompt,
+            'wrong_prompt': wrong_prompt,
+        })
+    
+    return samples
+
+
+def get_yes_no_simple_exps(data, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        story, _, correct_answer, wrong_answer = data[idx]
+        story = ". ".join(story.split(". ")[:-2]) + "."
+        correct_question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
+        wrong_question = f'Does {wrong_answer.replace("believes", "believe").replace(".", "?")}'
+        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
+        wrong_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {wrong_question}\nAnswer:'
+        samples.append({
+            'correct_prompt': correct_prompt,
+            'wrong_prompt': wrong_prompt,
+        })
+    
+    return samples
+
+
+def get_diff_event_obsr_exps(clean, corrupt, n_samples, model):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        clean_story, _, clean_answer, _ = clean[idx]
+        corrupt_story, _, _, corrupt_wrong = corrupt[idx]
+        clean_question = f'Does {clean_answer.replace("believes", "believe").replace(".", "?")}'
+        corrupt_question = f'Does {corrupt_wrong.replace("believes", "believe").replace(".", "?")}'
+        clean_prompt = f'{instruction}\n\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:'
+        corrupt_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:'
+        agent_name = " " + clean_story.split(' ', maxsplit=1)[0]
+        samples.append({
+            'correct_prompt': clean_prompt,
+            'wrong_prompt': corrupt_prompt,
+            "agent_name_len": len(model.tokenizer.encode(agent_name)) - 1,
+        })
+    
     return samples
