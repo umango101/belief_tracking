@@ -1330,6 +1330,8 @@ def get_diff_name(data, n_samples, model):
         story = story.replace("She", agent_name.strip())
         corrupt_story = story.replace(agent_name.strip(), corrupt_agent_name.strip())
         question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
+        question = question.replace("?", " according to the story?")
+        # corrupt_question = question.replace(agent_name.strip(), corrupt_agent_name.strip())
 
         correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {question}\nAnswer:'
         wrong_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {question}\nAnswer:'
@@ -1348,10 +1350,18 @@ def get_yes_no_exps(data, n_samples):
     samples = []
 
     for idx in range(n_samples):
+        random_idx = idx
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
         story, _, correct_answer, wrong_answer = data[idx]
-        correct_question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
+        random_story, _, random_correct_answer, random_wrong_answer = data[random_idx]
+
+        correct_question = f'Does {random_correct_answer.replace("believes", "believe").replace(".", "?")}'
         wrong_question = f'Does {wrong_answer.replace("believes", "believe").replace(".", "?")}'
-        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
+
+        correct_question = correct_question.replace("?", " according to the story?")
+        wrong_question = wrong_question.replace("?", " according to the story?")
+        correct_prompt = f'{instruction}\n\nStory: {random_story}\nQuestion: {correct_question}\nAnswer:'
         wrong_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {wrong_question}\nAnswer:'
         samples.append({
             'correct_prompt': correct_prompt,
@@ -1389,6 +1399,10 @@ def get_diff_event_obsr_exps(clean, corrupt, n_samples, model):
         corrupt_story, _, _, corrupt_wrong = corrupt[idx]
         clean_question = f'Does {clean_answer.replace("believes", "believe").replace(".", "?")}'
         corrupt_question = f'Does {corrupt_wrong.replace("believes", "believe").replace(".", "?")}'
+
+        clean_question = clean_question.replace("?", " according to the story?")
+        corrupt_question = corrupt_question.replace("?", " according to the story?")
+
         clean_prompt = f'{instruction}\n\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:'
         corrupt_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {corrupt_question}\nAnswer:'
         agent_name = " " + clean_story.split(' ', maxsplit=1)[0]
@@ -1396,6 +1410,45 @@ def get_diff_event_obsr_exps(clean, corrupt, n_samples, model):
             'correct_prompt': clean_prompt,
             'wrong_prompt': corrupt_prompt,
             "agent_name_len": len(model.tokenizer.encode(agent_name)) - 1,
+        })
+    
+    return samples
+
+
+def get_world_state_exps(data, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        story, question, correct_answer, _ = data[idx]
+        random_idx = idx
+        # while random_idx == idx:
+        #     random_idx = random.randint(0, len(data) - 1)
+        random_story, _, _, random_wrong_answer = data[random_idx]
+
+        correct_answer = correct_answer.replace("\n", "")
+        random_wrong_answer = random_wrong_answer.replace("\n", "")
+        if "is" in correct_answer:
+            correct_answer = correct_answer.replace("is ", "")
+            correct_question = f"Is {correct_answer.replace('The', 'the').replace('.', '?')}"
+        else:
+            correct_question = f"Does {correct_answer.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        
+        if "is" in random_wrong_answer:
+            random_wrong_answer = random_wrong_answer.replace("is ", "")
+            wrong_question = f"Is {random_wrong_answer.replace('The', 'the').replace('.', '?')}"
+        else:
+            wrong_question = f"Does {random_wrong_answer.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        
+        correct_question = correct_question.replace("?", " according to the story?")
+        wrong_question = wrong_question.replace("?", " according to the story?")
+
+        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
+        wrong_prompt = f'{instruction}\n\nStory: {random_story}\nQuestion: {wrong_question}\nAnswer:'
+
+        samples.append({
+            'correct_prompt': correct_prompt,
+            'wrong_prompt': wrong_prompt,
         })
     
     return samples
