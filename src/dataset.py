@@ -24,9 +24,6 @@ class Dataset(DataClassJsonMixin):
     instruction: str = (
         """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag."""
     )
-    # instruction: str = (
-    #     """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag."""
-    # )
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -57,14 +54,77 @@ class Dataset(DataClassJsonMixin):
         return question, tags[correct_ans_idx]
 
 
-def load_worldstate_dataset():
+@dataclass(frozen=True)
+class SampleV2(DataClassJsonMixin):
+    story: str
+    actor: str
+    obj_belief: str
+    obj_true: str
+    container: str
+
+    def __post_init__(self):
+        assert self.actor in self.story
+        assert self.obj_belief in self.story
+        assert self.obj_true in self.story
+        assert self.container in self.story
+        assert self.obj_belief != self.obj_true
+
+    def __eq__(self, other) -> bool:
+        assert isinstance(other, SampleV2)
+        return (
+            self.story == other.story
+            and self.actor == other.actor
+            and self.obj_belief == other.obj_belief
+            and self.obj_true == other.obj_true
+            and self.container == other.container
+        )
+
+
+@dataclass(frozen=True)
+class DatasetV2(DataClassJsonMixin):
+    samples: list[SampleV2]
+    instruction: str = (
+        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose "yes" or "no" after the "Answer (yes/no):" tag."""
+    )
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(
+        self,
+        idx: int,
+        set_ans: Optional[Literal["yes", "no"]] = None,
+        unaligned_actor: Optional[str] = None,
+    ) -> tuple[str, Literal["yes", "no"]]:
+        question = f"Instruction: {self.instruction.strip()}\n\n"
+
+        story = self.samples[idx].story
+        actor = self.samples[idx].actor
+        container = self.samples[idx].container
+
+        if unaligned_actor is not None:
+            story = story.replace(actor, unaligned_actor)
+        question += f"Story: {story.strip()}\n\n"
+
+        ans = random.choice(["yes", "no"]) if set_ans is None else set_ans
+        obj = (
+            self.samples[idx].obj_belief if ans == "yes" else self.samples[idx].obj_true
+        )
+        question += (
+            f"Question: Does {actor} believe that there is {obj} in the {container}?\n"
+        )
+        question += f"Answer:"
+        return question, ans
+
+
+# world_state: "bigtom_worldstate.csv",
+# TOM dataset: "bigtom/0_forward_belief_false_control/stories.csv"
+def load_TOM_dataset(
+    file_name: str = "bigtom/0_forward_belief_false_belief/stories.csv",
+):
     ws_csv = pd.read_csv(
-        os.path.join(
-            env_utils.DEFAULT_DATA_DIR,
-            "bigtom_worldstate.csv",
-            # "bigtom/0_forward_belief_false_control/stories.csv",
-        ),
-        # delimiter=";",
+        os.path.join(env_utils.DEFAULT_DATA_DIR, file_name),
+        delimiter=";",
     )
     samples: list[Sample] = []
     for idx, row in ws_csv.iterrows():
