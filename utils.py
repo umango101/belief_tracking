@@ -1036,6 +1036,7 @@ def get_event_observation_data(
 
     return samples
 
+
 def get_event_type_data(clean_data, corrupt_data, n_samples, method_name="0shot"):
     with open("prompt_instructions/0shot.txt", "r") as f:
         instructions = f.read()
@@ -1345,6 +1346,40 @@ def get_diff_name(data, n_samples, model):
     return samples
 
 
+def get_subject_exps_worldstate(clean, corrupt, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        clean_story, _, clean_correct_answer, clean_wrong_answer = clean[idx]
+        corrupt_story, _, corrupt_correct_answer, corrupt_wrong_answer = corrupt[idx]
+
+        if "is" in clean_correct_answer:
+            clean_question = f"Is {clean_correct_answer.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+        elif "are" in clean_correct_answer:
+            clean_question = f"Are {clean_correct_answer.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+        else:
+            clean_question = f"Does {clean_correct_answer.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        clean_question = clean_question.replace("?\n", "?")
+
+        if "is" in corrupt_correct_answer:
+            corrupt_question = f"Is {corrupt_correct_answer.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+        elif "are" in corrupt_correct_answer:
+            corrupt_question = f"Are {corrupt_correct_answer.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+        else:
+            corrupt_question = f"Does {corrupt_correct_answer.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        wrong_question = corrupt_question.replace("?\n", "?")
+
+        clean_prompt = f'{instruction}\n\nStory: {clean_story}\nQuestion: {clean_question}\nAnswer:'
+        corrupt_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {wrong_question}\nAnswer:'
+        samples.append({
+            'correct_prompt': clean_prompt,
+            'wrong_prompt': corrupt_prompt,
+        })
+    
+    return samples
+
+
 def get_yes_no_exps(data, n_samples):
     instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
     samples = []
@@ -1354,14 +1389,13 @@ def get_yes_no_exps(data, n_samples):
         while random_idx == idx:
             random_idx = random.randint(0, len(data) - 1)
         story, _, correct_answer, wrong_answer = data[idx]
-        random_story, _, random_correct_answer, random_wrong_answer = data[random_idx]
 
-        correct_question = f'Does {random_correct_answer.replace("believes", "believe").replace(".", "?")}'
+        correct_question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
         wrong_question = f'Does {wrong_answer.replace("believes", "believe").replace(".", "?")}'
 
         correct_question = correct_question.replace("?", " according to the story?")
         wrong_question = wrong_question.replace("?", " according to the story?")
-        correct_prompt = f'{instruction}\n\nStory: {random_story}\nQuestion: {correct_question}\nAnswer:'
+        correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
         wrong_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {wrong_question}\nAnswer:'
         samples.append({
             'correct_prompt': correct_prompt,
@@ -1412,6 +1446,76 @@ def get_diff_event_obsr_exps(clean, corrupt, n_samples, model):
             "agent_name_len": len(model.tokenizer.encode(agent_name)) - 1,
         })
     
+    return samples
+
+
+def align_markers(clean_data, reverse_data, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        story, _, clean_correct, clean_wrong = clean_data[idx]
+        random_idx = idx
+        while random_idx == idx:
+            random_idx = random.randint(0, len(reverse_data) - 1)
+        reverse_story, _, reverse_correct, reverse_wrong = reverse_data[random_idx]
+        story = ". ".join(story.split(". ")[:-2]) + "."
+        reverse_story = ". ".join(reverse_story.split(". ")[:-2]) + "."
+        
+        if "is" in clean_wrong:
+            clean_question = f"Is {clean_wrong.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+        elif "are" in clean_wrong:
+            clean_question = f"Are {clean_wrong.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+        else:
+            clean_question = f"Does {clean_wrong.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        clean_question = clean_question.replace("?\n", "?")
+
+        if "is" in reverse_wrong:
+            reverse_question = f"Is {reverse_wrong.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+        elif "are" in reverse_wrong:
+            reverse_question = f"Are {reverse_wrong.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+        else:
+            reverse_question = f"Does {reverse_wrong.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+        reverse_question = reverse_question.replace("?\n", "?")
+
+        clean_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {clean_question}\nAnswer:'
+        reverse_prompt = f'{instruction}\n\nStory: {reverse_story}\nQuestion: {reverse_question}\nAnswer:'
+
+        samples.append({
+            'clean_prompt': clean_prompt,
+            'corrupt_prompt': reverse_prompt,
+        })
+    
+    return samples
+
+
+def get_long_exps(data, n_samples):
+    instruction = '''Instructions: Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose \"yes\" or \"no" after the "Answer:" tag.'''
+    samples = []
+
+    for idx in range(n_samples):
+        story, _, correct_answer_1, wrong_answer_1 = data[idx]
+        random_idx = idx
+        while random_idx == idx:
+            random_idx = random.randint(0, len(data) - 1)
+        random_story, _, random_correct_answer_1, random_wrong_answer_1 = data[random_idx]
+
+        story = story + ' ' + random_story
+        for i, option in enumerate([correct_answer_1, random_correct_answer_1, wrong_answer_1, random_wrong_answer_1]):
+            if "is" in option:
+                question = f"Is {option.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+            else:
+                question = f"Does {option.replace('The', 'the').replace('.', '?')}"
+            question = question.replace("?\n", "?")
+            
+            prompt = f'{instruction}\n\nStory: {story}\nQuestion: {question}\nAnswer:'
+            target = "yes" if i < 2 else "no"
+            samples.append({
+                'prompt': prompt,
+                'target': target,
+            })
+    
+    random.shuffle(samples)
     return samples
 
 
