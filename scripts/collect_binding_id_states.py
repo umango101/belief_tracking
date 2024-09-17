@@ -1,21 +1,21 @@
 import argparse
+import json
 import logging
 import os
+import random
+from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 import torch
 import transformers
-from src.dataset import DatasetV2, SampleV2
-from dataclasses import dataclass
 from dataclasses_json import DataClassJsonMixin
 from nnsight import LanguageModel
-from src.utils import env_utils
-from src.models import load_LM
-import json
-from typing import Optional
-import random
 
-from src.functional import get_hs, find_token_range, prepare_input, logit_lens
+from src.dataset import DatasetV2, SampleV2
+from src.functional import find_token_range, get_hs, logit_lens, prepare_input
+from src.models import load_LM
+from src.utils import env_utils
 
 
 def collect_actor_latent_in_question(
@@ -71,10 +71,10 @@ class CachedBindingIDState(DataClassJsonMixin):
     context_unaware_actor: dict[str, torch.Tensor]
 
 
-@dataclass(frozen=False)
-class ExperimentResults(DataClassJsonMixin):
-    model_name: str
-    cached_states: list[CachedBindingIDState]
+# @dataclass(frozen=False)
+# class ExperimentResults(DataClassJsonMixin):
+#     model_name: str
+#     cached_states: list[CachedBindingIDState]
 
 
 def collect_binding_id_states(
@@ -105,7 +105,7 @@ def collect_binding_id_states(
     with open(os.path.join(env_utils.DEFAULT_DATA_DIR, "english_names.json"), "r") as f:
         names = json.load(f)
 
-    results = ExperimentResults(model_name=model_key, cached_states=[])
+    # results = ExperimentResults(model_name=model_key, cached_states=[])
     limit = len(dataset) if limit is None else limit
     for idx in range(limit):
         print(f"\nprocessing {idx+1}/{limit}")
@@ -140,23 +140,27 @@ def collect_binding_id_states(
             layer_name_format=layer_name_format,
         )
 
-        results.cached_states.append(
-            CachedBindingIDState(
-                sample=sample,
-                question=question,
-                answer=answer,
-                unaligned_actor=unaligned_actor,
-                context_informed_actor=context_informed_actor,
-                context_unaware_actor=context_unaware_actor,
-            )
+        cur_results = CachedBindingIDState(
+            sample=sample,
+            question=question,
+            answer=answer,
+            unaligned_actor=unaligned_actor,
+            context_informed_actor=context_informed_actor,
+            context_unaware_actor=context_unaware_actor,
         )
 
-        if idx % 100 == 0:
-            with open(os.path.join(save_dir, "results.json"), "w") as f:
-                json.dump(results.to_dict(), f)
+        # results.cached_states.append(
+        #     cur_results
+        # )
+        # if idx % 100 == 0:
+        #     with open(os.path.join(save_dir, "results.json"), "w") as f:
+        #         json.dump(results.to_dict(), f)
 
-    with open(os.path.join(save_dir, "results.json"), "w") as f:
-        json.dump(results.to_dict(), f)
+        with open(os.path.join(save_dir, f"doc_idx_{idx}.json"), "w") as f:
+            json.dump(cur_results.to_dict(), f)
+
+    # with open(os.path.join(save_dir, "results.json"), "w") as f:
+    #     json.dump(results.to_dict(), f)
 
 
 if __name__ == "__main__":
@@ -181,7 +185,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--save_dir",
         type=str,
-        default="binding_id_states",
+        default="binding_id_states_split",
     )
 
     args = parser.parse_args()

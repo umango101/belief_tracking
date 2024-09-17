@@ -80,9 +80,91 @@ class SampleV2(DataClassJsonMixin):
         )
 
 
-@dataclass(frozen=True)
-class DatasetV2(DataClassJsonMixin):
-    samples: list[SampleV2]
+STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_2> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
+
+
+def swap_entities(story, entity_1, entity_2):
+    story = story.replace(entity_1, "<<placeholder>>")
+    story = story.replace(entity_2, entity_1)
+    story = story.replace("<<placeholder>>", entity_2)
+    return story
+
+
+@dataclass(frozen=False)
+class SampleV3(DataClassJsonMixin):
+    protagonist: str
+    perpetrator: str
+    objects: list[str]
+    containers: list[str]
+    event_idx: Literal[0, 1] = 0  # which container is swapped?
+    event_noticed: bool = False  # the protagonist sees the swap?
+
+    story: str | None = None
+    protagonist_belief: dict[str, str] = None
+    true_state: dict[str, str] = None
+
+    def __post_init__(self):
+        assert len(self.objects) == 2 and len(self.containers) == 2
+        assert self.objects[0] != self.objects[1]
+        assert self.containers[0] != self.containers[1]
+
+        self.set_story()
+
+    def __eq__(self, other) -> bool:
+        assert isinstance(other, SampleV3)
+        return (
+            self.story == other.story
+            and self.protagonist == other.protagonist
+            and self.perpetrator == other.perpetrator
+            and self.objects == other.objects
+            and self.containers == other.containers
+        )
+
+    def set_story(self):
+        self.story = STORY_TEMPLATE
+        self.story = self.story.replace("<protagonist>", self.protagonist)
+        self.story = self.story.replace("<perpetrator>", self.perpetrator)
+        self.story = self.story.replace("<obj_1>", self.objects[0])
+        self.story = self.story.replace("<obj_2>", self.objects[1])
+        self.story = self.story.replace("<container_1>", self.containers[0])
+        self.story = self.story.replace("<container_2>", self.containers[1])
+
+        # event
+        self.story = self.story.replace("<obj_event>", self.objects[self.event_idx])
+        self.story = self.story.replace(
+            "<container_event>", self.containers[self.event_idx]
+        )
+        # protagonist observation
+        observation = "saw" if self.event_noticed else "didn't see"
+        self.story = self.story.replace("<saw/didn't see>", observation)
+
+        # true state
+        self.true_state = {
+            self.containers[0]: self.objects[0],
+            self.containers[1]: self.objects[1],
+        }
+        self.true_state[self.containers[self.event_idx]] = self.objects[1]
+
+        # protagonist belief
+        if self.event_idx == 0 and self.event_noticed == False:
+            self.protagonist_belief = {
+                self.containers[0]: self.objects[0],
+                self.containers[1]: self.objects[1],
+            }
+        else:
+            self.protagonist_belief = self.true_state.copy()
+
+        return self.story
+
+    def __str__(self):
+        if self.story is None:
+            self.set_story()
+        return self.story
+
+
+@dataclass(frozen=False)
+class DatasetV3(DataClassJsonMixin):
+    samples: list[SampleV3]
     instruction: str = (
         """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose "yes" or "no" after the "Answer (yes/no):" tag."""
     )
@@ -94,27 +176,38 @@ class DatasetV2(DataClassJsonMixin):
         self,
         idx: int,
         set_ans: Optional[Literal["yes", "no"]] = None,
-        unaligned_actor: Optional[str] = None,
+        set_actor: Literal["protagonist", "perpetrator"] = "protagonist",
+        set_container: Literal[0, 1] = 0,
     ) -> tuple[str, Literal["yes", "no"]]:
-        question = f"Instruction: {self.instruction.strip()}\n\n"
-
-        story = self.samples[idx].story
-        actor = self.samples[idx].actor
-        container = self.samples[idx].container
-
-        if unaligned_actor is not None:
-            story = story.replace(actor, unaligned_actor)
-        question += f"Story: {story.strip()}\n\n"
+        prompt = f"Instruction: {self.instruction.strip()}\n\n"
+        prompt += f"Story: {self.samples[idx].story.strip()}\n\n"
 
         ans = random.choice(["yes", "no"]) if set_ans is None else set_ans
-        obj = (
-            self.samples[idx].obj_belief if ans == "yes" else self.samples[idx].obj_true
+        actor = (
+            self.samples[idx].protagonist
+            if set_actor == "protagonist"
+            else self.samples[idx].perpetrator
         )
-        question += (
+        container = self.samples[idx].containers[set_container]
+        container_states = (
+            self.samples[idx].protagonist_belief
+            if set_actor == "protagonist"
+            else self.samples[idx].true_state
+        )
+        obj_yes = container_states[container]
+        obj_no = (
+            self.samples[idx].objects[0]
+            if self.samples[idx].objects[1] == obj_yes
+            else self.samples[idx].objects[1]
+        )
+        assert obj_yes != obj_no
+
+        obj = obj_yes if ans == "yes" else obj_no
+        prompt += (
             f"Question: Does {actor} believe that there is {obj} in the {container}?\n"
         )
-        question += f"Answer:"
-        return question, ans
+        prompt += f"Answer:"
+        return prompt, ans
 
 
 # world_state: "bigtom_worldstate.csv",
