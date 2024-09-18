@@ -148,7 +148,7 @@ class SampleV3(DataClassJsonMixin):
         self.true_state[self.containers[self.event_idx]] = obj_swap
 
         # protagonist belief
-        if self.event_idx == 0 and self.event_noticed == False:
+        if self.event_noticed == False:
             self.protagonist_belief = {
                 self.containers[0]: self.objects[0],
                 self.containers[1]: self.objects[1],
@@ -182,7 +182,7 @@ class DatasetV3(DataClassJsonMixin):
         set_container: Literal[0, 1] = 0,
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
-        prompt += f"Story: {self.samples[idx].story.strip()}\n\n"
+        prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
         ans = random.choice(["yes", "no"]) if set_ans is None else set_ans
         actor = (
