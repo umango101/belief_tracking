@@ -35,4 +35,5 @@ __pycache__/
 .ipynb_checkpoints
 *.log
 
+env.yml
 results/
