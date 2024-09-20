@@ -10,6 +10,7 @@ from transformers import StoppingCriteria
 from datasets import Dataset
 from torch.utils.data import DataLoader
 from einops import einsum
+from src.dataset import SampleV3, DatasetV3
 
 random.seed(10)
 
@@ -1338,8 +1339,8 @@ def get_diff_name(data, n_samples, model):
         wrong_prompt = f'{instruction}\n\nStory: {corrupt_story}\nQuestion: {question}\nAnswer:'
 
         samples.append({
-            'correct_prompt': correct_prompt,
-            'wrong_prompt': wrong_prompt,
+            'corrupt_prompt': correct_prompt,
+            'clean_prompt': wrong_prompt,
             "agent_name_len": len(model.tokenizer.encode(agent_name)) - 1,
         })
 
@@ -1393,8 +1394,8 @@ def get_yes_no_exps(data, n_samples):
         correct_question = f'Does {correct_answer.replace("believes", "believe").replace(".", "?")}'
         wrong_question = f'Does {wrong_answer.replace("believes", "believe").replace(".", "?")}'
 
-        correct_question = correct_question.replace("?", " according to the story?")
-        wrong_question = wrong_question.replace("?", " according to the story?")
+        # correct_question = correct_question.replace("?", " according to the story?")
+        # wrong_question = wrong_question.replace("?", " according to the story?")
         correct_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {correct_question}\nAnswer:'
         wrong_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {wrong_question}\nAnswer:'
         samples.append({
@@ -1456,26 +1457,26 @@ def align_markers(clean_data, reverse_data, n_samples):
     for idx in range(n_samples):
         story, _, clean_correct, clean_wrong = clean_data[idx]
         random_idx = idx
-        while random_idx == idx:
-            random_idx = random.randint(0, len(reverse_data) - 1)
+        # while random_idx == idx:
+        #     random_idx = random.randint(0, len(reverse_data) - 1)
         reverse_story, _, reverse_correct, reverse_wrong = reverse_data[random_idx]
-        story = ". ".join(story.split(". ")[:-2]) + "."
-        reverse_story = ". ".join(reverse_story.split(". ")[:-2]) + "."
+        # story = ". ".join(story.split(". ")[:-2]) + "."
+        # reverse_story = ". ".join(reverse_story.split(". ")[:-2]) + "."
         
         if "is" in clean_wrong:
-            clean_question = f"Is {clean_wrong.replace('The', 'the').replace('is ', '').replace('.', '?')}"
+            clean_question = f"Is {clean_wrong.replace('The', 'the').replace('is ', '').replace('believes', 'believe').replace('.', '?')}"
         elif "are" in clean_wrong:
-            clean_question = f"Are {clean_wrong.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+            clean_question = f"Are {clean_wrong.replace('The', 'the').replace('are ', '').replace('believes', 'believe').replace('.', '?')}"
         else:
             clean_question = f"Does {clean_wrong.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
         clean_question = clean_question.replace("?\n", "?")
 
-        if "is" in reverse_wrong:
-            reverse_question = f"Is {reverse_wrong.replace('The', 'the').replace('is ', '').replace('.', '?')}"
-        elif "are" in reverse_wrong:
-            reverse_question = f"Are {reverse_wrong.replace('The', 'the').replace('are ', '').replace('.', '?')}"
+        if "is" in reverse_correct:
+            reverse_question = f"Is {reverse_correct.replace('The', 'the').replace('is ', '').replace('believes', 'believe').replace('.', '?')}"
+        elif "are" in reverse_correct:
+            reverse_question = f"Are {reverse_correct.replace('The', 'the').replace('are ', '').replace('believes', 'believe').replace('.', '?')}"
         else:
-            reverse_question = f"Does {reverse_wrong.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
+            reverse_question = f"Does {reverse_correct.replace('The', 'the').replace('contains', 'contain').replace('.', '?')}"
         reverse_question = reverse_question.replace("?\n", "?")
 
         clean_prompt = f'{instruction}\n\nStory: {story}\nQuestion: {clean_question}\nAnswer:'
@@ -1553,6 +1554,176 @@ def get_world_state_exps(data, n_samples):
         samples.append({
             'correct_prompt': correct_prompt,
             'wrong_prompt': wrong_prompt,
+        })
+    
+    return samples
+
+
+def get_new_template_exps(actorC2, objectsC2, containersC2, n_samples):
+    configs, samples = [], []
+
+    for i in range(n_samples):
+        protagonist, perpetrator = random.choice(actorC2)
+        object1, object2 = random.choice(objectsC2)
+        container1, container2 = random.choice(containersC2)
+        event_idx = random.choices([0, 1], weights=[0.5, 0.5], k=1)[0]
+        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object1, object2],
+            containers=[container1, container2],
+            event_idx=event_idx,
+            event_noticed=event_noticed
+        )
+        configs.append(sample)
+    
+    dataset = DatasetV3(configs)
+
+    for i in range(n_samples):
+        # actor = random.choice(["protagonist", "perpetrator"])
+        container = random.choice([0, 1])
+        prompt, target = dataset.__getitem__(i, set_container=container)
+        samples.append({
+            "prompt": prompt,
+            "target": target,
+        })
+    
+    return samples
+
+
+def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for i in range(n_samples):
+        protagonist, perpetrator = random.choice(actorC2)
+        object1, object2 = random.choice(objectsC2)
+        container1, container2 = random.choice(containersC2)
+        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object1, object2],
+            containers=[container1, container2],
+            event_idx=1,
+            event_noticed=event_noticed
+        )
+        corrupt_configs.append(sample)
+
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object1, object2],
+            containers=[container2, container1],
+            event_idx=1,
+            event_noticed=event_noticed,
+            new_template=True,
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for i in range(n_samples):
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0)
+
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target
+        })
+    
+    return samples
+
+
+def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for i in range(n_samples):
+        protagonist, perpetrator = random.choice(actorC2)
+        object1, object2 = random.choice(objectsC2)
+        container1, container2 = random.choice(containersC2)
+        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object1, object2],
+            containers=[container1, container2],
+            event_idx=1,
+            event_noticed=event_noticed
+        )
+        corrupt_configs.append(sample)
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object2, object1],
+            containers=[container1, container2],
+            event_idx=0,
+            event_noticed=event_noticed
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for i in range(n_samples):
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1)
+
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target
+        })
+    
+    return samples
+
+
+def get_consistency_pairs(actorsC2, objectsC2, containersC2, n_samples):
+    configs, samples = [], []
+
+    for i in range(n_samples):
+        protagonist, perpetrator = random.choice(actorsC2)
+        object1, object2 = random.choice(objectsC2)
+        container1, container2 = random.choice(containersC2)
+        event_idx = random.choices([0, 1], weights=[0.5, 0.5], k=1)[0]
+        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+
+        sample = SampleV3(
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            objects=[object1, object2],
+            containers=[container1, container2],
+            event_idx=event_idx,
+            event_noticed=event_noticed
+        )
+        configs.append(sample)
+    
+    dataset = DatasetV3(configs)
+
+    for i in range(n_samples):
+        # actor = random.choice(["protagonist", "perpetrator"])
+        container = random.choice([0, 1])
+        clean_prompt, clean_target = dataset.__getitem__(i, set_ans="no", set_container=container)
+        random_idx = i
+        while random_idx == i:
+            random_idx = random.randint(0, n_samples - 1)
+        # actor = random.choice(["protagonist", "perpetrator"])
+        container = random.choice([0, 1])
+        corrupt_prompt, corrupt_target = dataset.__getitem__(random_idx, set_ans="yes", set_container=container)
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target
         })
     
     return samples
