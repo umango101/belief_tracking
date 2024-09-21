@@ -1559,38 +1559,44 @@ def get_world_state_exps(data, n_samples):
     return samples
 
 
-def get_new_template_exps(actorC2, objectsC2, containersC2, n_samples):
+def get_new_template_exps(data, characters, n_samples):
     configs, samples = [], []
 
-    for i in range(n_samples):
-        protagonist, perpetrator = random.choice(actorC2)
-        object1, object2 = random.choice(objectsC2)
-        container1, container2 = random.choice(containersC2)
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
         event_idx = random.choices([0, 1], weights=[0.5, 0.5], k=1)[0]
         event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+        
+        if event_noticed:
+            obsr_event = data[idx]['true_belief']
+        else:
+            obsr_event = data[idx]['false_belief']
 
-        sample = SampleV3(
+        config = SampleV3(
+            story=data[idx]['story'],
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object1, object2],
-            containers=[container1, container2],
+            states=states,
+            containers=containers,
             event_idx=event_idx,
+            obsr_event=obsr_event,
             event_noticed=event_noticed
         )
-        configs.append(sample)
-    
+        configs.append(config)
+
     dataset = DatasetV3(configs)
 
-    for i in range(n_samples):
-        # actor = random.choice(["protagonist", "perpetrator"])
-        container = random.choice([0, 1])
-        prompt, target = dataset.__getitem__(i, set_container=container)
+    for idx in range(n_samples):
+        prompt, target = dataset.__getitem__(idx, question_type='belief')
         samples.append({
-            "prompt": prompt,
-            "target": target,
+            'prompt': prompt,
+            'target': target
         })
     
-    return samples
+    return samples, configs
 
 
 def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
@@ -1606,7 +1612,7 @@ def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
         sample = SampleV3(
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object1, object2],
+            states=[object1, object2],
             containers=[container1, container2],
             event_idx=1,
             event_noticed=event_noticed
@@ -1616,7 +1622,7 @@ def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
         sample = SampleV3(
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object1, object2],
+            states=[object1, object2],
             containers=[container2, container1],
             event_idx=1,
             event_noticed=event_noticed,
@@ -1654,7 +1660,7 @@ def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
         sample = SampleV3(
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object1, object2],
+            states=[object1, object2],
             containers=[container1, container2],
             event_idx=1,
             event_noticed=event_noticed
@@ -1663,7 +1669,7 @@ def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
         sample = SampleV3(
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object2, object1],
+            states=[object2, object1],
             containers=[container1, container2],
             event_idx=0,
             event_noticed=event_noticed
@@ -1700,7 +1706,7 @@ def get_consistency_pairs(actorsC2, objectsC2, containersC2, n_samples):
         sample = SampleV3(
             protagonist=protagonist,
             perpetrator=perpetrator,
-            objects=[object1, object2],
+            states=[object1, object2],
             containers=[container1, container2],
             event_idx=event_idx,
             event_noticed=event_noticed
