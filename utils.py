@@ -1559,7 +1559,7 @@ def get_world_state_exps(data, n_samples):
     return samples
 
 
-def get_new_template_exps(data, characters, n_samples):
+def get_new_template_exps(data, characters, n_samples, event_noticed=False, question_type='true_state'):
     configs, samples = [], []
 
     for idx in range(n_samples):
@@ -1568,7 +1568,6 @@ def get_new_template_exps(data, characters, n_samples):
         states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
         containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
         event_idx = random.choices([0, 1], weights=[0.5, 0.5], k=1)[0]
-        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
         
         if event_noticed:
             obsr_event = data[idx]['true_belief']

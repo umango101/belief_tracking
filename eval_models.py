@@ -1,4 +1,5 @@
 import os
+import csv
 import json
 import torch
 import argparse
@@ -9,7 +10,7 @@ from tqdm import tqdm
 from pathlib import Path
 from collections import defaultdict
 from nnsight import LanguageModel, CONFIG
-from utils import load_model_and_tokenizer, load_bigtom
+from utils import load_model_and_tokenizer, get_new_template_exps
 
 warnings.filterwarnings("ignore")
 
@@ -31,102 +32,81 @@ def main():
     )
     parser.add_argument("--precision", type=str, default="int4")
     parser.add_argument("--ndif", type=bool, default=False)
-    parser.add_argument("--method_name", type=str, default="0shot")
-    parser.add_argument("--variable", type=str, default="0_forward_belief")
-    parser.add_argument("--condition", type=str, default="false_control")
-    parser.add_argument("--batch_size", type=int, default=4)
+    parser.add_argument("--n_samples", type=int, default=100)
+    parser.add_argument("--n_iterations", type=int, default=10)
+    parser.add_argument("--event_noticed", type=bool, default=False)
+    parser.add_argument("--question_type", type=str, default="true_state")
+    parser.add_argument("--batch_size", type=int, default=1)
     args = parser.parse_args()
 
     # Print arguments
     print(f"Model name: {args.model_name}")
     print(f"Precision: {args.precision}")
     print(f"NDIF: {args.ndif}")
-    print(f"Method name: {args.method_name}")
-    print(f"Variable: {args.variable}")
-    print(f"Condition: {args.condition}")
+    print(f"Number of samples: {args.n_samples}")
+    print(f"Number of iterations: {args.n_iterations}")
+    print(f"Event noticed: {args.event_noticed}")
+    print(f"Question type: {args.question_type}")
     print(f"Batch size: {args.batch_size}")
 
     os.makedirs(
-        f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}",
+        f"{current_dir}/preds/new_bigtom/",
         exist_ok=True,
     )
 
     if not args.ndif:
-        model, tokenizer = load_model_and_tokenizer(
-            args.model_name, args.precision, device
-        )
+        model = LanguageModel(args.model_name, device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
     else:
         model = LanguageModel(args.model_name)
 
     if "tokenizer" not in locals():
         tokenizer = model.tokenizer
+    
+    data_path = os.path.join(current_dir, "data", "new_bigtom_formatted.csv")
+    with open(data_path, 'r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        data = list(reader)
+    
+    characters_path = os.path.join(current_dir, "data", "synthetic_entities", "actor.json")
+    characters = json.load(open(characters_path, 'r', encoding='utf-8'))
 
-    dataloader = load_bigtom(
-        model.config,
-        tokenizer,
-        current_dir,
-        batch_size=args.batch_size,
-        method_name=args.method_name,
-        variable=args.variable,
-        condition=args.condition,
-    )
-    print(f"{args.model_name} and Data loaded successfully")
-
-    correct, total = 0, 0
+    accs = {}
     with torch.no_grad():
-        for batch_idx, inp in tqdm(enumerate(dataloader), total=len(dataloader)):
-            if not args.ndif:
-                inp["input_ids"] = inp["input_ids"].to(device)
-                inp["target"] = inp["target"].to(device)
-                outputs = model(inp["input_ids"])
-                logits = outputs.logits[:, -1]
-                pred_token_ids = torch.argmax(logits, dim=-1)
+        for iteration in range(args.n_iterations):
+            dataset, _ = get_new_template_exps(data=data, 
+                                               characters=characters, 
+                                               n_samples=args.n_samples, 
+                                               event_noticed=args.event_noticed, 
+                                               question_type=args.question_type)
+            dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False)
 
-            if args.ndif:
-                with model.trace(
-                    inp["input_ids"], scan=False, validate=False, remote=True
-                ):
-                    pred_token_ids = torch.argmax(
-                        model.output["logits"][:, -1], dim=-1
-                    ).save()
+            correct, total = 0, 0
+            for batch in tqdm(dataloader, total=len(dataloader)):
+                if not args.ndif:
+                    prompt = batch['prompt'][0]
+                    target = batch['target'][0]
 
-            for idx in range(len(inp["target"])):
-                input_text = tokenizer.decode(inp["input_ids"][idx].tolist()).strip()
-                target_text = tokenizer.decode(inp["target"][idx].tolist()).strip()
-                pred_text = tokenizer.decode(pred_token_ids[idx].tolist()).strip()
+                    with model.trace(prompt, scan=False, validate=False):
+                        pred = model.lm_head.output[0, -1].argmax(dim=-1).item().save()
 
-                if pred_text == target_text:
+                pred_text = tokenizer.decode([pred]).lower().strip()
+                if pred_text == target:
                     correct += 1
                 total += 1
 
-                with open(
-                    f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}/{args.model_name.split('/')[-1]}.jsonl",
-                    "a",
-                ) as f:
-                    f.write(
-                        json.dumps(
-                            {
-                                "pred": pred_text,
-                                "target": target_text,
-                                "input": input_text,
-                            }
-                        )
-                        + "\n"
-                    )
+                del batch, pred
+                torch.cuda.empty_cache()
 
-            del inp, outputs, logits, pred_token_ids
-            torch.cuda.empty_cache()
+            acc = round(correct/total, 2)
+            print(f"Accuracy: {acc}")
 
-    print(f"Accuracy: {round(correct/total, 2)}")
+            accs[iteration] = acc
+            # Save accs to a json file
+            with open(f"{current_dir}/preds/new_bigtom/{args.model_name.split('/')[-1]}_accs.json", 'w', encoding='utf-8') as file:
+                json.dump(accs, file)
 
-    with open(
-        f"{current_dir}/preds/bigtom/{args.method_name}/{args.variable}_{args.condition}/results.txt",
-        "a",
-    ) as f:
-        f.write(f"Model: {args.model_name}\nAccuracy: {round(correct/total, 2)}\n\n")
+            print(f"Iteration {iteration} completed")
 
-    del model
-    torch.cuda.empty_cache()
 
     # home_dir = str(Path.home())
     # shutil.rmtree(
