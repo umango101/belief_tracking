@@ -85,12 +85,12 @@ def calculate_and_save_SVD(
     print("loaded delta representations", representation_matrix.shape)
     print("saving representations ...")
 
-    representations_dir = os.path.join(save_dir, "representations")
-    os.makedirs(representations_dir, exist_ok=True)
-    np.savez_compressed(
-        os.path.join(representations_dir, f"{layer_name}.npz"),
-        representation_matrix=representation_matrix.cpu().numpy(),
-    )
+    # representations_dir = os.path.join(save_dir, "representations")
+    # os.makedirs(representations_dir, exist_ok=True)
+    # np.savez_compressed(
+    #     os.path.join(representations_dir, f"{layer_name}.npz"),
+    #     representation_matrix=representation_matrix.cpu().numpy(),
+    # )
 
     _, singular_values, Vh = torch.linalg.svd(
         representation_matrix.cuda(), full_matrices=False
