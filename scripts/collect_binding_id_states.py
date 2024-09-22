@@ -42,6 +42,7 @@ def collect_token_latent_in_question(
     token_of_interest: str,
     layers: list = list(range(7, 28)),
     layer_name_format: str = "model.layers.{}",
+    detensorize: bool = True,
 ) -> TokenStates:
     inputs = prepare_input(prompts=prompt, tokenizer=lm, return_offsets_mapping=True)
     token_range = find_token_range(
@@ -68,19 +69,22 @@ def collect_token_latent_in_question(
     predicted_ans = logit_lens(lm=lm, h=hs[last_loc], k=2)[0]
     print(f"{answer=} | {predicted_ans=}")
 
-    hs_return = {}
-    for loc in hs:
-        module_name, token_idx = loc
-        hs_return[f"{module_name}_<>_{token_idx}"] = (
-            hs[loc].cpu().numpy().astype(np.float32).tolist()
-        )
+    if detensorize:
+        hs_return = {}
+        for loc in hs:
+            module_name, token_idx = loc
+            hs_return[f"{module_name}_<>_{token_idx}"] = (
+                hs[loc].cpu().numpy().astype(np.float32).tolist()
+            )
+        hs = hs_return
+
     return TokenStates(
         value=token_of_interest,
         prompt=prompt,
         answer=answer,
         token_position=token_last_idx,
         predicted_answer=predicted_ans,
-        states=hs_return,
+        states=hs,
     )
 
 
