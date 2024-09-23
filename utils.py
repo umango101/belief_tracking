@@ -1598,7 +1598,70 @@ def get_new_template_exps(data, characters, n_samples, event_noticed=False, ques
     return samples, configs
 
 
-def get_subject_marker_story_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
+def get_container_marker_container2(data, characters, n_samples, event_noticed=False, question_type='true_state'):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        # Select a random state from data[idx]['states_1'] which is not in states
+        random_containter = random.choice(data[idx]['containers_1'].split(', '))
+        while random_containter in states:
+            random_containter = random.choice(data[idx]['containers_1'].split(', '))
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
+
+        story = data[idx]['story']
+        story = story.replace("<state2>", "<state1>", 1)
+        story = story.replace("<state_event>", "<state1>", 1)
+        config = SampleV3(
+            story=story,
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=containers,
+            event_idx=0,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed,
+            diff_template=True
+        )
+        clean_configs.append(config)
+
+        # story = story.replace("<container1>", "plate", 1)
+        config = SampleV3(
+            story=story,
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=list(reversed(containers)),
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed,
+            diff_template=True
+        )
+        corrupt_configs.append(config)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for i in range(n_samples):
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1, question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="yes", set_container=1, question_type=question_type)
+
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target,
+            "containers": clean_configs[i].containers,
+        })
+    
+    return samples
+
+
+def get_container_marker_event(data, characters, n_samples, event_noticed=False, question_type='true_state'):
     clean_configs, corrupt_configs = [], []
     samples = []
 
@@ -1618,7 +1681,7 @@ def get_subject_marker_story_pairs(data, characters, n_samples, event_noticed=Fa
             perpetrator=perpetrator,
             states=states,
             containers=containers,
-            event_idx=1,
+            event_idx=0,
             obsr_event=obsr_event,
             event_noticed=event_noticed,
             diff_template=True
@@ -1643,7 +1706,7 @@ def get_subject_marker_story_pairs(data, characters, n_samples, event_noticed=Fa
 
     for i in range(n_samples):
         corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1, question_type=question_type)
-        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0, question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1, question_type=question_type)
 
         samples.append({
             "clean_prompt": clean_prompt,
@@ -1710,6 +1773,8 @@ def get_subject_marker_pairs(data, characters, n_samples, event_noticed=False, q
             "clean_target": clean_target,
             "corrupt_prompt": corrupt_prompt,
             "corrupt_target": corrupt_target,
+            "states": clean_configs[i].states,
+            "containers": clean_configs[i].containers,
         })
     
     return samples
