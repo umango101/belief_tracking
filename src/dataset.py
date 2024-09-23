@@ -101,6 +101,7 @@ class SampleV3(DataClassJsonMixin):
     event_idx: Literal[0, 1]
     obsr_event: str
     event_noticed: bool = False
+    diff_template: bool = False
 
     protagonist_belief: dict[str, str] = None
     true_state: dict[str, str] = None
@@ -128,7 +129,7 @@ class SampleV3(DataClassJsonMixin):
         self.story = self.story.replace("<character1>", self.protagonist)
         self.story = self.story.replace("<character2>", self.perpetrator)
         self.story = self.story.replace("<state1>", self.states[0])
-        self.story = self.story.replace("<state2>", self.states[1])
+        self.story = self.story.replace("<state2>", 'NONE') if self.diff_template else self.story.replace("<state2>", self.states[1])
         self.story = self.story.replace("<container1>", self.containers[0])
         self.story = self.story.replace("<container2>", self.containers[1])
 
@@ -137,15 +138,21 @@ class SampleV3(DataClassJsonMixin):
         self.story = self.story.replace(
             "<container_event>", self.containers[self.event_idx]
         )
-        state_swap = self.states[1 ^ self.event_idx]
+        state_swap = self.states[1] if self.diff_template else self.states[1 ^ self.event_idx]
         self.story = self.story.replace("<state_swap>", state_swap)
 
 
         # true state (after container swap)
-        self.true_state = {
-            self.containers[0]: self.states[0],
-            self.containers[1]: self.states[1],
-        }
+        if self.diff_template:
+            self.true_state = {
+                self.containers[0]: self.states[0],
+                self.containers[1]: self.states[0],
+            }
+        else:
+            self.true_state = {
+                self.containers[0]: self.states[0],
+                self.containers[1]: self.states[1],
+            }
         self.true_state[self.containers[self.event_idx]] = state_swap
 
         # protagonist belief

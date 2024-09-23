@@ -1598,34 +1598,103 @@ def get_new_template_exps(data, characters, n_samples, event_noticed=False, ques
     return samples, configs
 
 
-def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
+def get_subject_marker_story_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
     clean_configs, corrupt_configs = [], []
     samples = []
 
-    for i in range(n_samples):
-        protagonist, perpetrator = random.choice(actorC2)
-        object1, object2 = random.choice(objectsC2)
-        container1, container2 = random.choice(containersC2)
-        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
 
-        sample = SampleV3(
+        story = data[idx]['story']
+        story = story.replace("<state2>", "<state1>", 1)
+        story = story.replace("<state_event>", "<state1>", 1)
+        config = SampleV3(
+            story=story,
             protagonist=protagonist,
             perpetrator=perpetrator,
-            states=[object1, object2],
-            containers=[container1, container2],
+            states=states,
+            containers=containers,
             event_idx=1,
-            event_noticed=event_noticed
-        )
-        corrupt_configs.append(sample)
-
-        sample = SampleV3(
-            protagonist=protagonist,
-            perpetrator=perpetrator,
-            states=[object1, object2],
-            containers=[container2, container1],
-            event_idx=1,
+            obsr_event=obsr_event,
             event_noticed=event_noticed,
-            new_template=True,
+            diff_template=True
+        )
+        clean_configs.append(config)
+
+        config = SampleV3(
+            story=story,
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=list(reversed(containers)),
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed,
+            diff_template=True
+        )
+        corrupt_configs.append(config)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for i in range(n_samples):
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1, question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0, question_type=question_type)
+
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target,
+            "states": clean_configs[i].states,
+            "containers": clean_configs[i].containers,
+        })
+
+    return samples    
+
+
+def get_subject_marker_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
+
+        sample = SampleV3(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=containers,
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed
+        )
+        corrupt_configs.append(sample)
+
+        # Replace the first instance of <state2> with <state1> in the story
+        story = data[idx]['story']
+        story = story.replace("<state2>", "<state1>", 1)
+        story = story.replace("<state_event>", "<state1>", 1)
+
+        sample = SampleV3(
+            story=story,
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=list(reversed(containers)),
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed,
+            diff_template=True
         )
         clean_configs.append(sample)
     
@@ -1633,44 +1702,49 @@ def get_subject_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for i in range(n_samples):
-        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1)
-        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0)
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1, question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0, question_type=question_type)
 
         samples.append({
             "clean_prompt": clean_prompt,
             "clean_target": clean_target,
             "corrupt_prompt": corrupt_prompt,
-            "corrupt_target": corrupt_target
+            "corrupt_target": corrupt_target,
         })
     
     return samples
 
 
-def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
+def get_object_marker_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
     clean_configs, corrupt_configs = [], []
     samples = []
 
-    for i in range(n_samples):
-        protagonist, perpetrator = random.choice(actorC2)
-        object1, object2 = random.choice(objectsC2)
-        container1, container2 = random.choice(containersC2)
-        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
 
         sample = SampleV3(
+            story=data[idx]['story'],
             protagonist=protagonist,
             perpetrator=perpetrator,
-            states=[object1, object2],
-            containers=[container1, container2],
+            states=states,
+            containers=containers,
             event_idx=1,
+            obsr_event=obsr_event,
             event_noticed=event_noticed
         )
         corrupt_configs.append(sample)
         sample = SampleV3(
+            story=data[idx]['story'],
             protagonist=protagonist,
             perpetrator=perpetrator,
-            states=[object2, object1],
-            containers=[container1, container2],
+            states=list(reversed(states)),
+            containers=containers,
             event_idx=0,
+            obsr_event=obsr_event,
             event_noticed=event_noticed
         )
         clean_configs.append(sample)
@@ -1679,8 +1753,8 @@ def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for i in range(n_samples):
-        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=1)
-        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1)
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_container=1, set_ans="no", question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_container=1, set_ans="no", question_type=question_type)
 
         samples.append({
             "clean_prompt": clean_prompt,
@@ -1692,38 +1766,48 @@ def get_object_marker_pairs(actorC2, objectsC2, containersC2, n_samples):
     return samples
 
 
-def get_consistency_pairs(actorsC2, objectsC2, containersC2, n_samples):
-    configs, samples = [], []
+def get_consistency_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
+    clean_configs, corrupt_configs = [], []
+    samples = []
 
-    for i in range(n_samples):
-        protagonist, perpetrator = random.choice(actorsC2)
-        object1, object2 = random.choice(objectsC2)
-        container1, container2 = random.choice(containersC2)
-        event_idx = random.choices([0, 1], weights=[0.5, 0.5], k=1)[0]
-        event_noticed = random.choices([True, False], weights=[0.5, 0.5], k=1)[0]
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
 
-        sample = SampleV3(
+        config = SampleV3(
+            story=data[idx]['story'],
             protagonist=protagonist,
             perpetrator=perpetrator,
-            states=[object1, object2],
-            containers=[container1, container2],
-            event_idx=event_idx,
+            states=states,
+            containers=containers,
+            event_idx=0,
+            obsr_event=obsr_event,
             event_noticed=event_noticed
         )
-        configs.append(sample)
+        clean_configs.append(config)
+
+        config = SampleV3(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=containers,
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed
+        )
+        corrupt_configs.append(config)
     
-    dataset = DatasetV3(configs)
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
 
     for i in range(n_samples):
-        # actor = random.choice(["protagonist", "perpetrator"])
-        container = random.choice([0, 1])
-        clean_prompt, clean_target = dataset.__getitem__(i, set_ans="no", set_container=container)
-        random_idx = i
-        while random_idx == i:
-            random_idx = random.randint(0, n_samples - 1)
-        # actor = random.choice(["protagonist", "perpetrator"])
-        container = random.choice([0, 1])
-        corrupt_prompt, corrupt_target = dataset.__getitem__(random_idx, set_ans="yes", set_container=container)
+        container = 1
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=container, question_type=question_type)
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="yes", set_container=container, question_type=question_type)
         samples.append({
             "clean_prompt": clean_prompt,
             "clean_target": clean_target,
