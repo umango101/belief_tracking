@@ -80,7 +80,8 @@ class SampleV2(DataClassJsonMixin):
         )
 
 
-STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
+# STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
+STORY_TEMPLATE = "<protagonist> is a magician performing at a grand theater. <protagonist> wants to amaze the audience with a trick involving a <obj_1>. <protagonist> places the <obj_1> in a <container_1> and sets it on the stage. Then <protagonist> prepares a backup <container_2> and places a <obj_2> inside. An assistant named <perpetrator>, who thinks the trick should be different, swaps the <obj_event> in the <container_event> with the <obj_swap> while <protagonist> is backstage. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
 
 
 def swap_entities(story, entity_1, entity_2):
@@ -123,9 +124,17 @@ class SampleV3(DataClassJsonMixin):
     def set_story(self):
         self.story = STORY_TEMPLATE
         self.story = self.story.replace("<protagonist>", self.protagonist)
+        self.story = self.story.replace("<character_1>", self.protagonist)
+
         self.story = self.story.replace("<perpetrator>", self.perpetrator)
+        self.story = self.story.replace("<character_2>", self.perpetrator)
+
         self.story = self.story.replace("<obj_1>", self.objects[0])
+        self.story = self.story.replace("<state_1>", self.objects[0])
+
         self.story = self.story.replace("<obj_2>", self.objects[1])
+        self.story = self.story.replace("<state_2>", self.objects[1])
+
         self.story = self.story.replace("<container_1>", self.containers[0])
         self.story = self.story.replace("<container_2>", self.containers[1])
 

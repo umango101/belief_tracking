@@ -30,7 +30,7 @@ class TokenStates(DataClassJsonMixin):
     value: str
     prompt: str
     answer: str
-    token_position: int
+    token_position: tuple[int, int]
     predicted_answer: PredictedToken
     states: dict[str, torch.Tensor | np.ndarray]
 
@@ -40,6 +40,7 @@ def collect_token_latent_in_question(
     prompt: str,
     answer: str,
     token_of_interest: str,
+    token_of_interest_idx: int = -1,
     layers: list = list(range(7, 28)),
     layer_name_format: str = "model.layers.{}",
     detensorize: bool = True,
@@ -48,22 +49,27 @@ def collect_token_latent_in_question(
     token_range = find_token_range(
         string=prompt,
         substring=token_of_interest,
-        occurrence=-1,
+        occurrence=token_of_interest_idx,
         offset_mapping=inputs["offset_mapping"][0],
     )
-    token_last_idx = token_range[1] - 1
+    # token_last_idx = token_range[1] - 1
     inputs.pop("offset_mapping")
     print(
-        f'{token_last_idx} {lm.tokenizer.decode(inputs["input_ids"][0][token_last_idx])}'
+        f'{token_range} {"|".join([lm.tokenizer.decode(inputs["input_ids"][0][t]) for t in range(*token_range)])}'
     )
 
     last_loc = (
         layer_name_format.format(lm.config.num_hidden_layers - 1),
         inputs.input_ids.shape[1] - 1,
     )
-    locations = [(layer_name_format.format(i), token_last_idx) for i in layers] + [
-        last_loc
-    ]
+    # locations = [(layer_name_format.format(i), token_last_idx) for i in layers] + [
+    #     last_loc
+    # ]
+    locations = []
+    for i in layers:
+        for t in range(*token_range):
+            locations.append((layer_name_format.format(i), t))
+    locations.append(last_loc)
 
     hs = get_hs(lm=lm, input=inputs, locations=locations, return_dict=True)
     predicted_ans = logit_lens(lm=lm, h=hs[last_loc], k=2)[0]
@@ -82,7 +88,7 @@ def collect_token_latent_in_question(
         value=token_of_interest,
         prompt=prompt,
         answer=answer,
-        token_position=token_last_idx,
+        token_position=token_range,
         predicted_answer=predicted_ans,
         states=hs,
     )
