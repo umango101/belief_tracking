@@ -54,32 +54,6 @@ class Dataset(DataClassJsonMixin):
         return question, tags[correct_ans_idx]
 
 
-@dataclass(frozen=True)
-class SampleV2(DataClassJsonMixin):
-    story: str
-    actor: str
-    obj_belief: str
-    obj_true: str
-    container: str
-
-    def __post_init__(self):
-        assert self.actor in self.story
-        assert self.obj_belief in self.story
-        assert self.obj_true in self.story
-        assert self.container in self.story
-        assert self.obj_belief != self.obj_true
-
-    def __eq__(self, other) -> bool:
-        assert isinstance(other, SampleV2)
-        return (
-            self.story == other.story
-            and self.actor == other.actor
-            and self.obj_belief == other.obj_belief
-            and self.obj_true == other.obj_true
-            and self.container == other.container
-        )
-
-
 STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
 NEW_STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_1>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
 
@@ -89,6 +63,103 @@ def swap_entities(story, entity_1, entity_2):
     story = story.replace(entity_2, entity_1)
     story = story.replace("<<placeholder>>", entity_2)
     return story
+
+
+@dataclass(frozen=False)
+class SampleV2(DataClassJsonMixin):
+    story: str
+    protagonist: str
+    perpetrator: str
+    states: list[str]
+    containers: list[str]
+
+    def __post_init__(self):
+        assert len(self.states) == 2 and len(self.containers) == 2
+        assert self.states[0] != self.states[1]
+        assert self.containers[0] != self.containers[1]
+
+        self.set_story()
+    
+    def set_story(self):
+        self.story = self.story.replace("<character1>", self.protagonist)
+        self.story = self.story.replace("<character2>", self.perpetrator)
+        self.story = self.story.replace("<state1>", self.states[0])
+        self.story = self.story.replace("<state2>", self.states[1])
+        self.story = self.story.replace("<container1>", self.containers[0])
+        self.story = self.story.replace("<container2>", self.containers[1])
+
+        self.true_state = {
+            self.containers[0]: self.states[0],
+            self.containers[1]: self.states[1],
+        }
+
+        return self.story
+
+
+@dataclass(frozen=False)
+class DatasetV2(DataClassJsonMixin):
+    samples: list[SampleV2]
+    instruction: str = (
+        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose "yes" or "no" after the "Answer:" tag."""
+    )
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(
+            self,
+            idx: int,
+            set_ans: Optional[Literal["yes", "no"]] = None,
+            set_container: Literal[0, 1] | None = None,
+            set_obj: Literal[0, 1] | None = None,
+        ) -> tuple[str, Literal["yes", "no"]]:
+        prompt = f"Instruction: {self.instruction.strip()}\n\n"
+        prompt += f"Story: {self.samples[idx].story.strip()}\n"
+
+        if set_ans is not None:
+            ans = set_ans
+            assert (
+                set_container is None or set_obj is None
+            ), "if both the container and the obj is set true, then the answer is determined"
+
+            if set_container is None and set_obj is None:
+                set_container = random.choice([0, 1])
+
+            if set_container is not None:
+                q_container = self.samples[idx].containers[set_container]
+                obj_yes = self.samples[idx].true_state[q_container]
+                obj_no = (
+                    self.samples[idx].states[0]
+                    if self.samples[idx].states[1] == obj_yes
+                    else self.samples[idx].states[1]
+                )
+                assert obj_yes != obj_no
+                q_obj = obj_yes if set_ans == "yes" else obj_no
+            elif set_obj is not None:
+                q_obj = self.samples[idx].states[set_obj]
+                c1, c2 = self.samples[idx].containers
+                container_yes = c1 if self.samples[idx].true_state[c1] == q_obj else c2
+                container_no = c1 if container_yes == c2 else c2
+                assert container_yes != container_no
+                q_container = container_yes if set_ans == "yes" else container_no
+        
+        else:
+            q_container = (
+                random.choice(self.samples[idx].containers)
+                if set_container is None
+                else self.samples[idx].containers[set_container]
+            )
+            q_obj = (
+                random.choice(self.samples[idx].states)
+                if set_obj is None
+                else self.samples[idx].states[set_obj]
+            )
+
+            ans = "yes" if self.samples[idx].true_state[q_container] == q_obj else "no"
+
+        prompt += f"Question: Does the {q_container} contain {q_obj}?\n"
+        prompt += f"Answer:"
+        return prompt, ans
 
 
 @dataclass(frozen=False)

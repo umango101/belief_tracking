@@ -10,7 +10,7 @@ from transformers import StoppingCriteria
 from datasets import Dataset
 from torch.utils.data import DataLoader
 from einops import einsum
-from src.dataset import SampleV3, DatasetV3
+from src.dataset import SampleV3, DatasetV3, SampleV2, DatasetV2
 
 random.seed(10)
 
@@ -1878,6 +1878,161 @@ def get_consistency_pairs(data, characters, n_samples, event_noticed=False, ques
             "clean_target": clean_target,
             "corrupt_prompt": corrupt_prompt,
             "corrupt_target": corrupt_target
+        })
+    
+    return samples
+
+
+def get_initial_worldstate(data, n_samples, characters):
+    configs, samples = [], []
+
+    for idx in range(n_samples):
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=random.choice(characters),
+            states=states,
+            containers=containers
+        )
+        configs.append(sample)
+    
+    dataset = DatasetV2(configs)
+
+    for idx in range(n_samples):
+        prompt, target = dataset.__getitem__(idx)
+        samples.append({
+            'prompt': prompt,
+            'target': target
+        })
+    
+    return samples
+
+
+def get_initial_worldstate_consistency(data, characters, n_samples):
+    configs, samples = [], []
+
+    for idx in range(n_samples):
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=random.choice(characters),
+            states=states,
+            containers=containers
+        )
+        configs.append(sample)
+    
+    dataset = DatasetV2(configs)
+
+    for idx in range(n_samples):
+        clean_prompt, clean_target = dataset.__getitem__(idx, set_ans="no")
+        corrupt_prompt, corrupt_target = dataset.__getitem__(idx, set_ans="yes")
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target
+        })
+    
+    return samples
+
+
+def get_initial_worldstate_obj_marker(data, characters, n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=random.choice(characters),
+            states=states,
+            containers=containers
+        )
+        clean_configs.append(sample)
+
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=random.choice(characters),
+            states=list(reversed(states)),
+            containers=containers
+        )
+        corrupt_configs.append(sample)
+    
+    clean_dataset = DatasetV2(clean_configs)
+    corrupt_dataset = DatasetV2(corrupt_configs)
+
+    for i in range(n_samples):
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1)
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="no", set_container=0)
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target
+        })
+    
+    return samples
+
+
+def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples, random_states = [], []
+
+    for idx in range(n_samples):
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        protagonist, perpetrator = random.sample(characters, k=2)
+
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=containers
+        )
+        clean_configs.append(sample)
+        
+        # random_state_1 = random.choice(data[idx]['states_1'].split(', '))
+        # random_state_2 = random.choice(data[idx]['states_2'].split(', '))
+        # while random_state_1 in states or random_state_1 == random_state_2:
+        #     random_state_1 = random.choice(data[idx]['states_1'].split(', '))
+        
+        # while random_state_2 in states or random_state_2 == random_state_1:
+        #     random_state_2 = random.choice(data[idx]['states_2'].split(', '))
+        
+        # random_states.append([random_state_1, random_state_2])
+
+        # story = data[idx]['story']
+        # story = story.replace("<state1>", random_state_1)
+        # story = story.replace("<state2>", random_state_2)
+        sample = SampleV2(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=list(reversed(states)),
+            containers=containers
+        )
+        corrupt_configs.append(sample)
+    
+    clean_dataset = DatasetV2(clean_configs)
+    corrupt_dataset = DatasetV2(corrupt_configs)
+
+    for i in range(n_samples):
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0)
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="yes", set_container=0)
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target,
+            "states": clean_configs[i].states,
+            "containers": clean_configs[i].containers
         })
     
     return samples
