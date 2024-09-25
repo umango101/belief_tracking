@@ -1780,6 +1780,59 @@ def get_subject_marker_pairs(data, characters, n_samples, event_noticed=False, q
     return samples
 
 
+def get_container_marker_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        idx = idx % len(data)
+        protagonist, perpetrator = random.choices(characters, k=2)
+        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
+        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        obsr_event = data[idx]['true_belief'] if event_noticed else data[idx]['false_belief']
+
+        sample = SampleV3(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=states,
+            containers=containers,
+            event_idx=1,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed
+        )
+        corrupt_configs.append(sample)
+        sample = SampleV3(
+            story=data[idx]['story'],
+            protagonist=protagonist,
+            perpetrator=perpetrator,
+            states=list(reversed(states)),
+            containers=containers,
+            event_idx=0,
+            obsr_event=obsr_event,
+            event_noticed=event_noticed
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for i in range(n_samples):
+        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_container=0, set_ans="no", question_type=question_type)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_container=0, set_ans="no", question_type=question_type)
+
+        samples.append({
+            "clean_prompt": clean_prompt,
+            "clean_target": clean_target,
+            "corrupt_prompt": corrupt_prompt,
+            "corrupt_target": corrupt_target,
+            "states": clean_configs[i].states,
+            "containers": clean_configs[i].containers,
+        })
+    
+    return samples
+
+
 def get_object_marker_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
     clean_configs, corrupt_configs = [], []
     samples = []
@@ -1829,6 +1882,7 @@ def get_object_marker_pairs(data, characters, n_samples, event_noticed=False, qu
         })
     
     return samples
+
 
 
 def get_consistency_pairs(data, characters, n_samples, event_noticed=False, question_type='true_state'):
@@ -2015,8 +2069,8 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
             story=data[idx]['story'],
             protagonist=protagonist,
             perpetrator=perpetrator,
-            states=list(reversed(states)),
-            containers=["small plate", "small bowl"]
+            states=states,
+            containers=list(reversed(containers))
         )
         corrupt_configs.append(sample)
     
@@ -2033,7 +2087,7 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
             "corrupt_target": corrupt_target,
             "states": clean_configs[i].states,
             "clean_containers": clean_configs[i].containers,
-            "corrupt_containers": ["small plate", "small bowl"]
+            "corrupt_containers": clean_configs[i].containers,
         })
     
     return samples
