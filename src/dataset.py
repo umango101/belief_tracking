@@ -81,7 +81,8 @@ class SampleV2(DataClassJsonMixin):
 
 
 # STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
-STORY_TEMPLATE = "<protagonist> is a magician performing at a grand theater. <protagonist> wants to amaze the audience with a trick involving a <obj_1>. <protagonist> places the <obj_1> in a <container_1> and sets it on the stage. Then <protagonist> prepares a backup <container_2> and places a <obj_2> inside. An assistant named <perpetrator>, who thinks the trick should be different, swaps the <obj_event> in the <container_event> with the <obj_swap> while <protagonist> is backstage. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
+# STORY_TEMPLATE = "<protagonist> is a magician performing at a grand theater. <protagonist> wants to amaze the audience with a trick involving a <obj_1>. <protagonist> places the <obj_1> in a <container_1> and sets it on the stage. Then <protagonist> prepares a backup <container_2> and places a <obj_2> inside. An assistant named <perpetrator>, who thinks the trick should be different, swaps the <obj_event> in the <container_event> with the <obj_swap> while <protagonist> is backstage. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
+STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>."
 
 
 def swap_entities(story, entity_1, entity_2):
@@ -94,10 +95,10 @@ def swap_entities(story, entity_1, entity_2):
 @dataclass(frozen=False)
 class SampleV3(DataClassJsonMixin):
     protagonist: str
-    perpetrator: str
     objects: list[str]
     containers: list[str]
-    event_idx: Literal[0, 1] = 0  # which container is swapped?
+    perpetrator: Optional[str] = None
+    event_idx: Optional[Literal[0, 1]] = 0  # which container is swapped?
     event_noticed: bool = False  # the protagonist sees the swap?
 
     story: str | None = None
@@ -138,32 +139,37 @@ class SampleV3(DataClassJsonMixin):
         self.story = self.story.replace("<container_1>", self.containers[0])
         self.story = self.story.replace("<container_2>", self.containers[1])
 
-        # event
-        self.story = self.story.replace("<obj_event>", self.objects[self.event_idx])
-        self.story = self.story.replace(
-            "<container_event>", self.containers[self.event_idx]
-        )
-        obj_swap = self.objects[1 ^ self.event_idx]
-        self.story = self.story.replace("<obj_swap>", obj_swap)
-        # protagonist observation
-        observation = "saw" if self.event_noticed else "didn't see"
-        self.story = self.story.replace("<saw/didn't see>", observation)
-
         # true state
         self.true_state = {
             self.containers[0]: self.objects[0],
             self.containers[1]: self.objects[1],
         }
-        self.true_state[self.containers[self.event_idx]] = obj_swap
+        self.protagonist_belief = self.true_state.copy()
 
-        # protagonist belief
-        if self.event_noticed == False:
-            self.protagonist_belief = {
-                self.containers[0]: self.objects[0],
-                self.containers[1]: self.objects[1],
-            }
+        # event
+        if self.event_idx is not None:
+            self.story = self.story.replace("<obj_event>", self.objects[self.event_idx])
+            self.story = self.story.replace(
+                "<container_event>", self.containers[self.event_idx]
+            )
+            obj_swap = self.objects[1 ^ self.event_idx]
+            self.story = self.story.replace("<obj_swap>", obj_swap)
+
+            # did the protagonist see the event happening?
+            observation = "saw" if self.event_noticed else "didn't see"
+            self.story = self.story.replace("<saw/didn't see>", observation)
+            self.true_state[self.containers[self.event_idx]] = obj_swap
+
+            # protagonist belief
+            if self.event_noticed == True:
+                self.protagonist_belief = self.true_state.copy()
         else:
-            self.protagonist_belief = self.true_state.copy()
+            assert (
+                self.event_noticed == False
+            ), "If there is no causal event, there is nothing to observe"
+            assert (
+                self.perpetrator is None
+            ), "If there is no causal event, there is no perpetrator to blame"
 
         return self.story
 
@@ -204,6 +210,7 @@ class DatasetV3(DataClassJsonMixin):
             if set_actor == "protagonist"
             else self.samples[idx].true_state
         )
+
         if set_ans is not None:
             ans = set_ans
             assert (

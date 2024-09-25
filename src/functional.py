@@ -16,8 +16,8 @@ from tqdm import tqdm
 from src.models import (
     get_module_nnsight,
     prepare_input,
-    unwrap_tokenizer,
     reset_forwards,
+    unwrap_tokenizer,
 )
 from src.utils.typing import PredictedToken, Tokenizer, TokenizerOutput
 
@@ -192,7 +192,7 @@ def get_dummy_input(
 def find_token_range(
     string: str,
     substring: str,
-    tokenizer: Optional[Tokenizer] = None,
+    tokenizer: Optional[LanguageModel | Tokenizer] = None,
     occurrence: int = 0,
     offset_mapping: Optional[torch.Tensor] = None,
     **kwargs: Any,
@@ -257,16 +257,14 @@ def find_token_range(
                 ) from error
     char_end = char_start + len(substring)
 
-    # logger.debug(
-    #     f"char range: [{char_start}, {char_end}] => `{string[char_start:char_end]}`"
-    # )
+    # print(f"char range: [{char_start}, {char_end}] => `{string[char_start:char_end]}`")
 
     if offset_mapping is None:
         assert tokenizer is not None
         tokens = prepare_input(
-            string, return_offsets_mapping=True, tokenizer=tokenizer, **kwargs
+            string, return_offset_mapping=True, tokenizer=tokenizer, **kwargs
         )
-        offset_mapping = tokens.offset_mapping
+        offset_mapping = tokens.offset_mapping[0]
 
     token_start, token_end = None, None
     for index, (token_char_start, token_char_end) in enumerate(offset_mapping):
@@ -282,7 +280,10 @@ def find_token_range(
                 token_end = index
                 break
 
-    assert token_start is not None
+    # print(f"{substring=}, {occurrence=} | {token_start=}, {token_end=}")
+    assert (
+        token_start is not None
+    ), "Are you working with Llama-3? Try passing the LanguageModel object as the tokenizer"
     assert token_end is not None
     assert token_start <= token_end
     return (token_start, token_end + 1)
