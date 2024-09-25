@@ -1982,7 +1982,7 @@ def get_initial_worldstate_obj_marker(data, characters, n_samples):
 
 def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
     clean_configs, corrupt_configs = [], []
-    samples, random_states = [], []
+    samples, random_containers = [], []
 
     for idx in range(n_samples):
         states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
@@ -1998,15 +1998,15 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
         )
         clean_configs.append(sample)
         
-        # random_state_1 = random.choice(data[idx]['states_1'].split(', '))
-        # random_state_2 = random.choice(data[idx]['states_2'].split(', '))
-        # while random_state_1 in states or random_state_1 == random_state_2:
-        #     random_state_1 = random.choice(data[idx]['states_1'].split(', '))
+        random_container_1 = random.choice(data[idx]['containers_1'].split(', '))
+        random_container_2 = random.choice(data[idx]['containers_2'].split(', '))
+        while random_container_1 in containers or random_container_1 == random_container_2:
+            random_container_1 = random.choice(data[idx]['containers_1'].split(', '))
         
-        # while random_state_2 in states or random_state_2 == random_state_1:
-        #     random_state_2 = random.choice(data[idx]['states_2'].split(', '))
+        while random_container_2 in containers or random_container_2 == random_container_1:
+            random_container_2 = random.choice(data[idx]['containers_2'].split(', '))
         
-        # random_states.append([random_state_1, random_state_2])
+        random_containers.append([random_container_1, random_container_2])
 
         # story = data[idx]['story']
         # story = story.replace("<state1>", random_state_1)
@@ -2016,7 +2016,7 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
             protagonist=protagonist,
             perpetrator=perpetrator,
             states=list(reversed(states)),
-            containers=containers
+            containers=["small plate", "small bowl"]
         )
         corrupt_configs.append(sample)
     
@@ -2024,7 +2024,7 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
     corrupt_dataset = DatasetV2(corrupt_configs)
 
     for i in range(n_samples):
-        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=0)
+        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1)
         corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="yes", set_container=0)
         samples.append({
             "clean_prompt": clean_prompt,
@@ -2032,7 +2032,8 @@ def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
             "corrupt_prompt": corrupt_prompt,
             "corrupt_target": corrupt_target,
             "states": clean_configs[i].states,
-            "containers": clean_configs[i].containers
+            "clean_containers": clean_configs[i].containers,
+            "corrupt_containers": ["small plate", "small bowl"]
         })
     
     return samples
