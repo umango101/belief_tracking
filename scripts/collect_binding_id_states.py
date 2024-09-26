@@ -119,7 +119,7 @@ def collect_variable_contrast_information(
 
     sample = dataset.samples[sample_idx]
     field, f_idx = field.split("_")
-    value = getattr(sample + "s", field)[int(f_idx)]
+    value = getattr(sample, field + "s")[int(f_idx)]
 
     print(f"{field=} {value=}")
 
@@ -130,15 +130,17 @@ def collect_variable_contrast_information(
 
     if field.startswith("character"):
         kwargs["set_character"] = int(f_idx)
-        file_path = "characters.json"
+        file_name = "characters.json"
         exclude = sample.characters
     elif field.startswith("state"):
         kwargs["set_state"] = int(f_idx)
-        file_path = os.path.join("states", sample.template["state_type"])
+        file_name = os.path.join("states", sample.template["state_type"] + ".json")
         exclude = sample.states
     elif field.startswith("container"):
         kwargs["set_container"] = int(f_idx)
-        file_path = os.path.join("containers", sample.template["container_type"])
+        file_name = os.path.join(
+            "containers", sample.template["container_type"] + ".json"
+        )
         exclude = sample.containers
     else:
         raise ValueError(f"Unknown field: {field}")
@@ -186,7 +188,8 @@ class CachedBindingIDState(DataClassJsonMixin):
     containers: list[SampleV3Variable]
 
     def __post_init__(self):
-        assert len(self.objects) == 2 and len(self.containers) == 2
+        assert len(self.states) == 2 and len(self.containers) == 2
+        assert len(self.characters) in [1, 2]
 
 
 # @dataclass(frozen=False)
@@ -214,7 +217,7 @@ def cache_states(
         load_in_4bit=True,
     )
 
-    with open(os.path.join(env_utils.DEFAULT_DATA_DIR, "dataset_v3.json"), "r") as f:
+    with open(os.path.join(env_utils.DEFAULT_DATA_DIR, "dataset_v4.json"), "r") as f:
         dataset_dict = json.load(f)
 
     dataset = DatasetV3.from_dict(dataset_dict)
@@ -225,20 +228,23 @@ def cache_states(
     idx_range = (idx_range[0], min(idx_range[1], len(dataset)))
     limit = idx_range[1] - idx_range[0]
     for idx in range(*idx_range):
-        print(f"\nprocessing {idx+1} ... {idx - idx_range[0]}/{limit}")
+        print(f"\nprocessing {idx} ... {idx - idx_range[0] + 1}/{limit}")
 
         variable_states = {
             field: None
             for field in [
                 "character_0",
                 "character_1",
-                "object_0",
-                "object_1",
+                "state_0",
+                "state_1",
                 "container_0",
                 "container_1",
             ]
         }
+        sample = dataset.samples[idx]
         for field in variable_states:
+            if sample.event_idx is None and field == "character_1":
+                continue
             variable_states[field] = collect_variable_contrast_information(
                 lm=lm,
                 dataset=dataset,
@@ -248,8 +254,12 @@ def cache_states(
 
         cur_states = CachedBindingIDState(
             sample=dataset.samples[idx],
-            characters=[variable_states["character_0"], variable_states["character_1"]],
-            objects=[variable_states["object_0"], variable_states["object_1"]],
+            characters=(
+                [variable_states["character_0"], variable_states["character_1"]]
+                if sample.event_idx is not None
+                else [variable_states["character_0"]]
+            ),
+            states=[variable_states["state_0"], variable_states["state_1"]],
             containers=[
                 variable_states["container_0"],
                 variable_states["container_1"],
@@ -300,7 +310,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--save_dir",
         type=str,
-        default="binding_id_states_V4",
+        default="BID_cache_V4",
     )
 
     args = parser.parse_args()
