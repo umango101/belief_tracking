@@ -1,3 +1,4 @@
+import json
 import os
 import random
 from dataclasses import dataclass
@@ -82,7 +83,12 @@ class SampleV2(DataClassJsonMixin):
 
 # STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
 # STORY_TEMPLATE = "<protagonist> is a magician performing at a grand theater. <protagonist> wants to amaze the audience with a trick involving a <obj_1>. <protagonist> places the <obj_1> in a <container_1> and sets it on the stage. Then <protagonist> prepares a backup <container_2> and places a <obj_2> inside. An assistant named <perpetrator>, who thinks the trick should be different, swaps the <obj_event> in the <container_event> with the <obj_swap> while <protagonist> is backstage. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
-STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>."
+# STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>."
+
+STORY_TEMPLATE_PATH = os.path.join(env_utils.DEFAULT_DATA_DIR, "story_templates.json")
+
+with open(STORY_TEMPLATE_PATH, "r") as f:
+    STORY_TEMPLATES = json.load(f)
 
 
 def swap_entities(story, entity_1, entity_2):
@@ -94,82 +100,119 @@ def swap_entities(story, entity_1, entity_2):
 
 @dataclass(frozen=False)
 class SampleV3(DataClassJsonMixin):
-    protagonist: str
-    objects: list[str]
+    template: dict[str, str]
+    characters: list[str]
     containers: list[str]
-    perpetrator: Optional[str] = None
+    states: list[str]
     event_idx: Optional[Literal[0, 1]] = 0  # which container is swapped?
     event_noticed: bool = False  # the protagonist sees the swap?
 
     story: str | None = None
-    protagonist_belief: dict[str, str] = None
-    true_state: dict[str, str] = None
+    character_belief: list[dict[str, str]] = None
 
     def __post_init__(self):
-        assert len(self.objects) == 2 and len(self.containers) == 2
-        assert self.objects[0] != self.objects[1]
+        if len(self.characters) == 1:
+            self.characters.append("<N/A>")
+        assert (
+            len(self.states) == 2
+            and len(self.containers) == 2
+            and len(self.characters) == 2
+        )
+        assert self.states[0] != self.states[1]
         assert self.containers[0] != self.containers[1]
+        assert self.characters[0] != self.characters[1]
 
         self.set_story()
 
     def __eq__(self, other) -> bool:
         assert isinstance(other, SampleV3)
-        return (
-            self.story == other.story
-            and self.protagonist == other.protagonist
-            and self.perpetrator == other.perpetrator
-            and self.objects == other.objects
-            and self.containers == other.containers
+        return self.story == other.story
+
+    def set_entity_names(self):
+        # characters
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["character"][0],
+            self.characters[0],
+        )
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["character"][1],
+            self.characters[1],
+        )
+
+        # containers
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["container"][0],
+            self.containers[0],
+        )
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["container"][1],
+            self.containers[1],
+        )
+
+        # states
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["state"][0], self.states[0]
+        )
+        self.story = self.story.replace(
+            STORY_TEMPLATES["placeholders"]["entity"]["state"][1], self.states[1]
         )
 
     def set_story(self):
-        self.story = STORY_TEMPLATE
-        self.story = self.story.replace("<protagonist>", self.protagonist)
-        self.story = self.story.replace("<character_1>", self.protagonist)
-
-        self.story = self.story.replace("<perpetrator>", self.perpetrator)
-        self.story = self.story.replace("<character_2>", self.perpetrator)
-
-        self.story = self.story.replace("<obj_1>", self.objects[0])
-        self.story = self.story.replace("<state_1>", self.objects[0])
-
-        self.story = self.story.replace("<obj_2>", self.objects[1])
-        self.story = self.story.replace("<state_2>", self.objects[1])
-
-        self.story = self.story.replace("<container_1>", self.containers[0])
-        self.story = self.story.replace("<container_2>", self.containers[1])
+        self.story = self.template["context"]
 
         # true state
-        self.true_state = {
-            self.containers[0]: self.objects[0],
-            self.containers[1]: self.objects[1],
+        initial_state = {
+            self.containers[0]: self.states[0],
+            self.containers[1]: self.states[1],
         }
-        self.protagonist_belief = self.true_state.copy()
+        self.character_belief = [initial_state.copy(), initial_state.copy()]
 
         # event
-        if self.event_idx is not None:
-            self.story = self.story.replace("<obj_event>", self.objects[self.event_idx])
+        if self.event_idx is not None:  # Event happened
+            self.story += f' {self.template["causal_event"]}'
+            state_swap = self.states[1 ^ self.event_idx]
+            state_event = self.states[self.event_idx]
+            container_event = self.containers[self.event_idx]
+
             self.story = self.story.replace(
-                "<container_event>", self.containers[self.event_idx]
+                STORY_TEMPLATES["placeholders"]["event"]["container_event"],
+                container_event,
             )
-            obj_swap = self.objects[1 ^ self.event_idx]
-            self.story = self.story.replace("<obj_swap>", obj_swap)
+            self.story = self.story.replace(
+                STORY_TEMPLATES["placeholders"]["event"]["state_event"], state_event
+            )
+            self.story = self.story.replace(
+                STORY_TEMPLATES["placeholders"]["event"]["state_swap"], state_swap
+            )
 
             # did the protagonist see the event happening?
-            observation = "saw" if self.event_noticed else "didn't see"
-            self.story = self.story.replace("<saw/didn't see>", observation)
-            self.true_state[self.containers[self.event_idx]] = obj_swap
+            self.story += f' {self.template["event_noticed"]}'
+            observation = "noticed" if self.event_noticed else "didn't notice"
+            self.story = self.story.replace(
+                STORY_TEMPLATES["placeholders"]["notice"], observation
+            )
+            self.story = self.story.replace(
+                STORY_TEMPLATES["placeholders"]["event"]["container_event"],
+                container_event,
+            )
+            self.character_belief[1][self.containers[self.event_idx]] = state_swap
 
             # protagonist belief
             if self.event_noticed == True:
-                self.protagonist_belief = self.true_state.copy()
-        else:
+                self.character_belief[0][self.containers[self.event_idx]] = state_swap
+
+        else:  # Event did not happen
             assert (
                 self.event_noticed == False
             ), "If there is no causal event, there is nothing to observe"
             assert (
-                self.perpetrator is None
+                STORY_TEMPLATES["placeholders"]["entity"]["character"][1]
+                not in self.story
             ), "If there is no causal event, there is no perpetrator to blame"
+
+        # set the common entity names
+        self.set_entity_names()
+        assert "<" not in self.story and ">" not in self.story
 
         return self.story
 
@@ -194,44 +237,46 @@ class DatasetV3(DataClassJsonMixin):
         idx: int,
         set_ans: Optional[Literal["yes", "no"]] = None,
         set_container: Literal[0, 1] | None = None,
-        set_obj: Literal[0, 1] | None = None,
-        set_actor: Literal["protagonist", "perpetrator"] = "protagonist",
+        set_state: Literal[0, 1] | None = None,
+        set_character: Literal[0, 1] | None = None,
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
-        q_actor = (
-            self.samples[idx].protagonist
-            if set_actor == "protagonist"
-            else self.samples[idx].perpetrator
-        )
-        belief_states = (
-            self.samples[idx].protagonist_belief
-            if set_actor == "protagonist"
-            else self.samples[idx].true_state
-        )
+        sample = self.samples[idx]
+
+        if sample.event_idx is None:
+            assert set_character != 1
+            set_character = 0
+        else:
+            set_character = (
+                random.choice([0, 1]) if set_character is None else set_character
+            )
+        q_actor = self.samples[idx].characters[set_character]
+
+        belief_states = self.samples[idx].character_belief[set_character]
 
         if set_ans is not None:
             ans = set_ans
             assert (
-                set_container is None or set_obj is None
+                set_container is None or set_state is None
             ), "if both the container and the obj is set true, then the answer is determined"
-            if set_container is None and set_obj is None:
+            if set_container is None and set_state is None:
                 set_container = random.choice([0, 1])
 
             if set_container is not None:
-                q_container = self.samples[idx].containers[set_container]
+                q_container = sample.containers[set_container]
                 obj_yes = belief_states[q_container]
                 obj_no = (
-                    self.samples[idx].objects[0]
-                    if self.samples[idx].objects[1] == obj_yes
-                    else self.samples[idx].objects[1]
+                    sample.states[0]
+                    if sample.states[1] == obj_yes
+                    else sample.states[1]
                 )
                 assert obj_yes != obj_no
                 q_obj = obj_yes if set_ans == "yes" else obj_no
-            elif set_obj is not None:
-                q_obj = self.samples[idx].objects[set_obj]
-                c1, c2 = self.samples[idx].containers
+            elif set_state is not None:
+                q_obj = sample.states[set_state]
+                c1, c2 = sample.containers
                 container_yes = c1 if belief_states[c1] == q_obj else c2
                 container_no = c1 if container_yes == c2 else c2
                 assert container_yes != container_no
@@ -239,21 +284,30 @@ class DatasetV3(DataClassJsonMixin):
 
         else:
             q_container = (
-                random.choice(self.samples[idx].containers)
+                random.choice(sample.containers)
                 if set_container is None
-                else self.samples[idx].containers[set_container]
+                else sample.containers[set_container]
             )
             q_obj = (
-                random.choice(self.samples[idx].objects)
-                if set_obj is None
-                else self.samples[idx].objects[set_obj]
+                random.choice(self.samples[idx].states)
+                if set_state is None
+                else self.samples[idx].states[set_state]
             )
 
             ans = "yes" if belief_states[q_container] == q_obj else "no"
 
-        prompt += (
-            f"Question: Does {q_actor} believe the {q_container} contains {q_obj}?\n"
+        question = sample.template["question"]
+        question = question.replace(
+            STORY_TEMPLATES["placeholders"]["question"]["character"], q_actor
         )
+        question = question.replace(
+            STORY_TEMPLATES["placeholders"]["question"]["container"], q_container
+        )
+        question = question.replace(
+            STORY_TEMPLATES["placeholders"]["question"]["state"], q_obj
+        )
+
+        prompt += f"Question: {question}?\n"
         prompt += f"Answer:"
         return prompt, ans
 

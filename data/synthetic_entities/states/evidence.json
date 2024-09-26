@@ -1,9 +1,17 @@
 [
-    "gun",
     "knife",
-    "razor",
+    "gun",
+    "glove",
+    "shoe",
+    "hair",
+    "blood",
+    "fiber",
+    "bullet",
+    "button",
+    "cloth",
     "ring",
-    "necklace",
-    "bracelet",
-    "watch"
+    "watch",
+    "phone",
+    "coin",
+    "key"
 ]
