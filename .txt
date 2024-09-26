@@ -1,7 +1,0 @@
-Model Name: huggyllama/llama-30b | Category: second_order_true_belief | Correct: 1156 | Total: 1214
-Model Name: huggyllama/llama-30b | Category: first_order_true_belief | Correct: 1536 | Total: 1579
-Model Name: huggyllama/llama-30b | Category: reality | Correct: 963 | Total: 1000
-Model Name: huggyllama/llama-30b | Category: first_order_false_belief | Correct: 54 | Total: 423
-Model Name: huggyllama/llama-30b | Category: second_order_false_belief | Correct: 117 | Total: 788
-Model Name: huggyllama/llama-30b | Category: memory | Correct: 995 | Total: 999
-

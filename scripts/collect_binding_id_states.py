@@ -1,0 +1,327 @@
+import argparse
+import json
+import logging
+import os
+import random
+from dataclasses import dataclass
+from typing import Literal, Optional
+
+import numpy as np
+import torch
+import transformers
+from dataclasses_json import DataClassJsonMixin
+from nnsight import LanguageModel
+
+from src.dataset import DatasetV3, SampleV3
+from src.functional import (
+    find_token_range,
+    free_gpu_cache,
+    get_hs,
+    logit_lens,
+    prepare_input,
+)
+from src.models import load_LM
+from src.utils import env_utils
+from src.utils.typing import PredictedToken
+
+
+@dataclass(frozen=True)
+class TokenStates(DataClassJsonMixin):
+    value: str
+    prompt: str
+    answer: str
+    token_position: tuple[int, int]
+    predicted_answer: PredictedToken
+    states: dict[str, torch.Tensor | np.ndarray]
+
+
+def collect_token_latent_in_question(
+    lm: LanguageModel,
+    prompt: str,
+    answer: str,
+    token_of_interest: str,
+    token_of_interest_idx: int = -1,
+    layers: list = list(range(7, 28)),
+    layer_name_format: str = "model.layers.{}",
+    detensorize: bool = True,
+) -> TokenStates:
+    inputs = prepare_input(prompts=prompt, tokenizer=lm, return_offsets_mapping=True)
+    token_range = find_token_range(
+        string=prompt,
+        substring=token_of_interest,
+        occurrence=token_of_interest_idx,
+        offset_mapping=inputs["offset_mapping"][0],
+    )
+    # token_last_idx = token_range[1] - 1
+    inputs.pop("offset_mapping")
+    print(
+        f'{token_range} {"|".join([lm.tokenizer.decode(inputs["input_ids"][0][t]) for t in range(*token_range)])}'
+    )
+
+    last_loc = (
+        layer_name_format.format(lm.config.num_hidden_layers - 1),
+        inputs.input_ids.shape[1] - 1,
+    )
+    # locations = [(layer_name_format.format(i), token_last_idx) for i in layers] + [
+    #     last_loc
+    # ]
+    locations = []
+    for i in layers:
+        for t in range(*token_range):
+            locations.append((layer_name_format.format(i), t))
+    locations.append(last_loc)
+
+    hs = get_hs(lm=lm, input=inputs, locations=locations, return_dict=True)
+    predicted_ans = logit_lens(lm=lm, h=hs[last_loc], k=2)[0]
+    print(f"{answer=} | {predicted_ans=}")
+
+    if detensorize:
+        hs_return = {}
+        for loc in hs:
+            module_name, token_idx = loc
+            hs_return[f"{module_name}_<>_{token_idx}"] = (
+                hs[loc].cpu().numpy().astype(np.float32).tolist()
+            )
+        hs = hs_return
+
+    return TokenStates(
+        value=token_of_interest,
+        prompt=prompt,
+        answer=answer,
+        token_position=token_range,
+        predicted_answer=predicted_ans,
+        states=hs,
+    )
+
+
+@dataclass(frozen=True)
+class SampleV3Variable(DataClassJsonMixin):
+    field: str
+    value: str
+    unaligned_value: str
+    story_informed_states: TokenStates
+    story_unaware_states: TokenStates
+
+
+def collect_variable_contrast_information(
+    lm: LanguageModel,
+    dataset: DatasetV3,
+    sample_idx: int,
+    field: Literal[
+        "character_0",
+        "character_1",
+        "state_0",
+        "state_1",
+        "container_0",
+        "container_1",
+    ],
+) -> SampleV3Variable:
+
+    sample = dataset.samples[sample_idx]
+    field, f_idx = field.split("_")
+    value = getattr(sample, field + "s")[int(f_idx)]
+
+    print(f"{field=} {value=}")
+
+    kwargs = {}
+    file_name = None
+
+    sample: SampleV3 = dataset.samples[sample_idx]
+
+    if field.startswith("character"):
+        kwargs["set_character"] = int(f_idx)
+        file_name = "characters.json"
+        exclude = sample.characters
+    elif field.startswith("state"):
+        kwargs["set_state"] = int(f_idx)
+        file_name = os.path.join("states", sample.template["state_type"] + ".json")
+        exclude = sample.states
+    elif field.startswith("container"):
+        kwargs["set_container"] = int(f_idx)
+        file_name = os.path.join(
+            "containers", sample.template["container_type"] + ".json"
+        )
+        exclude = sample.containers
+    else:
+        raise ValueError(f"Unknown field: {field}")
+
+    prompt, answer = dataset.__getitem__(
+        sample_idx,
+        **kwargs,
+    )
+
+    context_informed_states = collect_token_latent_in_question(
+        lm=lm,
+        prompt=prompt,
+        answer=answer,
+        token_of_interest=value,
+    )
+
+    root = os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities")
+    names = json.load(open(os.path.join(root, file_name), "r"))
+    names = list(set(names) - set(exclude))
+    unaligned_value = random.choice(names)
+
+    Q_idx = prompt.index("Question:")
+    unaligned_prompt = prompt[:Q_idx].replace(value, unaligned_value) + prompt[Q_idx:]
+    context_unaware_states = collect_token_latent_in_question(
+        lm=lm,
+        prompt=unaligned_prompt,
+        answer="no",
+        token_of_interest=value,  # its always the `value` in the Question that we wanna track
+    )
+
+    return SampleV3Variable(
+        field=field,
+        value=value,
+        unaligned_value=unaligned_value,
+        story_informed_states=context_informed_states,
+        story_unaware_states=context_unaware_states,
+    )
+
+
+@dataclass(frozen=True)
+class CachedBindingIDState(DataClassJsonMixin):
+    sample: SampleV3
+    characters: list[SampleV3Variable]
+    states: list[SampleV3Variable]
+    containers: list[SampleV3Variable]
+
+    def __post_init__(self):
+        assert len(self.states) == 2 and len(self.containers) == 2
+        assert len(self.characters) in [1, 2]
+
+
+# @dataclass(frozen=False)
+# class ExperimentResults(DataClassJsonMixin):
+#     model_name: str
+#     cached_states: list[CachedBindingIDState]
+
+
+def cache_states(
+    model_key: str,
+    save_dir: str,
+    layers: list = list(range(7, 28)),
+    layer_name_format: str = "model.layers.{}",
+    idx_range: Optional[tuple[int, int]] = None,
+):
+
+    save_dir = os.path.join(
+        env_utils.DEFAULT_RESULTS_DIR, save_dir, model_key.split("/")[-1]
+    )
+    os.makedirs(save_dir, exist_ok=True)
+
+    lm = load_LM(
+        model_key=model_key,
+        torch_dtype=torch.float16,
+        load_in_4bit=True,
+    )
+
+    with open(os.path.join(env_utils.DEFAULT_DATA_DIR, "dataset_v4.json"), "r") as f:
+        dataset_dict = json.load(f)
+
+    dataset = DatasetV3.from_dict(dataset_dict)
+    print(f"dataset loaded, {len(dataset)} samples")
+
+    # results = ExperimentResults(model_name=model_key, cached_states=[])
+    idx_range = idx_range if idx_range is not None else (0, len(dataset))
+    idx_range = (idx_range[0], min(idx_range[1], len(dataset)))
+    limit = idx_range[1] - idx_range[0]
+    for idx in range(*idx_range):
+        print(f"\nprocessing {idx} ... {idx - idx_range[0] + 1}/{limit}")
+
+        variable_states = {
+            field: None
+            for field in [
+                "character_0",
+                "character_1",
+                "state_0",
+                "state_1",
+                "container_0",
+                "container_1",
+            ]
+        }
+        sample = dataset.samples[idx]
+        for field in variable_states:
+            if sample.event_idx is None and field == "character_1":
+                continue
+            variable_states[field] = collect_variable_contrast_information(
+                lm=lm,
+                dataset=dataset,
+                sample_idx=idx,
+                field=field,
+            )
+
+        cur_states = CachedBindingIDState(
+            sample=dataset.samples[idx],
+            characters=(
+                [variable_states["character_0"], variable_states["character_1"]]
+                if sample.event_idx is not None
+                else [variable_states["character_0"]]
+            ),
+            states=[variable_states["state_0"], variable_states["state_1"]],
+            containers=[
+                variable_states["container_0"],
+                variable_states["container_1"],
+            ],
+        )
+
+        # results.cached_states.append(
+        #     cur_results
+        # )
+        # if idx % 100 == 0:
+        #     with open(os.path.join(save_dir, "results.json"), "w") as f:
+        #         json.dump(results.to_dict(), f)
+
+        with open(os.path.join(save_dir, f"doc_idx_{idx}.json"), "w") as f:
+            json.dump(cur_states.to_dict(), f)
+
+        print("-" * 50)
+        free_gpu_cache()
+
+    # with open(os.path.join(save_dir, "results.json"), "w") as f:
+    #     json.dump(results.to_dict(), f)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--model",
+        type=str,
+        choices=[
+            "meta-llama/Meta-Llama-3-70B-Instruct",
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+        ],
+        default="meta-llama/Meta-Llama-3-70B-Instruct",
+    )
+
+    parser.add_argument(
+        "--idx-from",
+        type=int,
+        default=111111,
+    )
+    parser.add_argument(
+        "--idx-to",
+        type=int,
+        default=111111,
+    )
+
+    parser.add_argument(
+        "--save_dir",
+        type=str,
+        default="BID_cache_V4",
+    )
+
+    args = parser.parse_args()
+    print(args)
+
+    idx_range = (args.idx_from, args.idx_to) if args.idx_from != 111111 else None
+    if args.idx_from == 111111 and args.idx_to != 111111:
+        idx_range = (0, args.idx_to)
+
+    cache_states(
+        model_key=args.model,
+        save_dir=args.save_dir,
+        idx_range=idx_range,
+    )

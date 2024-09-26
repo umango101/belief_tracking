@@ -1,0 +1,111 @@
+{
+    "placeholders": {
+        "entity": {
+            "character": [
+                "<character_1>",
+                "<character_2>"
+            ],
+            "container": [
+                "<container_1>",
+                "<container_2>"
+            ],
+            "state": [
+                "<state_1>",
+                "<state_2>"
+            ]
+        },
+        "event": {
+            "state_event": "<state_event>",
+            "container_event": "<container_event>",
+            "state_swap": "<state_swap>"
+        },
+        "question": {
+            "character": "<character_q>",
+            "container": "<container_q>",
+            "state": "<state_q>"
+        },
+        "notice": "<noticed/didn't notice>"
+    },
+    "templates": [
+        {
+            "context": "<character_1> is working in a busy restaurant. A customer asks <character_1> for <state_1>. <character_1> grabs an opaque <container_1> and fills it with <state_1>. Then <character_1> grabs another opaque <container_2> and fills it with <state_2>.",
+            "causal_event": "A co-worker named <character_2> didn't hear the customer's request and swaps the <state_event> in the <container_event> with <state_swap> while <character_1> was attending to another task.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "bottles",
+            "state_type": "drinks"
+        },
+        {
+            "context": "<character_1> is a detective investigating a mysterious case. At the crime scene <character_1> finds a <state_1> and puts it in a <container_1>. Then <character_1> finds another piece of evidence, a <state_2> and puts it in a <container_2>",
+            "causal_event": "A rookie detective named <character_2> accidentally swaps the <state_event> in the <container_event> with <state_swap> while <character_1> was interviewing a witness.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "evidence_bags",
+            "state_type": "evidence"
+        },
+        {
+            "context": "<character_1> is a scientist conducting an important experiment in a laboratory. <character_1> needs to use a <container_1> filled with <state_1> to complete the experiment. <character_1> carefully measures and fills the <container_1> with <state_1>. Then <character_1> prepares a backup <container_2> and fills it with <state_2>.",
+            "causal_event": "A lab assistant named <character_2>, thinking the experiment requires a different substance, swaps the <state_event> in the <container_event> with <state_swap> while <character_1> is reviewing data.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "beakers",
+            "state_type": "chemicals"
+        },
+        {
+            "context": "<character_1> is a gardener working in a beautiful botanical garden. <character_1> wants to plant a <container_1> filled with <state_1> in a new section of the garden. <character_1> gathers the seeds and fills the <container_1> with <state_1>. Then <character_1> prepares a backup <container_2> and fills it with <state_2>.",
+            "causal_event": "Another gardener named <character_2>, thinking the new section needs a different type of plant, swaps the <state_event> in the <container_event> with <state_swap> while <character_1> is watering other plants.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "pots",
+            "state_type": "seeds"
+        },
+        {
+            "context": "<character_1> is a botanist conducting research in a dense rainforest. <character_1> wants to collect samples of a rare <state_1> plant. <character_1> places the <state_1> samples in a <container_1>. Then <character_1> collects some common <state_2> samples and places them in a <container_2>.",
+            "causal_event": "A fellow researcher named <character_2>, who is unaware of the importance of the samples, accidentally swaps the <state_event> samples in the <container_event> with the <state_swap> samples while <character_1> is setting up camp.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "bags",
+            "state_type": "plants"
+        },
+        {
+            "context": "<character_1> is an archaeologist at a dig site in Egypt. <character_1> wants to catalog a newly discovered <state_1> artifact. <character_1> places the <state_1> artifact in a <container_1>. Then <character_1> places a more common <state_2> artifact in a <container_2>.",
+            "causal_event": "A fellow archaeologist named <character_2>, who is unaware of the significance, accidentally swaps the <state_event> artifact in the <container_event> with the <state_swap> artifact while <character_1> is documenting the findings.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "boxes",
+            "state_type": "artifact"
+        },
+        {
+            "context": "<character_1> is a librarian organizing a special collection of books. <character_1> wants to ensure a rare <state_1> book is properly stored. <character_1> places the <state_1> book in a <container_1>. Then <character_1> places a more common <state_2> book in a <container_2>.",
+            "causal_event": "A library assistant named <character_2>, who is unaware of the importance, accidentally swaps the <state_event> book in the <container_event> with the <state_swap> book while <character_1> is arranging other shelves.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "shelves",
+            "state_type": "book"
+        },
+        {
+            "context": "<character_1> is a magician performing a grand illusion on stage. <character_1> wants to use a <container_1> filled with <state_1> to amaze the audience. For the trick, <character_1> puts a <state_1> in <container_1>. Then <character_1> puts a <state_2> in <container_2>.",
+            "causal_event": "An assistant named <character_2> swaps the <state_event> in the <container_event> with <state_swap> while <character_1> is distracted by the audience.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "magic_conts",
+            "state_type": "magic_objs"
+        },
+        {
+            "context": "<character_1> is baking a cake for a local charity event. <character_1> wants to use a specific <container_1> to mix the ingredients. <character_1> fills the <container_1> with <state_1>. Then <character_1> prepares a backup <container_2> and fills it with <state_2>.",
+            "causal_event": "A friend named <character_2>, who thinks the ingredients should be mixed differently, swaps the <state_event> in the <container_event> with <state_swap> while <character_1> is fetching more supplies.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "cake_mixing",
+            "state_type": "cake_ingridients"
+        },
+        {
+            "context": "<character_1> is a jeweler creating a custom piece for a client. <character_1> selects a <state_1> and places it in a <container_1>. <character_1> then selects a <state_2> and places it in a <container_2> as a backup.",
+            "causal_event": "An apprentice named <character_2>, thinking the gemstones should be switched, swaps the <state_event> in the <container_event> with the <state_swap> while <character_1> was attending to another customer.",
+            "event_noticed": "<character_1> <noticed/didn't notice> <character_2> swapping the contents of the <container_event>.",
+            "question": "Does <character_q> believe <container_q> contains <state_q>?",
+            "container_type": "jewelry_boxes",
+            "state_type": "gemstones"
+        }
+    ]
+}
