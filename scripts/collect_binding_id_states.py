@@ -108,32 +108,40 @@ def collect_variable_contrast_information(
     dataset: DatasetV3,
     sample_idx: int,
     field: Literal[
-        "protagonist",
-        "perpetrator",
-        "objects_0",
-        "objects_1",
-        "containers_0",
-        "containers_1",
+        "character_0",
+        "character_1",
+        "state_0",
+        "state_1",
+        "container_0",
+        "container_1",
     ],
 ) -> SampleV3Variable:
 
     sample = dataset.samples[sample_idx]
-    if field in ["protagonist", "perpetrator"]:
-        value = getattr(sample, field)
-    else:
-        field, f_idx = field.split("_")
-        value = getattr(sample, field)[int(f_idx)]
+    field, f_idx = field.split("_")
+    value = getattr(sample + "s", field)[int(f_idx)]
 
     print(f"{field=} {value=}")
 
     kwargs = {}
-    if field in ["protagonist", "perpetrator"]:
-        kwargs["set_actor"] = field
+    file_name = None
+
+    sample: SampleV3 = dataset.samples[sample_idx]
+
+    if field.startswith("character"):
+        kwargs["set_character"] = int(f_idx)
+        file_path = "characters.json"
+        exclude = sample.characters
+    elif field.startswith("state"):
+        kwargs["set_state"] = int(f_idx)
+        file_path = os.path.join("states", sample.template["state_type"])
+        exclude = sample.states
+    elif field.startswith("container"):
+        kwargs["set_container"] = int(f_idx)
+        file_path = os.path.join("containers", sample.template["container_type"])
+        exclude = sample.containers
     else:
-        if field == "objects":
-            kwargs["set_obj"] = int(f_idx)
-        elif field == "containers":
-            kwargs["set_container"] = int(f_idx)
+        raise ValueError(f"Unknown field: {field}")
 
     prompt, answer = dataset.__getitem__(
         sample_idx,
@@ -146,16 +154,6 @@ def collect_variable_contrast_information(
         answer=answer,
         token_of_interest=value,
     )
-
-    if field in ["protagonist", "perpetrator"]:
-        file_name = "actor.json"
-        exclude = [sample.protagonist, sample.perpetrator]
-    elif field == "objects":
-        file_name = "object.json"
-        exclude = sample.objects
-    elif field == "containers":
-        file_name = "container.json"
-        exclude = sample.containers
 
     root = os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities")
     names = json.load(open(os.path.join(root, file_name), "r"))
@@ -183,9 +181,8 @@ def collect_variable_contrast_information(
 @dataclass(frozen=True)
 class CachedBindingIDState(DataClassJsonMixin):
     sample: SampleV3
-    protagonist: SampleV3Variable
-    perpetrator: SampleV3Variable
-    objects: list[SampleV3Variable]
+    characters: list[SampleV3Variable]
+    states: list[SampleV3Variable]
     containers: list[SampleV3Variable]
 
     def __post_init__(self):
@@ -233,12 +230,12 @@ def cache_states(
         variable_states = {
             field: None
             for field in [
-                "protagonist",
-                "perpetrator",
-                "objects_0",
-                "objects_1",
-                "containers_0",
-                "containers_1",
+                "character_0",
+                "character_1",
+                "object_0",
+                "object_1",
+                "container_0",
+                "container_1",
             ]
         }
         for field in variable_states:
@@ -251,12 +248,11 @@ def cache_states(
 
         cur_states = CachedBindingIDState(
             sample=dataset.samples[idx],
-            protagonist=variable_states["protagonist"],
-            perpetrator=variable_states["perpetrator"],
-            objects=[variable_states["objects_0"], variable_states["objects_1"]],
+            characters=[variable_states["character_0"], variable_states["character_1"]],
+            objects=[variable_states["object_0"], variable_states["object_1"]],
             containers=[
-                variable_states["containers_0"],
-                variable_states["containers_1"],
+                variable_states["container_0"],
+                variable_states["container_1"],
             ],
         )
 
@@ -304,7 +300,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--save_dir",
         type=str,
-        default="binding_id_states_split",
+        default="binding_id_states_V4",
     )
 
     args = parser.parse_args()
