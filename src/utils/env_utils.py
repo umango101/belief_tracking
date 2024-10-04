@@ -39,5 +39,5 @@ Other defaults are set to:
     HPARAMS_DIR = "hparams"'''
     )
     DEFAULT_MODELS_DIR = ""
-    DEFAULT_DATA_DIR = "data"
-    DEFAULT_RESULTS_DIR = "results"
+    DEFAULT_DATA_DIR = "../data"
+    DEFAULT_RESULTS_DIR = "../results"
