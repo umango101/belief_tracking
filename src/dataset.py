@@ -97,12 +97,12 @@ class DatasetV2(DataClassJsonMixin):
         return len(self.samples)
 
     def __getitem__(
-            self,
-            idx: int,
-            set_ans: Optional[Literal["yes", "no"]] = None,
-            set_container: Literal[0, 1] | None = None,
-            set_obj: Literal[0, 1] | None = None,
-        ) -> tuple[str, Literal["yes", "no"]]:
+        self,
+        idx: int,
+        set_ans: Optional[Literal["yes", "no"]] = None,
+        set_container: Literal[0, 1] | None = None,
+        set_obj: Literal[0, 1] | None = None,
+    ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
@@ -132,7 +132,7 @@ class DatasetV2(DataClassJsonMixin):
                 container_no = c1 if container_yes == c2 else c2
                 assert container_yes != container_no
                 q_container = container_yes if set_ans == "yes" else container_no
-        
+
         else:
             q_container = (
                 random.choice(self.samples[idx].containers)
@@ -150,7 +150,6 @@ class DatasetV2(DataClassJsonMixin):
         prompt += f"Question: Does the {q_container} contain {q_obj}?\n"
         prompt += f"Answer:"
         return prompt, ans
-
 
 
 # STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
@@ -176,7 +175,7 @@ class SampleV3(DataClassJsonMixin):
     characters: list[str]
     containers: list[str]
     states: list[str]
-    event_idx: Optional[Literal[0, 1]] = 0  # which container is swapped?
+    event_idx: Optional[Literal[0, 1, None]] = None  # which container is swapped?
     event_noticed: bool = False  # the protagonist sees the swap?
 
     story: str | None = None
@@ -185,11 +184,7 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        assert (
-            len(self.states) == 2
-            and len(self.containers) == 2
-            and len(self.characters) == 2
-        )
+        assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
         assert self.states[0] != self.states[1]
         assert self.containers[0] != self.containers[1]
         assert self.characters[0] != self.characters[1]
@@ -233,11 +228,11 @@ class SampleV3(DataClassJsonMixin):
         self.story = self.template["context"]
 
         # true state
-        initial_state = {
+        self.initial_state = {
             self.containers[0]: self.states[0],
             self.containers[1]: self.states[1],
         }
-        self.character_belief = [initial_state.copy(), initial_state.copy()]
+        self.character_belief = [self.initial_state.copy(), self.initial_state.copy()]
 
         # event
         if self.event_idx is not None:  # Event happened
@@ -245,6 +240,8 @@ class SampleV3(DataClassJsonMixin):
             state_swap = self.states[1 ^ self.event_idx]
             state_event = self.states[self.event_idx]
             container_event = self.containers[self.event_idx]
+
+            self.story += f' {self.template["event_noticed"]}'
 
             self.story = self.story.replace(
                 STORY_TEMPLATES["placeholders"]["event"]["container_event"],
@@ -258,11 +255,8 @@ class SampleV3(DataClassJsonMixin):
             )
 
             # did the protagonist see the event happening?
-            self.story += f' {self.template["event_noticed"]}'
             observation = "observed" if self.event_noticed else "does not observe"
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["notice"], observation
-            )
+            self.story = self.story.replace(STORY_TEMPLATES["placeholders"]["notice"], observation)
             self.story = self.story.replace(
                 STORY_TEMPLATES["placeholders"]["event"]["container_event"],
                 container_event,
@@ -278,8 +272,7 @@ class SampleV3(DataClassJsonMixin):
                 self.event_noticed == False
             ), "If there is no causal event, there is nothing to observe"
             assert (
-                STORY_TEMPLATES["placeholders"]["entity"]["character"][1]
-                not in self.story
+                STORY_TEMPLATES["placeholders"]["entity"]["character"][1] not in self.story
             ), "If there is no causal event, there is no perpetrator to blame"
 
         # set the common entity names
@@ -299,6 +292,12 @@ class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
     instruction: str = (
         """Keep track of characters' beliefs defined in the story. Characters' beliefs is updated only when they observe an action that change their existing beliefs. Their beliefs do not change if they do not observe the event occurring. To answer the question following the story, choose "yes" or "no" after the "Answer:" tag."""
+    )
+    # instruction: str = (
+    #     """Keep track of characters' beliefs defined in the story. Characters' beliefs is updated only when they observe an action that change their existing beliefs. Their beliefs do not change if they do not observe the event occurring. Answer the question by predicting the appropriate attribute token after the question sentence according to the story."""
+    # )
+    instruction: str = (
+        """1. Track each character's beliefs as defined in the story. 2. Only update a character's belief when they directly observe an action or event that contradicts or changes their existing belief. 3. If a character does not witness the event, their belief should remain unchanged, even if the event occurs. 4. Choose the correct attribute token based strictly on this final belief state."""
     )
 
     def __len__(self) -> int:
@@ -322,12 +321,10 @@ class DatasetV3(DataClassJsonMixin):
             assert set_character != 1
             set_character = 0
         else:
-            set_character = (
-                random.choice([0, 1]) if set_character is None else set_character
-            )
+            set_character = random.choice([0, 1]) if set_character is None else set_character
         q_actor = self.samples[idx].characters[set_character]
-
         belief_states = self.samples[idx].character_belief[set_character]
+        initial_states = self.samples[idx].initial_state
 
         if set_ans is not None:
             ans = set_ans
@@ -339,18 +336,21 @@ class DatasetV3(DataClassJsonMixin):
 
             if set_container is not None:
                 q_container = sample.containers[set_container]
-                obj_yes = belief_states[q_container]
-                obj_no = (
-                    sample.states[0]
-                    if sample.states[1] == obj_yes
-                    else sample.states[1]
+                obj_yes = (
+                    belief_states[q_container]
+                    if question_type == "belief_question"
+                    else initial_states[q_container]
                 )
+                obj_no = sample.states[0] if sample.states[1] == obj_yes else sample.states[1]
                 assert obj_yes != obj_no
                 q_obj = obj_yes if set_ans == "yes" else obj_no
             elif set_state is not None:
                 q_obj = sample.states[set_state]
                 c1, c2 = sample.containers
-                container_yes = c1 if belief_states[c1] == q_obj else c2
+                if question_type == "belief_question":
+                    container_yes = c1 if belief_states[c1] == q_obj else c2
+                else:
+                    container_yes = c1 if initial_states[c1] == q_obj else c2
                 container_no = c1 if container_yes == c2 else c2
                 assert container_yes != container_no
                 q_container = container_yes if set_ans == "yes" else container_no
@@ -367,7 +367,12 @@ class DatasetV3(DataClassJsonMixin):
                 else self.samples[idx].states[set_state]
             )
 
-            ans = "yes" if belief_states[q_container] == q_obj else "no"
+            if question_type == "belief_question":
+                # ans = "yes" if belief_states[q_container] == q_obj else "no"
+                ans = belief_states[q_container]
+            else:
+                # ans = "yes" if initial_states[q_container] == q_obj else "no"
+                ans = initial_states[q_container]
 
         question = sample.template[question_type]
         question = question.replace(
@@ -376,9 +381,7 @@ class DatasetV3(DataClassJsonMixin):
         question = question.replace(
             STORY_TEMPLATES["placeholders"]["question"]["container"], q_container
         )
-        question = question.replace(
-            STORY_TEMPLATES["placeholders"]["question"]["state"], q_obj
-        )
+        question = question.replace(STORY_TEMPLATES["placeholders"]["question"]["state"], q_obj)
 
         prompt += f"Question: {question}\n"
         prompt += f"Answer:"
