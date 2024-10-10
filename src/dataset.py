@@ -228,11 +228,11 @@ class SampleV3(DataClassJsonMixin):
         self.story = self.template["context"]
 
         # true state
-        self.initial_state = {
+        self.world_state = {
             self.containers[0]: self.states[0],
             self.containers[1]: self.states[1],
         }
-        self.character_belief = [self.initial_state.copy(), self.initial_state.copy()]
+        self.character_belief = [self.world_state.copy(), self.world_state.copy()]
 
         # event
         if self.event_idx is not None:  # Event happened
@@ -261,6 +261,7 @@ class SampleV3(DataClassJsonMixin):
                 STORY_TEMPLATES["placeholders"]["event"]["container_event"],
                 container_event,
             )
+            self.world_state[container_event] = state_swap
             self.character_belief[1][self.containers[self.event_idx]] = state_swap
 
             # protagonist belief
@@ -306,11 +307,10 @@ class DatasetV3(DataClassJsonMixin):
     def __getitem__(
         self,
         idx: int,
-        set_ans: Optional[Literal["yes", "no"]] = None,
         set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
-        question_type: Literal["belief_question", "state_question"] = "belief_question",
+        question_type: Literal["belief_question", "state_question"] = "state_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
@@ -324,55 +324,25 @@ class DatasetV3(DataClassJsonMixin):
             set_character = random.choice([0, 1]) if set_character is None else set_character
         q_actor = self.samples[idx].characters[set_character]
         belief_states = self.samples[idx].character_belief[set_character]
-        initial_states = self.samples[idx].initial_state
+        initial_states = self.samples[idx].world_state
 
-        if set_ans is not None:
-            ans = set_ans
-            assert (
-                set_container is None or set_state is None
-            ), "if both the container and the obj is set true, then the answer is determined"
-            if set_container is None and set_state is None:
-                set_container = random.choice([0, 1])
+        q_container = (
+            random.choice(sample.containers)
+            if set_container is None
+            else sample.containers[set_container]
+        )
+        q_obj = (
+            random.choice(self.samples[idx].states)
+            if set_state is None
+            else self.samples[idx].states[set_state]
+        )
 
-            if set_container is not None:
-                q_container = sample.containers[set_container]
-                obj_yes = (
-                    belief_states[q_container]
-                    if question_type == "belief_question"
-                    else initial_states[q_container]
-                )
-                obj_no = sample.states[0] if sample.states[1] == obj_yes else sample.states[1]
-                assert obj_yes != obj_no
-                q_obj = obj_yes if set_ans == "yes" else obj_no
-            elif set_state is not None:
-                q_obj = sample.states[set_state]
-                c1, c2 = sample.containers
-                if question_type == "belief_question":
-                    container_yes = c1 if belief_states[c1] == q_obj else c2
-                else:
-                    container_yes = c1 if initial_states[c1] == q_obj else c2
-                container_no = c1 if container_yes == c2 else c2
-                assert container_yes != container_no
-                q_container = container_yes if set_ans == "yes" else container_no
-
+        if question_type == "belief_question":
+            # ans = "yes" if belief_states[q_container] == q_obj else "no"
+            ans = belief_states[q_container]
         else:
-            q_container = (
-                random.choice(sample.containers)
-                if set_container is None
-                else sample.containers[set_container]
-            )
-            q_obj = (
-                random.choice(self.samples[idx].states)
-                if set_state is None
-                else self.samples[idx].states[set_state]
-            )
-
-            if question_type == "belief_question":
-                # ans = "yes" if belief_states[q_container] == q_obj else "no"
-                ans = belief_states[q_container]
-            else:
-                # ans = "yes" if initial_states[q_container] == q_obj else "no"
-                ans = initial_states[q_container]
+            # ans = "yes" if initial_states[q_container] == q_obj else "no"
+            ans = initial_states[q_container]
 
         question = sample.template[question_type]
         question = question.replace(

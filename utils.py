@@ -2014,31 +2014,57 @@ def get_initial_worldstate(data, n_samples, characters):
     return samples
 
 
-def get_initial_worldstate_consistency(data, characters, n_samples):
-    configs, samples = [], []
+def get_value_fetcher_exps(STORY_TEMPLATES, 
+                           all_characters, 
+                           all_containers, 
+                           all_states,
+                           n_samples):
+    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    samples = []
 
     for idx in range(n_samples):
-        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
-        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV2(
-            story=data[idx]['story'],
-            protagonist=random.choice(characters),
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
             states=states,
-            containers=containers
+            event_idx=None,
+            event_noticed=False,
         )
-        configs.append(sample)
+        clean_configs.append(sample)
+
+        random_state = random.choice(all_states[template["state_type"]])
+        while random_state in states:
+            random_state = random.choice(all_states[template["state_type"]])
+        intervention_pos.append(random.choice([0, 1]))
+        new_states = states.copy()
+        new_states[intervention_pos[-1]] = random_state
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=new_states,
+            event_idx=None,
+            event_noticed=False
+        )
+        corrupt_configs.append(sample)
     
-    dataset = DatasetV2(configs)
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        clean_prompt, clean_target = dataset.__getitem__(idx, set_ans="no")
-        corrupt_prompt, corrupt_target = dataset.__getitem__(idx, set_ans="yes")
+        clean = clean_dataset.__getitem__(idx, set_container=intervention_pos[idx])
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=intervention_pos[idx])
         samples.append({
-            "clean_prompt": clean_prompt,
-            "clean_target": clean_target,
-            "corrupt_prompt": corrupt_prompt,
-            "corrupt_target": corrupt_target
+            "clean_prompt": clean['prompt'],
+            "clean_target": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_target": corrupt['target']
         })
     
     return samples
@@ -2084,60 +2110,63 @@ def get_initial_worldstate_obj_marker(data, characters, n_samples):
     return samples
 
 
-def get_initial_worldstate_obj_marker_2(data, characters, n_samples):
-    clean_configs, corrupt_configs = [], []
-    samples, random_containers = [], []
+def get_pos_trans_exps(STORY_TEMPLATES,
+                       all_characters,
+                       all_containers,
+                       all_states,
+                       n_samples):
+    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    samples = []
 
     for idx in range(n_samples):
-        states = [random.choice(data[idx]['states_1'].split(', ')), random.choice(data[idx]['states_2'].split(', '))]
-        containers = [random.choice(data[idx]['containers_1'].split(', ')), random.choice(data[idx]['containers_2'].split(', '))]
-        protagonist, perpetrator = random.sample(characters, k=2)
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV2(
-            story=data[idx]['story'],
-            protagonist=protagonist,
-            perpetrator=perpetrator,
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
             states=states,
-            containers=containers
+            event_idx=None,
+            event_noticed=False,
         )
         clean_configs.append(sample)
-        
-        random_container_1 = random.choice(data[idx]['containers_1'].split(', '))
-        random_container_2 = random.choice(data[idx]['containers_2'].split(', '))
-        while random_container_1 in containers or random_container_1 == random_container_2:
-            random_container_1 = random.choice(data[idx]['containers_1'].split(', '))
-        
-        while random_container_2 in containers or random_container_2 == random_container_1:
-            random_container_2 = random.choice(data[idx]['containers_2'].split(', '))
-        
-        random_containers.append([random_container_1, random_container_2])
 
-        # story = data[idx]['story']
-        # story = story.replace("<state1>", random_state_1)
-        # story = story.replace("<state2>", random_state_2)
-        sample = SampleV2(
-            story=data[idx]['story'],
-            protagonist=protagonist,
-            perpetrator=perpetrator,
-            states=states,
-            containers=list(reversed(containers))
+        new_characters = random.sample(all_characters, 2)
+        while new_characters[0] in characters or new_characters[1] in characters:
+            new_characters = random.sample(all_characters, 2)
+        new_containers = random.sample(all_containers[template["container_type"]], 2)
+        while new_containers[0] in containers or new_containers[1] in containers:
+            new_containers = random.sample(all_containers[template["container_type"]], 2)
+        new_states = random.sample(all_states[template["state_type"]], 2)
+        while new_states[0] in states or new_states[1] in states:
+            new_states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template=template,
+            characters=new_characters,
+            containers=new_containers,
+            states=new_states,
+            event_idx=None,
+            event_noticed=False
         )
         corrupt_configs.append(sample)
     
-    clean_dataset = DatasetV2(clean_configs)
-    corrupt_dataset = DatasetV2(corrupt_configs)
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
 
-    for i in range(n_samples):
-        clean_prompt, clean_target = clean_dataset.__getitem__(i, set_ans="no", set_container=1)
-        corrupt_prompt, corrupt_target = corrupt_dataset.__getitem__(i, set_ans="yes", set_container=0)
+    for idx in range(n_samples):
+        set_container = random.choice([0, 1])
+        clean = clean_dataset.__getitem__(idx, set_container=set_container)
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=1 ^ set_container)
         samples.append({
-            "clean_prompt": clean_prompt,
-            "clean_target": clean_target,
-            "corrupt_prompt": corrupt_prompt,
-            "corrupt_target": corrupt_target,
-            "states": clean_configs[i].states,
-            "clean_containers": clean_configs[i].containers,
-            "corrupt_containers": clean_configs[i].containers,
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": clean_configs[idx].states[1 ^ set_container]
         })
     
     return samples
