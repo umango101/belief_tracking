@@ -292,13 +292,7 @@ class SampleV3(DataClassJsonMixin):
 class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
     instruction: str = (
-        """Keep track of characters' beliefs defined in the story. Characters' beliefs is updated only when they observe an action that change their existing beliefs. Their beliefs do not change if they do not observe the event occurring. To answer the question following the story, choose "yes" or "no" after the "Answer:" tag."""
-    )
-    # instruction: str = (
-    #     """Keep track of characters' beliefs defined in the story. Characters' beliefs is updated only when they observe an action that change their existing beliefs. Their beliefs do not change if they do not observe the event occurring. Answer the question by predicting the appropriate attribute token after the question sentence according to the story."""
-    # )
-    instruction: str = (
-        """1. Track each character's beliefs as defined in the story. 2. Only update a character's belief when they directly observe an action or event that contradicts or changes their existing belief. 3. If a character does not witness the event, their belief should remain unchanged, even if the event occurs. 4. Choose the correct attribute token based strictly on this final belief state."""
+        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict correct attribute token based strictly on this final belief state."""
     )
 
     def __len__(self) -> int:
@@ -310,12 +304,14 @@ class DatasetV3(DataClassJsonMixin):
         set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
-        question_type: Literal["belief_question", "state_question"] = "state_question",
+        question_type: Literal["belief_question", "state_question"] = "belief_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
         sample = self.samples[idx]
+        set_character = 0
+        set_container = self.samples[idx].event_idx
 
         if sample.event_idx is None:
             assert set_character != 1
@@ -331,17 +327,10 @@ class DatasetV3(DataClassJsonMixin):
             if set_container is None
             else sample.containers[set_container]
         )
-        q_obj = (
-            random.choice(self.samples[idx].states)
-            if set_state is None
-            else self.samples[idx].states[set_state]
-        )
 
         if question_type == "belief_question":
-            # ans = "yes" if belief_states[q_container] == q_obj else "no"
             ans = belief_states[q_container]
         else:
-            # ans = "yes" if initial_states[q_container] == q_obj else "no"
             ans = initial_states[q_container]
 
         question = sample.template[question_type]
@@ -351,7 +340,6 @@ class DatasetV3(DataClassJsonMixin):
         question = question.replace(
             STORY_TEMPLATES["placeholders"]["question"]["container"], q_container
         )
-        question = question.replace(STORY_TEMPLATES["placeholders"]["question"]["state"], q_obj)
 
         prompt += f"Question: {question}\n"
         prompt += f"Answer:"
