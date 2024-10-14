@@ -304,14 +304,12 @@ class DatasetV3(DataClassJsonMixin):
         set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
-        question_type: Literal["belief_question", "state_question"] = "belief_question",
+        question_type: Literal["belief_question", "state_question"] = "state_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
         sample = self.samples[idx]
-        set_character = 0
-        set_container = self.samples[idx].event_idx
 
         if sample.event_idx is None:
             assert set_character != 1

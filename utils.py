@@ -2019,7 +2019,7 @@ def get_value_fetcher_exps(STORY_TEMPLATES,
                            all_containers, 
                            all_states,
                            n_samples):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    clean_configs, corrupt_configs = [], []
     samples = []
 
     for idx in range(n_samples):
@@ -2038,19 +2038,17 @@ def get_value_fetcher_exps(STORY_TEMPLATES,
         )
         clean_configs.append(sample)
 
-        random_state = random.choice(all_states[template["state_type"]])
-        while random_state in states:
-            random_state = random.choice(all_states[template["state_type"]])
-        intervention_pos.append(random.choice([0, 1]))
-        new_states = states.copy()
-        new_states[intervention_pos[-1]] = random_state
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
         sample = SampleV3(
             template=template,
             characters=characters,
             containers=containers,
-            states=new_states,
+            states=states,
             event_idx=None,
-            event_noticed=False
+            event_noticed=False,
         )
         corrupt_configs.append(sample)
     
@@ -2058,8 +2056,8 @@ def get_value_fetcher_exps(STORY_TEMPLATES,
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        clean = clean_dataset.__getitem__(idx, set_container=intervention_pos[idx])
-        corrupt = corrupt_dataset.__getitem__(idx, set_container=intervention_pos[idx])
+        clean = clean_dataset.__getitem__(idx)
+        corrupt = corrupt_dataset.__getitem__(idx)
         samples.append({
             "clean_prompt": clean['prompt'],
             "clean_target": clean['target'],
@@ -2170,3 +2168,58 @@ def get_pos_trans_exps(STORY_TEMPLATES,
         })
     
     return samples
+
+
+# def get_obj_tracking_exps(STORY_TEMPLATES,
+#                           all_characters,
+#                           all_containers,
+#                           all_states,
+#                           n_samples):
+#     clean_configs, corrupt_configs = [], []
+#     samples = []
+
+#     for idx in range(n_samples):
+#         template = random.choice(STORY_TEMPLATES['templates'])
+#         characters = random.sample(all_characters, 2)
+#         containers = random.sample(all_containers[template["container_type"]], 2)
+#         states = random.sample(all_states[template["state_type"]], 2)
+
+#         sample = SampleV3(
+#             template=template,
+#             characters=characters,
+#             containers=containers,
+#             states=states,
+#             event_idx=None,
+#             event_noticed=False,
+#         )
+#         clean_configs.append(sample)
+
+#         random_container = random.choice(all_containers[template["container_type"]])
+#         while random_container in containers:
+#             random_container = random.choice(all_containers[template["container_type"]])
+
+#         sample = SampleV3(
+#             template=template,
+#             characters=characters,
+#             containers=[random_container, containers[1], containers[0]],
+#             states=states,
+#             event_idx=None,
+#             event_noticed=False
+#         )
+#         corrupt_configs.append(sample)
+    
+#     clean_dataset = DatasetV3(clean_configs)
+#     corrupt_dataset = DatasetV3(corrupt_configs)
+
+#     for idx in range(n_samples):
+#         clean = clean_dataset.__getitem__(idx, set_container=0)
+#         corrupt = corrupt_dataset.__getitem__(idx, set_container=-1)
+#         samples.append({
+#             "clean_prompt": clean['prompt'],
+#             "clean_ans": clean['target'],
+#             "corrupt_prompt": corrupt['prompt'],
+#             "corrupt_ans": corrupt['target'],
+#             "target": clean_configs[idx].states[0]
+#         })
+    
+#     return samples
