@@ -2170,56 +2170,60 @@ def get_pos_trans_exps(STORY_TEMPLATES,
     return samples
 
 
-# def get_obj_tracking_exps(STORY_TEMPLATES,
-#                           all_characters,
-#                           all_containers,
-#                           all_states,
-#                           n_samples):
-#     clean_configs, corrupt_configs = [], []
-#     samples = []
+def get_obj_tracking_exps(STORY_TEMPLATES,
+                          all_characters,
+                          all_containers,
+                          all_states,
+                          n_samples):
+    clean_configs, corrupt_configs, random_container_indices = [], [], []
+    samples = []
 
-#     for idx in range(n_samples):
-#         template = random.choice(STORY_TEMPLATES['templates'])
-#         characters = random.sample(all_characters, 2)
-#         containers = random.sample(all_containers[template["container_type"]], 2)
-#         states = random.sample(all_states[template["state_type"]], 2)
+    for idx in range(n_samples):
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
 
-#         sample = SampleV3(
-#             template=template,
-#             characters=characters,
-#             containers=containers,
-#             states=states,
-#             event_idx=None,
-#             event_noticed=False,
-#         )
-#         clean_configs.append(sample)
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False,
+        )
+        corrupt_configs.append(sample)
 
-#         random_container = random.choice(all_containers[template["container_type"]])
-#         while random_container in containers:
-#             random_container = random.choice(all_containers[template["container_type"]])
+        random_container = random.choice(all_containers[template["container_type"]])
+        while random_container in containers:
+            random_container = random.choice(all_containers[template["container_type"]])
+        random_container_indices.append(random.choice([0, 1]))
+        new_containers = containers.copy()
+        new_containers[random_container_indices[-1]] = random_container
+        new_containers.append(containers[random_container_indices[-1]])
 
-#         sample = SampleV3(
-#             template=template,
-#             characters=characters,
-#             containers=[random_container, containers[1], containers[0]],
-#             states=states,
-#             event_idx=None,
-#             event_noticed=False
-#         )
-#         corrupt_configs.append(sample)
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=new_containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False
+        )
+        clean_configs.append(sample)
     
-#     clean_dataset = DatasetV3(clean_configs)
-#     corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
 
-#     for idx in range(n_samples):
-#         clean = clean_dataset.__getitem__(idx, set_container=0)
-#         corrupt = corrupt_dataset.__getitem__(idx, set_container=-1)
-#         samples.append({
-#             "clean_prompt": clean['prompt'],
-#             "clean_ans": clean['target'],
-#             "corrupt_prompt": corrupt['prompt'],
-#             "corrupt_ans": corrupt['target'],
-#             "target": clean_configs[idx].states[0]
-#         })
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_container=-1)
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=random_container_indices[idx])
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": clean_configs[idx].states[random_container_indices[idx]]
+        })
     
-#     return samples
+    return samples

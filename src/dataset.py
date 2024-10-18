@@ -184,7 +184,7 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
+        assert len(self.states) == 2 and (len(self.containers) == 2 or len(self.containers) == 3) and len(self.characters) == 2
         assert self.states[0] != self.states[1]
         assert self.containers[0] != self.containers[1]
         assert self.characters[0] != self.characters[1]
@@ -292,7 +292,7 @@ class SampleV3(DataClassJsonMixin):
 class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
     instruction: str = (
-        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict correct attribute token based strictly on this final belief state."""
+        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict the attribute token associated with the container, based strictly on this final belief state. If no attribute is associated with the container, predict 'unknown'."""
     )
 
     def __len__(self) -> int:
@@ -301,7 +301,7 @@ class DatasetV3(DataClassJsonMixin):
     def __getitem__(
         self,
         idx: int,
-        set_container: Literal[0, 1] | None = None,
+        set_container: Literal[-1, 0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
         question_type: Literal["belief_question", "state_question"] = "state_question",
@@ -320,16 +320,23 @@ class DatasetV3(DataClassJsonMixin):
         belief_states = self.samples[idx].character_belief[set_character]
         initial_states = self.samples[idx].world_state
 
-        q_container = (
-            random.choice(sample.containers)
-            if set_container is None
-            else sample.containers[set_container]
-        )
+        if set_container is None:
+            q_container = random.choice(sample.containers)
+        elif set_container != -1:
+            q_container = sample.containers[set_container]
+        else:
+            q_container = sample.containers[2]
 
         if question_type == "belief_question":
-            ans = belief_states[q_container]
+            if q_container in belief_states:
+                ans = belief_states[q_container]
+            else:
+                ans = "unknown"
         else:
-            ans = initial_states[q_container]
+            if q_container in initial_states:
+                ans = initial_states[q_container]
+            else:
+                ans = "unknown"
 
         question = sample.template[question_type]
         question = question.replace(
