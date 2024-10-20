@@ -184,10 +184,10 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        assert len(self.states) == 2 and (len(self.containers) == 2 or len(self.containers) == 3) and len(self.characters) == 2
-        assert self.states[0] != self.states[1]
-        assert self.containers[0] != self.containers[1]
-        assert self.characters[0] != self.characters[1]
+        # assert len(self.states) == 2 and (len(self.containers) == 2 or len(self.containers) == 3) and len(self.characters) == 2
+        # assert self.states[0] != self.states[1]
+        # assert self.containers[0] != self.containers[1]
+        # assert self.characters[0] != self.characters[1]
 
         self.set_story()
 

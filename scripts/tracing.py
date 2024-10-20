@@ -21,17 +21,18 @@ os.environ["HF_TOKEN"] = "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"
 
 # Ignore warnings
 import warnings
+
 warnings.filterwarnings("ignore")
 CONFIG.APP.REMOTE_LOGGING = False
 
 all_states = {}
-all_containers= {}
-all_characters = json.load(open(os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "characters.json"), "r"))
+all_containers = {}
+all_characters = json.load(
+    open(os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "characters.json"), "r")
+)
 
 for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
-    ROOT = os.path.join(
-        env_utils.DEFAULT_DATA_DIR, "synthetic_entities", TYPE
-    )
+    ROOT = os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", TYPE)
     for file in os.listdir(ROOT):
         file_path = os.path.join(ROOT, file)
         with open(file_path, "r") as f:
@@ -45,28 +46,30 @@ print("Model loaded successfully!")
 n_samples = 10
 batch_size = 1
 
-dataset = get_obj_tracking_exps(STORY_TEMPLATES,
-                                all_characters,
-                                all_containers,
-                                all_states,
-                                n_samples)
+dataset = get_state_tracing_exps(
+    STORY_TEMPLATES, all_characters, all_containers, all_states, n_samples
+)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 print("Dataset created successfully!")
 
 accs = {}
-input_tokens = model.tokenizer(dataset[0]['clean_prompt'], return_tensors="pt")["input_ids"][0]
-story_token_idx = [i for i, x in enumerate(input_tokens.tolist()) if x == model.tokenizer.encode("Story")[1]][0]
-input_tokens_len = len(model.tokenizer(dataset[0]['clean_prompt'], return_tensors="pt")["input_ids"][0])
+input_tokens = model.tokenizer(dataset[0]["clean_prompt"], return_tensors="pt")["input_ids"][0]
+story_token_idx = [
+    i for i, x in enumerate(input_tokens.tolist()) if x == model.tokenizer.encode("Story")[1]
+][0]
+input_tokens_len = len(
+    model.tokenizer(dataset[0]["clean_prompt"], return_tensors="pt")["input_ids"][0]
+)
 
-if os.path.exists("../results/tracing_results.json"):
-    old_results = json.load(open("../results/tracing_results.json", "r"))
+if os.path.exists("../results/state_tracing_results.json"):
+    old_results = json.load(open("../results/state_tracing_results.json", "r"))
     accs = old_results.copy()
 
-for token_idx in range(input_tokens_len-1, story_token_idx, -1):
-    for layer_idx in range(41, 50, 1):
+for token_idx in range(input_tokens_len - 1, story_token_idx, -1):
+    for layer_idx in range(0, model.config.num_hidden_layers, 10):
 
         print(f"Starting tracing for Layer: {layer_idx} | Token Idx: {token_idx}")
-        if str(layer_idx) in accs and str(token_idx) in accs[str(layer_idx)]: 
+        if str(layer_idx) in accs and str(token_idx) in accs[str(layer_idx)]:
             continue
         elif str(layer_idx) not in accs:
             accs[str(layer_idx)] = {}
@@ -81,7 +84,7 @@ for token_idx in range(input_tokens_len-1, story_token_idx, -1):
 
                 with tracer.invoke(corrupt_prompt):
                     corrupt_layer_out = model.model.layers[layer_idx].output[0][0, token_idx].save()
-                
+
                 with tracer.invoke(clean_prompt):
                     model.model.layers[layer_idx].output[0][0, token_idx] = corrupt_layer_out
                     pred = model.lm_head.output[0, -1].argmax(dim=-1).save()
@@ -96,6 +99,6 @@ for token_idx in range(input_tokens_len-1, story_token_idx, -1):
         acc = round(correct / total, 2)
         accs[str(layer_idx)][token_idx] = acc
         print(f"Layer: {layer_idx} | Token Idx: {token_idx} | Accuracy: {acc}")
-    
-        with open("../results/tracing_results.json", "w") as f:
+
+        with open("../results/state_tracing_results.json", "w") as f:
             json.dump(accs, f, indent=4)

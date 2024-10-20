@@ -2170,7 +2170,7 @@ def get_pos_trans_exps(STORY_TEMPLATES,
     return samples
 
 
-def get_obj_tracking_exps(STORY_TEMPLATES,
+def get_obj_tracing_exps(STORY_TEMPLATES,
                           all_characters,
                           all_containers,
                           all_states,
@@ -2226,4 +2226,114 @@ def get_obj_tracking_exps(STORY_TEMPLATES,
             "target": clean_configs[idx].states[random_container_indices[idx]]
         })
     
+    return samples
+
+
+def get_state_tracing_exps(STORY_TEMPLATES,
+                           all_characters,
+                           all_containers,
+                           all_states,
+                           n_samples):
+    clean_configs, corrupt_configs, random_state_indices = [], [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False,
+        )
+        corrupt_configs.append(sample)
+
+        random_state = random.choice(all_states[template["state_type"]])
+        while random_state in states:
+            random_state = random.choice(all_states[template["state_type"]])
+        random_state_indices.append(random.choice([0, 1]))
+        new_states = states.copy()
+        new_states[random_state_indices[-1]] = random_state
+        new_states.append(states[random_state_indices[-1]])
+
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=new_states,
+            event_idx=None,
+            event_noticed=False
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_container=random_state_indices[idx])
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=random_state_indices[idx])
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": corrupt_configs[idx].states[random_state_indices[idx]]
+        })
+    
+    return samples
+
+
+def get_state_pos_exps(STORY_TEMPLATES,
+                       all_characters,
+                       all_containers,
+                       all_states,
+                       n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False,
+        )
+        clean_configs.append(sample)
+
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=list(reversed(containers)),
+            states=list(reversed(states)),
+            event_idx=None,
+            event_noticed=False
+        )
+        corrupt_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_container=1)
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=0)
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": clean_configs[idx].states[0]
+        })
+
     return samples
