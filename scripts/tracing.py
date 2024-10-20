@@ -46,7 +46,7 @@ print("Model loaded successfully!")
 n_samples = 10
 batch_size = 1
 
-dataset = get_state_tracing_exps(
+dataset = get_obj_tracing_exps(
     STORY_TEMPLATES, all_characters, all_containers, all_states, n_samples
 )
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
@@ -61,12 +61,12 @@ input_tokens_len = len(
     model.tokenizer(dataset[0]["clean_prompt"], return_tensors="pt")["input_ids"][0]
 )
 
-if os.path.exists("../results/state_tracing_results.json"):
-    old_results = json.load(open("../results/state_tracing_results.json", "r"))
+if os.path.exists("../results/tracing_results.json"):
+    old_results = json.load(open("../results/tracing_results.json", "r"))
     accs = old_results.copy()
 
 for token_idx in range(input_tokens_len - 1, story_token_idx, -1):
-    for layer_idx in range(0, model.config.num_hidden_layers, 10):
+    for layer_idx in range(31, 40, 1):
 
         print(f"Starting tracing for Layer: {layer_idx} | Token Idx: {token_idx}")
         if str(layer_idx) in accs and str(token_idx) in accs[str(layer_idx)]:
@@ -100,5 +100,5 @@ for token_idx in range(input_tokens_len - 1, story_token_idx, -1):
         accs[str(layer_idx)][token_idx] = acc
         print(f"Layer: {layer_idx} | Token Idx: {token_idx} | Accuracy: {acc}")
 
-        with open("../results/state_tracing_results.json", "w") as f:
+        with open("../results/tracing_results.json", "w") as f:
             json.dump(accs, f, indent=4)
