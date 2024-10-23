@@ -2337,3 +2337,60 @@ def get_state_pos_exps(STORY_TEMPLATES,
         })
 
     return samples
+
+
+def get_character_tracing_exps(STORY_TEMPLATES,
+                               all_characters,
+                               all_containers,
+                               all_states,
+                               n_samples):
+
+    clean_configs, corrupt_configs, random_character_indices = [], [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template = random.choice(STORY_TEMPLATES['templates'])
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template=template,
+            characters=characters,
+            containers=containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False,
+        )
+        corrupt_configs.append(sample)
+
+        random_character = random.choice(all_characters)
+        while random_character in characters:
+            random_character = random.choice(all_characters)
+        new_characters = [random_character, characters[0]]
+
+        sample = SampleV3(
+            template=template,
+            characters=new_characters,
+            containers=containers,
+            states=states,
+            event_idx=None,
+            event_noticed=False
+        )
+        clean_configs.append(sample)
+
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_character=-1, set_container=0, question_type='belief_question')
+        corrupt = corrupt_dataset.__getitem__(idx, set_character=0, set_container=0, question_type='belief_question')
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": clean_configs[idx].states[0]
+        })
+
+    return samples
