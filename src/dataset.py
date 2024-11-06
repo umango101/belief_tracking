@@ -233,6 +233,8 @@ class SampleV3(DataClassJsonMixin):
             self.containers[1]: self.states[1],
         }
         self.character_belief = [self.world_state.copy(), self.world_state.copy()]
+        self.character_belief[0][self.containers[1]] = "unknown"
+        self.character_belief[1][self.containers[0]] = "unknown"
 
         # event
         if self.event_idx is not None:  # Event happened
@@ -268,13 +270,13 @@ class SampleV3(DataClassJsonMixin):
             if self.event_noticed == True:
                 self.character_belief[0][self.containers[self.event_idx]] = state_swap
 
-        else:  # Event did not happen
-            assert (
-                self.event_noticed == False
-            ), "If there is no causal event, there is nothing to observe"
-            assert (
-                STORY_TEMPLATES["placeholders"]["entity"]["character"][1] not in self.story
-            ), "If there is no causal event, there is no perpetrator to blame"
+        # else:  # Event did not happen
+        #     assert (
+        #         self.event_noticed == False
+        #     ), "If there is no causal event, there is nothing to observe"
+        #     assert (
+        #         STORY_TEMPLATES["placeholders"]["entity"]["character"][1] not in self.story
+        #     ), "If there is no causal event, there is no perpetrator to blame"
 
         # set the common entity names
         self.set_entity_names()
@@ -292,7 +294,7 @@ class SampleV3(DataClassJsonMixin):
 class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
     instruction: str = (
-        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict the attribute token associated with the container, based strictly on this final belief state. If no attribute is associated with the container, predict 'unknown'."""
+        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict the attribute token associated with the container, based strictly on this final belief state. If no attribute is associated with the specific character or container in the question, predict 'unknown'."""
     )
 
     def __len__(self) -> int:
@@ -315,8 +317,8 @@ class DatasetV3(DataClassJsonMixin):
             q_actor = sample.characters[1]
             belief_states = {}
         else:
-            if sample.event_idx is None:
-                assert set_character != 1
+            if sample.event_idx is None and set_character is None:
+                # assert set_character != 1
                 set_character = 0
             else:
                 set_character = random.choice([0, 1]) if set_character is None else set_character
