@@ -306,7 +306,7 @@ class DatasetV3(DataClassJsonMixin):
         set_container: Literal[-1, 0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[-1, 0, 1] | None = None,
-        question_type: Literal["belief_question", "state_question"] = "state_question",
+        question_type: Literal["belief_question", "state_question"] = "belief_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
