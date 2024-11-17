@@ -69,7 +69,7 @@ class SampleV2(DataClassJsonMixin):
         assert self.containers[0] != self.containers[1]
 
         self.set_story()
-    
+
     def set_story(self):
         self.story = self.story.replace("<character1>", self.protagonist)
         self.story = self.story.replace("<character2>", self.perpetrator)
@@ -258,7 +258,9 @@ class SampleV3(DataClassJsonMixin):
 
             # did the protagonist see the event happening?
             observation = "observed" if self.event_noticed else "does not observe"
-            self.story = self.story.replace(STORY_TEMPLATES["placeholders"]["notice"], observation)
+            self.story = self.story.replace(
+                STORY_TEMPLATES["placeholders"]["notice"], observation
+            )
             self.story = self.story.replace(
                 STORY_TEMPLATES["placeholders"]["event"]["container_event"],
                 container_event,
@@ -321,7 +323,9 @@ class DatasetV3(DataClassJsonMixin):
                 # assert set_character != 1
                 set_character = 0
             else:
-                set_character = random.choice([0, 1]) if set_character is None else set_character
+                set_character = (
+                    random.choice([0, 1]) if set_character is None else set_character
+                )
             q_actor = sample.characters[set_character]
             belief_states = sample.character_belief[set_character]
 
@@ -357,8 +361,13 @@ class DatasetV3(DataClassJsonMixin):
         prompt += f"Question: {question}\n"
         prompt += f"Answer:"
         return {
-            "prompt": prompt,
+            "characters": sample.characters,
+            "objects": sample.containers,
+            "states": sample.states,
+            "story": sample.story,
+            "question": question,
             "target": ans,
+            "prompt": prompt,
         }
 
 
