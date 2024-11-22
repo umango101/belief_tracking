@@ -13,12 +13,12 @@ random.seed(10)
 token_pos_coords = {
     "e1_last": (95, 170),
     "e2_last": (95, 325),
-    "e1_query_obj_real": (310, 145),
+    "e1_query_obj_real": (400, 145),
     "e1_query_obj_belief": (450, 145),
-    "e2_query_obj_real": (310, 300),
+    "e2_query_obj_real": (400, 300),
     "e2_query_obj_belief": (450, 300),
-    "e1_query_charac": (260, 145),
-    "e2_query_charac": (260, 300),
+    "e1_query_charac": (240, 145),
+    "e2_query_charac": (240, 300),
     "e1_obj1": (360, 105),
     "e1_obj2": (280, 125),
     "e2_obj1": (360, 260),
@@ -138,9 +138,11 @@ class StoryGenerator:
             font-weight: bold;
         }
         img {
-            height: 90%;
+            height: 93%;
             width: -webkit-fill-available;
             margin: auto;
+            position: relative;
+            top: 15px;
         }
     </style>
 </head>
@@ -155,14 +157,12 @@ class StoryGenerator:
             colored_answer = self.color_text(story["answer"])
 
             if i == 0:
-                html_content += f"""<div class="box-wrapper"><div class="label">Corrupt Example</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
+                html_content += f"""<div class="box-wrapper"><div class="label">Alternate</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
             else:
-                html_content += f"""<div class="box-wrapper"><div class="label">Clean Example</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
+                html_content += f"""<div class="box-wrapper"><div class="label">Original</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
 
         # Add target with label
-        html_content += (
-            f"""<div class="target-container">{self.color_text(self.target)}</div>"""
-        )
+        html_content += f"""<div class="target-container">Target: {self.color_text(self.target)}</div>"""
 
         # Add SVG overlay for arrows
         for i, arrow in enumerate(self.arrows):
@@ -179,11 +179,10 @@ class StoryGenerator:
           stroke="{color}"
           stroke-width="4"
           style="paint-order: stroke fill;"
-          filter="drop-shadow(0 0 2px black)"
           marker-end="url(#arrowhead_{i})"/>
     <defs>
-        <marker id="arrowhead_{i}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="{color}"/>
+        <marker id="arrowhead_{i}" markerWidth="6" markerHeight="4.2" refX="4.5" refY="2.1" orient="auto">
+            <polygon points="0 0, 6 2.1, 0 4.2" fill="{color}"/>
         </marker>
     </defs>
 </svg>
@@ -196,11 +195,10 @@ class StoryGenerator:
           stroke="{color}"
           stroke-width="4"
           style="paint-order: stroke fill;"
-          filter="drop-shadow(0 0 2px black)"
           marker-end="url(#arrowhead_{i})"/>
     <defs>
-        <marker id="arrowhead_{i}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="{color}"/>
+        <marker id="arrowhead_{i}" markerWidth="6" markerHeight="4.2" refX="4.5" refY="2.1" orient="auto">
+            <polygon points="0 0, 6 2.1, 0 4.2" fill="{color}"/>
         </marker>
     </defs>
 </svg>
@@ -216,22 +214,107 @@ class StoryGenerator:
         # Generate the line plot
         x = np.arange(len(self.plot_data["labels"]))
         fig, ax = plt.subplots(figsize=(6, 4))
-        ax.plot(x, self.plot_data["values"], marker="o", color="b", label="Accuracy")
+
+        if "acc_one_layer" in self.plot_data:
+            ax.plot(
+                x,
+                self.plot_data["acc_one_layer"],
+                marker="o",
+                color="black",
+                linestyle="-",
+                label="One layer",
+            )
+        if "acc_upto_layer" in self.plot_data:
+            ax.plot(
+                x,
+                self.plot_data["acc_upto_layer"],
+                marker="*",
+                color="black",
+                linestyle="-",
+                label="Upto layer",
+            )
+        if "acc_from_layer" in self.plot_data:
+            ax.plot(
+                x,
+                self.plot_data["acc_from_layer"],
+                marker="^",
+                color="black",
+                linestyle="-",
+                label="From layer",
+            )
+
         ax.set_xticks(x)
         ax.set_xticklabels(self.plot_data["labels"])
         ax.set_title(self.plot_data["title"])
         ax.set_xlabel(self.plot_data["x_label"])
-        ax.set_ylabel(self.plot_data["y_label"])
+        ax.set_ylabel(self.plot_data["y_label"], color="black")
         ax.set_ylim(-0.1, 1.1)
+        ax.tick_params(axis="y", labelcolor="black")
+        ax.legend(loc="upper left")
         ax.grid(True)
-        # Change the font family to times new roman
-        for item in (
-            [ax.title, ax.xaxis.label, ax.yaxis.label]
-            + ax.get_xticklabels()
-            + ax.get_yticklabels()
-        ):
-            item.set_fontsize(18)
-            item.set_fontname("Times New Roman")
+
+        # Increase the marker size
+        for line in ax.get_lines():
+            line.set_markersize(8)
+
+        if "prob_one_layer" in self.plot_data:
+            # Rotate the x-axis labels
+            plt.xticks(rotation=90)
+
+            ax2 = ax.twinx()
+            ax2.set_ylabel("Probability", color="deeppink")
+            ax2.set_ylim(-0.1, 1.1)
+            ax2.tick_params(axis="y", labelcolor="deeppink")
+
+            ax2.plot(
+                x,
+                self.plot_data["prob_one_layer"],
+                marker="o",
+                color="hotpink",
+                linestyle="--",
+                label="One layer",
+            )
+            ax2.plot(
+                x,
+                self.plot_data["prob_upto_layer"],
+                marker="*",
+                color="hotpink",
+                linestyle="--",
+                label="Upto layer",
+            )
+            ax2.plot(
+                x,
+                self.plot_data["prob_from_layer"],
+                marker="^",
+                color="hotpink",
+                linestyle="--",
+                label="From layer",
+            )
+
+            # Change the opacity of plot lines
+            for line in ax2.get_lines():
+                line.set_alpha(0.5)
+
+            # Change the font family to times new roman
+            for item in (
+                [ax.title, ax.xaxis.label, ax.yaxis.label, ax2.yaxis.label]
+                + ax.get_xticklabels()
+                + ax.get_yticklabels()
+                + ax2.get_yticklabels()
+            ):
+                item.set_fontsize(18)
+                item.set_fontname("Times New Roman")
+
+        else:
+            # Change the font family to times new roman
+            for item in (
+                [ax.title, ax.xaxis.label, ax.yaxis.label]
+                + ax.get_xticklabels()
+                + ax.get_yticklabels()
+            ):
+                item.set_fontsize(18)
+                item.set_fontname("Times New Roman")
+
         plt.tight_layout()
 
         buf = BytesIO()
@@ -273,7 +356,7 @@ def get_value_fetcher_exps(
     samples = []
 
     for idx in range(n_samples):
-        template = random.choice(STORY_TEMPLATES["templates"])
+        template = STORY_TEMPLATES["templates"][0]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
@@ -283,12 +366,13 @@ def get_value_fetcher_exps(
             characters=characters,
             containers=containers,
             states=states,
+            visibility=False,
             event_idx=None,
             event_noticed=False,
         )
         clean_configs.append(sample)
 
-        template = random.choice(STORY_TEMPLATES["templates"])
+        template = STORY_TEMPLATES["templates"][1]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
@@ -297,6 +381,7 @@ def get_value_fetcher_exps(
             characters=characters,
             containers=containers,
             states=states,
+            visibility=True,
             event_idx=None,
             event_noticed=False,
         )
@@ -307,18 +392,18 @@ def get_value_fetcher_exps(
 
     for idx in range(n_samples):
         if question_type == "belief_question":
-            set_character = random.choice([0, 1])
+            random_choice = random.choice([0, 1])
             clean = clean_dataset.__getitem__(
                 idx,
                 question_type=question_type,
-                set_character=set_character,
-                set_container=set_character,
+                set_character=random_choice,
+                set_container=1 ^ random_choice,
             )
             corrupt = corrupt_dataset.__getitem__(
                 idx,
                 question_type=question_type,
-                set_character=1 ^ set_character,
-                set_container=1 ^ set_character,
+                set_character=random_choice,
+                set_container=1 ^ random_choice,
             )
         else:
             clean = clean_dataset.__getitem__(idx, question_type=question_type)
@@ -358,7 +443,7 @@ def get_pos_trans_exps(
     samples = []
 
     for idx in range(n_samples):
-        template = random.choice(STORY_TEMPLATES["templates"])
+        template = STORY_TEMPLATES["templates"][0]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
@@ -368,6 +453,7 @@ def get_pos_trans_exps(
             characters=characters,
             containers=containers,
             states=states,
+            visibility=False,
             event_idx=None,
             event_noticed=False,
         )
@@ -378,14 +464,11 @@ def get_pos_trans_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
-            characters=(
-                characters
-                if question_type == "state_question"
-                else list(reversed(characters))
-            ),
-            containers=list(reversed(containers)),
+            template=STORY_TEMPLATES["templates"][1],
+            characters=characters,
+            containers=containers,
             states=new_states,
+            visibility=True,
             event_idx=None,
             event_noticed=False,
         )
@@ -395,37 +478,47 @@ def get_pos_trans_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        set_container = random.choice([0, 1])
+        random_choice = random.choice([0, 1])
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
                 idx,
-                set_container=set_container,
-                set_character=set_container,
+                set_container=random_choice,
+                set_character=1 ^ random_choice,
                 question_type=question_type,
             )
             corrupt = corrupt_dataset.__getitem__(
                 idx,
-                set_container=1 ^ set_container,
-                set_character=1 ^ set_container,
+                set_container=random_choice,
+                set_character=1 ^ random_choice,
                 question_type=question_type,
             )
 
         else:
             clean = clean_dataset.__getitem__(
-                idx, set_container=set_container, question_type=question_type
+                idx, set_container=random_choice, question_type=question_type
             )
             corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=1 ^ set_container, question_type=question_type
+                idx, set_container=1 ^ random_choice, question_type=question_type
             )
 
         samples.append(
             {
+                "clean_characters": clean["characters"],
+                "clean_objects": clean["objects"],
+                "clean_states": clean["states"],
+                "clean_story": clean["story"],
+                "clean_question": clean["question"],
                 "clean_prompt": clean["prompt"],
                 "clean_ans": clean["target"],
+                "corrupt_characters": corrupt["characters"],
+                "corrupt_objects": corrupt["objects"],
+                "corrupt_states": corrupt["states"],
+                "corrupt_story": corrupt["story"],
+                "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[1 ^ set_container],
+                "target": clean_configs[idx].states[random_choice],
             }
         )
 

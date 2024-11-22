@@ -2,7 +2,7 @@ import json
 import os
 import random
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Literal, Optional, List
 
 import pandas as pd
 from dataclasses_json import DataClassJsonMixin
@@ -10,151 +10,6 @@ from torch.utils.data import Dataset
 
 from src.utils import env_utils
 
-
-@dataclass(frozen=True)
-class Sample(DataClassJsonMixin):
-    story: str
-    question: str
-    answer: str
-    distractor: str
-
-
-@dataclass(frozen=True)
-class Dataset(DataClassJsonMixin):
-    samples: list[Sample]
-    instruction: str = (
-        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose the correct option by predicting the answer option after the "Answer:" tag."""
-    )
-
-    def __len__(self) -> int:
-        return len(self.samples)
-
-    def __getitem__(
-        self,
-        idx: int,
-        tags: tuple[int, int] = ["a", "b"],
-        correct_ans_idx: Literal[0, 1] = None,
-    ) -> Sample:
-        question = f"Instruction: {self.instruction.strip().replace('<op1>', tags[0]).replace('<op2>', tags[1])}\n\n"
-        question += f"Story: {self.samples[idx].story.strip()}\n\n"
-        question += f"Question: {self.samples[idx].question.strip()}\n"
-
-        correct_ans_idx = (
-            random.choice([0, 1]) if correct_ans_idx is None else correct_ans_idx
-        )
-        distractor_idx = 1 - correct_ans_idx
-        option_dict = {
-            tags[correct_ans_idx]: self.samples[idx].answer,
-            tags[distractor_idx]: self.samples[idx].distractor,
-        }
-        question += f"{tags[0]}) {option_dict[tags[0]].strip()}\n"
-        question += f"{tags[1]}) {option_dict[tags[1]].strip()}\n"
-        question += "Choose one of the following:\n"
-        question += f"Answer:"
-
-        return question, tags[correct_ans_idx]
-
-
-@dataclass(frozen=False)
-class SampleV2(DataClassJsonMixin):
-    story: str
-    protagonist: str
-    perpetrator: str
-    states: list[str]
-    containers: list[str]
-
-    def __post_init__(self):
-        assert len(self.states) == 2 and len(self.containers) == 2
-        assert self.states[0] != self.states[1]
-        assert self.containers[0] != self.containers[1]
-
-        self.set_story()
-
-    def set_story(self):
-        self.story = self.story.replace("<character1>", self.protagonist)
-        self.story = self.story.replace("<character2>", self.perpetrator)
-        self.story = self.story.replace("<state1>", self.states[0])
-        self.story = self.story.replace("<state2>", self.states[1])
-        self.story = self.story.replace("<container1>", self.containers[0])
-        self.story = self.story.replace("<container2>", self.containers[1])
-
-        self.true_state = {
-            self.containers[0]: self.states[0],
-            self.containers[1]: self.states[1],
-        }
-
-        return self.story
-
-
-@dataclass(frozen=False)
-class DatasetV2(DataClassJsonMixin):
-    samples: list[SampleV2]
-    instruction: str = (
-        """Keep track of people's knowledge defined in the story. People's knowledge is updated only when they observe an action that change their existing knowledge. To answer the question following the story, choose "yes" or "no" after the "Answer:" tag."""
-    )
-
-    def __len__(self) -> int:
-        return len(self.samples)
-
-    def __getitem__(
-        self,
-        idx: int,
-        set_ans: Optional[Literal["yes", "no"]] = None,
-        set_container: Literal[0, 1] | None = None,
-        set_obj: Literal[0, 1] | None = None,
-    ) -> tuple[str, Literal["yes", "no"]]:
-        prompt = f"Instruction: {self.instruction.strip()}\n\n"
-        prompt += f"Story: {self.samples[idx].story.strip()}\n"
-
-        if set_ans is not None:
-            ans = set_ans
-            assert (
-                set_container is None or set_obj is None
-            ), "if both the container and the obj is set true, then the answer is determined"
-
-            if set_container is None and set_obj is None:
-                set_container = random.choice([0, 1])
-
-            if set_container is not None:
-                q_container = self.samples[idx].containers[set_container]
-                obj_yes = self.samples[idx].true_state[q_container]
-                obj_no = (
-                    self.samples[idx].states[0]
-                    if self.samples[idx].states[1] == obj_yes
-                    else self.samples[idx].states[1]
-                )
-                assert obj_yes != obj_no
-                q_obj = obj_yes if set_ans == "yes" else obj_no
-            elif set_obj is not None:
-                q_obj = self.samples[idx].states[set_obj]
-                c1, c2 = self.samples[idx].containers
-                container_yes = c1 if self.samples[idx].true_state[c1] == q_obj else c2
-                container_no = c1 if container_yes == c2 else c2
-                assert container_yes != container_no
-                q_container = container_yes if set_ans == "yes" else container_no
-
-        else:
-            q_container = (
-                random.choice(self.samples[idx].containers)
-                if set_container is None
-                else self.samples[idx].containers[set_container]
-            )
-            q_obj = (
-                random.choice(self.samples[idx].states)
-                if set_obj is None
-                else self.samples[idx].states[set_obj]
-            )
-
-            ans = "yes" if self.samples[idx].true_state[q_container] == q_obj else "no"
-
-        prompt += f"Question: Does the {q_container} contain {q_obj}?\n"
-        prompt += f"Answer:"
-        return prompt, ans
-
-
-# STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>. A coworker named <perpetrator> observes <protagonist> pouring the contents in the <container_1> and the <container_2>. But <perpetrator> didn't hear the customer's request and swaps the <obj_event> in the <container_event> with <obj_swap> while <protagonist> was attending to another task. <protagonist> can't see what is in the <container_1> and the <container_2> without opening their lid. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
-# STORY_TEMPLATE = "<protagonist> is a magician performing at a grand theater. <protagonist> wants to amaze the audience with a trick involving a <obj_1>. <protagonist> places the <obj_1> in a <container_1> and sets it on the stage. Then <protagonist> prepares a backup <container_2> and places a <obj_2> inside. An assistant named <perpetrator>, who thinks the trick should be different, swaps the <obj_event> in the <container_event> with the <obj_swap> while <protagonist> is backstage. <protagonist> <saw/didn't see> <perpetrator> swapping the the contents of <container_event>."
-# STORY_TEMPLATE = "<protagonist> is working in a busy restaurant. A customer asks <protagonist> for <obj_1>. <protagonist> grabs an opaque <container_1> and fills it with <obj_1>. Then <protagonist> grabs another opaque <container_2> and fills it with <obj_2>."
 
 STORY_TEMPLATE_PATH = os.path.join(env_utils.DEFAULT_DATA_DIR, "story_templates.json")
 
@@ -175,6 +30,7 @@ class SampleV3(DataClassJsonMixin):
     characters: list[str]
     containers: list[str]
     states: list[str]
+    visibility: bool = False
     event_idx: Optional[Literal[0, 1, None]] = None  # which container is swapped?
     event_noticed: bool = False  # the protagonist sees the swap?
 
@@ -233,8 +89,10 @@ class SampleV3(DataClassJsonMixin):
             self.containers[1]: self.states[1],
         }
         self.character_belief = [self.world_state.copy(), self.world_state.copy()]
-        self.character_belief[0][self.containers[1]] = "unknown"
-        self.character_belief[1][self.containers[0]] = "unknown"
+
+        if not self.visibility:
+            self.character_belief[0][self.containers[1]] = "unknown"
+            self.character_belief[1][self.containers[0]] = "unknown"
 
         # event
         if self.event_idx is not None:  # Event happened
@@ -369,6 +227,7 @@ class DatasetV3(DataClassJsonMixin):
             "target": ans,
             "prompt": prompt,
         }
+
 
 
 # world_state: "bigtom_worldstate.csv",
