@@ -153,9 +153,7 @@ class SampleV3(DataClassJsonMixin):
 @dataclass(frozen=False)
 class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
-    instruction: str = (
-        """1. Track each character's beliefs as defined in the story. 2. Update a character's belief only when they directly observe an event that alters their current belief or when they perform the event themselves. 3. If a character does not observe the event, their belief should remain unchanged, even if the event occurs. 4. To answer the question following the story, predict the attribute token associated with the container, based strictly on this final belief state. If no attribute is associated with the specific character or container in the question, predict 'unknown'."""
-    )
+    instruction: str = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
 
     def __len__(self) -> int:
         return len(self.samples)

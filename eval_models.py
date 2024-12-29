@@ -1,22 +1,22 @@
+import random
 import os
-import csv
 import json
 import torch
 import argparse
 import warnings
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from pathlib import Path
-from collections import defaultdict
 from nnsight import LanguageModel, CONFIG
-from utils import load_model_and_tokenizer, get_new_template_exps
+from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
+from src.utils import env_utils
+from utils import *
 
 warnings.filterwarnings("ignore")
 
-CONFIG.set_default_api_key("6TnmrIokoS3Judkyez1F")
+CONFIG.set_default_api_key("d9e00ab7d4f74643b3176de0913f24a7")
 os.environ["HF_TOKEN"] = "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"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+device = torch.device("cuda:7" if torch.cuda.is_available() else "cpu")
 
 # Get current directory
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -24,6 +24,7 @@ if "mind" not in current_dir:
     current_dir = f"{current_dir}/mind"
 print(f"Current directory: {current_dir}")
 
+random.seed(10)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -31,88 +32,123 @@ def main():
         "--model_name", type=str, default="meta-llama/Meta-Llama-3-70B-Instruct"
     )
     parser.add_argument("--precision", type=str, default="int4")
-    parser.add_argument("--ndif", type=bool, default=False)
     parser.add_argument("--n_samples", type=int, default=100)
     parser.add_argument("--n_iterations", type=int, default=10)
-    parser.add_argument("--event_noticed", type=bool, default=False)
-    parser.add_argument("--question_type", type=str, default="true_state")
     parser.add_argument("--batch_size", type=int, default=1)
     args = parser.parse_args()
 
     # Print arguments
     print(f"Model name: {args.model_name}")
     print(f"Precision: {args.precision}")
-    print(f"NDIF: {args.ndif}")
     print(f"Number of samples: {args.n_samples}")
     print(f"Number of iterations: {args.n_iterations}")
-    print(f"Event noticed: {args.event_noticed}")
-    print(f"Question type: {args.question_type}")
     print(f"Batch size: {args.batch_size}")
 
     os.makedirs(
-        f"{current_dir}/preds/new_bigtom/",
+        f"{current_dir}/evals/",
         exist_ok=True,
     )
-
-    if not args.ndif:
-        model = LanguageModel(args.model_name, device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
-    else:
-        model = LanguageModel(args.model_name)
-
-    if "tokenizer" not in locals():
-        tokenizer = model.tokenizer
     
-    data_path = os.path.join(current_dir, "data", "new_bigtom_formatted.csv")
-    with open(data_path, 'r', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        data = list(reader)
-    
-    characters_path = os.path.join(current_dir, "data", "synthetic_entities", "actor.json")
-    characters = json.load(open(characters_path, 'r', encoding='utf-8'))
+    all_states = {}
+    all_containers = {}
+    all_characters = json.load(open(os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "characters.json"), "r"))
+
+    for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
+        ROOT = os.path.join(
+            env_utils.DEFAULT_DATA_DIR, "synthetic_entities", TYPE
+        )
+        for file in os.listdir(ROOT):
+            file_path = os.path.join(ROOT, file)
+            with open(file_path, "r") as f:
+                names = json.load(f)
+            DCT[file.split(".")[0]] = names
 
     accs = {}
     with torch.no_grad():
+        print(f"Loading {args.model_name} ...")
+        model = LanguageModel(args.model_name, device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
+
+        accs[args.model_name] = {
+            'visibility': [],
+            'no_visibility': []
+        }
+
         for iteration in range(args.n_iterations):
-            dataset, _ = get_new_template_exps(data=data, 
-                                               characters=characters, 
-                                               n_samples=args.n_samples, 
-                                               event_noticed=args.event_noticed, 
-                                               question_type=args.question_type)
-            dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False)
+            configs_1, configs_2 = [], []
+            correct_vis, correct_no_vis, total = 0, 0, 0
 
-            correct, total = 0, 0
-            for batch in tqdm(dataloader, total=len(dataloader)):
-                if not args.ndif:
-                    prompt = batch['prompt'][0]
-                    target = batch['target'][0]
+            for _ in range(args.n_samples):
+                template_1 = STORY_TEMPLATES['templates'][0]
+                template_2 = STORY_TEMPLATES['templates'][1]
+                characters = random.sample(all_characters, 2)
+                containers = random.sample(all_containers[template_1["container_type"]], 2)
+                states = random.sample(all_states[template_1["state_type"]], 2)
+                event_idx = None
+                event_noticed = False
 
-                    with model.trace(prompt, scan=False, validate=False):
-                        pred = model.lm_head.output[0, -1].argmax(dim=-1).item().save()
+                sample = SampleV3(
+                    template=template_1,
+                    characters=characters,
+                    containers=containers,
+                    states=states,
+                    visibility=False,
+                    event_idx=event_idx,
+                    event_noticed=event_noticed,
+                )
+                configs_1.append(sample)
 
-                pred_text = tokenizer.decode([pred]).lower().strip()
-                if pred_text == target:
-                    correct += 1
+                sample = SampleV3(
+                    template=template_2,
+                    characters=characters,
+                    containers=containers,
+                    states=states,
+                    visibility=True,
+                    event_idx=event_idx,
+                    event_noticed=event_noticed,
+                )
+                configs_2.append(sample)
+
+            dataset_1 = DatasetV3(configs_1)
+            dataset_2 = DatasetV3(configs_2)
+            dataloader_1 = DataLoader(dataset_1, batch_size=1, shuffle=False)
+            dataloader_2 = DataLoader(dataset_2, batch_size=1, shuffle=False)
+
+            for i, (data_1, data_2) in tqdm(enumerate(zip(dataloader_1, dataloader_2)), total=len(dataloader_1)):
+                prompt_1, target_1 = data_1['prompt'][0], data_1['target'][0]
+                prompt_2, target_2 = data_2['prompt'][0], data_2['target'][0]
+
+                with torch.no_grad():
+
+                    with model.trace() as tracer:
+
+                        with tracer.invoke(prompt_1):
+                            pred_1 = model.lm_head.output[0, -1].argmax(dim=-1).save()
+
+                        with tracer.invoke(prompt_2):
+                            pred_2 = model.lm_head.output[0, -1].argmax(dim=-1).save()
+
+                pred_1 = model.tokenizer.decode([pred_1]).lower().strip()
+                pred_2 = model.tokenizer.decode([pred_2]).lower().strip()
+
+                if pred_1 in target_1:
+                    correct_no_vis += 1
+                if pred_2 in target_2:
+                    correct_vis += 1
                 total += 1
-
-                del batch, pred
+                
+                del pred_1, pred_2
                 torch.cuda.empty_cache()
 
-            acc = round(correct/total, 2)
-            print(f"Accuracy: {acc}")
+            acc_vis = round(correct_vis/total, 2)
+            acc_no_vis = round(correct_no_vis/total, 2)
+            print(f"Model name: {args.model_name} | Iteration: {iteration} | Vis acc: {acc_vis} | No-Vis acc: {acc_no_vis}")
 
-            accs[iteration] = acc
+            accs[args.model_name]['visibility'].append(acc_vis)
+            accs[args.model_name]['no_visibility'].append(acc_no_vis)
+
             # Save accs to a json file
-            with open(f"{current_dir}/preds/new_bigtom/{args.model_name.split('/')[-1]}_accs.json", 'w', encoding='utf-8') as file:
+            with open(f"{current_dir}/evals/{args.model_name.split('/')[-1]}_accs.json", 'w', encoding='utf-8') as file:
                 json.dump(accs, file)
-
-            print(f"Iteration {iteration} completed")
-
-
-    # home_dir = str(Path.home())
-    # shutil.rmtree(
-    #     f"{home_dir}/.cache/huggingface/hub/models--{model_name.replace('/', '--')}"
-    # )
-
 
 if __name__ == "__main__":
     main()
