@@ -161,38 +161,20 @@ class DatasetV3(DataClassJsonMixin):
     def __getitem__(
         self,
         idx: int,
-        set_container: Literal[-1, 0, 1] | None = None,
+        set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
-        set_character: Literal[-1, 0, 1] | None = None,
+        set_character: Literal[0, 1] | None = None,
         question_type: Literal["belief_question", "state_question"] = "belief_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
         sample = self.samples[idx]
-
-        if set_character == -1:
-            q_actor = sample.characters[1]
-            belief_states = {}
-        else:
-            if sample.event_idx is None and set_character is None:
-                # assert set_character != 1
-                set_character = 0
-            else:
-                set_character = (
-                    random.choice([0, 1]) if set_character is None else set_character
-                )
-            q_actor = sample.characters[set_character]
-            belief_states = sample.character_belief[set_character]
-
+        set_character = random.choice([0, 1]) if set_character is None else set_character
+        q_actor = sample.characters[set_character]
+        belief_states = sample.character_belief[set_character]
         initial_states = sample.world_state
-
-        if set_container is None:
-            q_container = random.choice(sample.containers)
-        elif set_container != -1:
-            q_container = sample.containers[set_container]
-        else:
-            q_container = sample.containers[2]
+        q_container = random.choice(sample.containers) if set_container is None else sample.containers[set_container]
 
         if question_type == "belief_question":
             if q_container in belief_states:

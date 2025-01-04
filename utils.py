@@ -527,7 +527,7 @@ def get_pos_trans_exps(
     return samples
 
 
-def get_visibilit_align_exps(
+def get_visibility_align_exps(
     STORY_TEMPLATES,
     all_characters,
     all_containers,
@@ -564,7 +564,7 @@ def get_visibilit_align_exps(
             template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
             characters=characters,
             containers=containers,
-            states=new_states,
+            states=states,
             visibility=True,
             event_idx=None,
             event_noticed=False,
@@ -575,7 +575,7 @@ def get_visibilit_align_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = random.choice([0, 1])
+        random_choice = 1
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
