@@ -40,10 +40,10 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        # assert len(self.states) == 2 and (len(self.containers) == 2 or len(self.containers) == 3) and len(self.characters) == 2
-        # assert self.states[0] != self.states[1]
-        # assert self.containers[0] != self.containers[1]
-        # assert self.characters[0] != self.characters[1]
+        assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
+        assert self.states[0] != self.states[1]
+        assert self.containers[0] != self.containers[1]
+        assert self.characters[0] != self.characters[1]
 
         self.set_story()
 
@@ -93,50 +93,6 @@ class SampleV3(DataClassJsonMixin):
         if not self.visibility:
             self.character_belief[0][self.containers[1]] = "unknown"
             self.character_belief[1][self.containers[0]] = "unknown"
-
-        # event
-        if self.event_idx is not None:  # Event happened
-            self.story += f' {self.template["causal_event"]}'
-            state_swap = self.states[1 ^ self.event_idx]
-            state_event = self.states[self.event_idx]
-            container_event = self.containers[self.event_idx]
-
-            self.story += f' {self.template["event_noticed"]}'
-
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["event"]["container_event"],
-                container_event,
-            )
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["event"]["state_event"], state_event
-            )
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["event"]["state_swap"], state_swap
-            )
-
-            # did the protagonist see the event happening?
-            observation = "observed" if self.event_noticed else "does not observe"
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["notice"], observation
-            )
-            self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["event"]["container_event"],
-                container_event,
-            )
-            self.world_state[container_event] = state_swap
-            self.character_belief[1][self.containers[self.event_idx]] = state_swap
-
-            # protagonist belief
-            if self.event_noticed == True:
-                self.character_belief[0][self.containers[self.event_idx]] = state_swap
-
-        # else:  # Event did not happen
-        #     assert (
-        #         self.event_noticed == False
-        #     ), "If there is no causal event, there is nothing to observe"
-        #     assert (
-        #         STORY_TEMPLATES["placeholders"]["entity"]["character"][1] not in self.story
-        #     ), "If there is no causal event, there is no perpetrator to blame"
 
         # set the common entity names
         self.set_entity_names()

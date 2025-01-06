@@ -587,7 +587,7 @@ def get_visibility_align_exps(
             corrupt = corrupt_dataset.__getitem__(
                 idx,
                 set_container=random_choice,
-                set_character=1 ^ random_choice,
+                set_character=1 ^ random_choice if diff_visibility else random_choice,
                 question_type=question_type,
             )
 
