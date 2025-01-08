@@ -119,7 +119,7 @@ class DatasetV3(DataClassJsonMixin):
         idx: int,
         set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
-        set_character: Literal[0, 1] | None = None,
+        set_character: Literal[0, 1] | None = 1,
         question_type: Literal["belief_question", "state_question"] = "belief_question",
     ) -> tuple[str, Literal["yes", "no"]]:
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
