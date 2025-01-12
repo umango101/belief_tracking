@@ -860,7 +860,7 @@ def get_visibility_align_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
