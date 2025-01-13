@@ -480,7 +480,7 @@ def query_obj_pos(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -575,7 +575,7 @@ def query_charac_pos(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -670,7 +670,7 @@ def get_pos_trans_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -765,7 +765,7 @@ def get_charac_pos_exp(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -948,7 +948,7 @@ def get_state_pos_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_container_idx = 1
+        random_container_idx = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -1041,7 +1041,7 @@ def get_obj_pos_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = 0
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
