@@ -6,6 +6,7 @@ generated_tomi.json
 generated_tomi_old.json
 *.bin
 finetuning_output/
+*.pt
 
 # debug logs
 *.out

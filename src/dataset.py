@@ -17,13 +17,6 @@ with open(STORY_TEMPLATE_PATH, "r") as f:
     STORY_TEMPLATES = json.load(f)
 
 
-def swap_entities(story, entity_1, entity_2):
-    story = story.replace(entity_1, "<<placeholder>>")
-    story = story.replace(entity_2, entity_1)
-    story = story.replace("<<placeholder>>", entity_2)
-    return story
-
-
 @dataclass(frozen=False)
 class SampleV3(DataClassJsonMixin):
     template: dict[str, str]
@@ -162,8 +155,57 @@ class DatasetV3(DataClassJsonMixin):
             "question": question,
             "target": ans,
             "prompt": prompt,
+            "character_idx": set_character,
+            "visibility": sample.visibility.item(),
         }
 
+
+@dataclass(frozen=True)
+class BigToMSample(DataClassJsonMixin):
+    story: str
+    question: str
+    answer: str
+    distractor: str
+
+
+@dataclass(frozen=True)
+class BigToMDataset(DataClassJsonMixin):
+    samples: list[BigToMSample]
+    instruction: str = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
+
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(
+        self,
+        idx: int,
+        tags: tuple[int, int] = ["a", "b"],
+        correct_ans_idx: Literal[0, 1] = None,
+    ) -> BigToMSample:
+        prompt = f"Instruction: {self.instruction.strip()}\n\n"
+        prompt += f"Story: {self.samples[idx].story.strip()}\n"
+        prompt += f"Question: {question}\n"
+        prompt += f"Answer:"
+
+        prompt = f"Instruction: {self.instruction.strip().replace('<op1>', tags[0]).replace('<op2>', tags[1])}\n\n"
+        prompt += f"Story: {self.samples[idx].story.strip()}\n\n"
+        prompt += f"Question: {self.samples[idx].question.strip()}\n"
+
+        correct_ans_idx = (
+            random.choice([0, 1]) if correct_ans_idx is None else correct_ans_idx
+        )
+        distractor_idx = 1 - correct_ans_idx
+        option_dict = {
+            tags[correct_ans_idx]: self.samples[idx].answer,
+            tags[distractor_idx]: self.samples[idx].distractor,
+        }
+        prompt += f"{tags[0]}) {option_dict[tags[0]].strip()}\n"
+        prompt += f"{tags[1]}) {option_dict[tags[1]].strip()}\n"
+        prompt += "Choose one of the following:\n"
+        prompt += f"Answer:"
+
+        return prompt, tags[correct_ans_idx]
 
 
 # world_state: "bigtom_worldstate.csv",
@@ -175,14 +217,14 @@ def load_TOM_dataset(
         os.path.join(env_utils.DEFAULT_DATA_DIR, file_name),
         delimiter=";",
     )
-    samples: list[Sample] = []
+    samples: list[BigToMSample] = []
     for idx, row in ws_csv.iterrows():
         samples.append(
-            Sample(
+            BigToMSample(
                 story=row["story"],
                 question=row["question"],
                 answer=row["answer"],
                 distractor=row["distractor"],
             )
         )
-    return Dataset(samples=samples)
+    return BigToMDataset(samples=samples)
