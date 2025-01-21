@@ -123,7 +123,9 @@ class DatasetV3(DataClassJsonMixin):
         q_actor = sample.characters[set_character]
         belief_states = sample.character_belief[set_character]
         initial_states = sample.world_state
-        q_container = random.choice(sample.containers) if set_container is None else sample.containers[set_container]
+        set_container = random.choice([0, 1]) if set_container is None else set_container
+        q_container = sample.containers[set_container]
+        # q_container = random.choice(sample.containers) if set_container is None else sample.containers[set_container]
 
         if question_type == "belief_question":
             if q_container in belief_states:
@@ -156,7 +158,8 @@ class DatasetV3(DataClassJsonMixin):
             "target": ans,
             "prompt": prompt,
             "character_idx": set_character,
-            "visibility": sample.visibility.item(),
+            "object_idx": set_container,
+            "visibility": sample.visibility,
         }
 
 

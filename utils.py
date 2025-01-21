@@ -575,7 +575,7 @@ def query_charac_pos(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 0
+        random_choice = 1
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(

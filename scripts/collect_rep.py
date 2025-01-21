@@ -19,7 +19,7 @@ from einops import rearrange, reduce
 sys.path.append("../")
 from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
 from src.utils import env_utils
-from utils import *
+from utils import get_visibility_align_exps
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 random.seed(10)
@@ -48,47 +48,50 @@ for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
 
 model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
 
-n_samples = 10000
+n_samples = 5000
 batch_size = 1
 
-configs_1, configs_2 = [], []
-for _ in range(n_samples):
-    template_1 = STORY_TEMPLATES['templates'][0]
-    template_2 = STORY_TEMPLATES['templates'][1]
-    characters = random.sample(all_characters, 2)
-    containers = random.sample(all_containers[template_1["container_type"]], 2)
-    states = random.sample(all_states[template_1["state_type"]], 2)
-    event_idx = None
-    event_noticed = False
-    visibility = random.choice([True, False])
+dataset = get_visibility_align_exps(STORY_TEMPLATES,
+                                    all_characters,
+                                    all_containers,
+                                    all_states,
+                                    n_samples,
+                                    question_type="belief_question",
+                                    diff_visibility=True)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-    sample = SampleV3(
-        template=template_1 if not visibility else template_2,
-        characters=characters,
-        containers=containers,
-        states=states,
-        visibility=visibility,
-        event_idx=event_idx,
-        event_noticed=event_noticed,
-    )
-    configs_1.append(sample)
+cached_acts = torch.empty(n_samples, model.config.num_hidden_layers, 3, model.config.hidden_size)
 
-dataset = DatasetV3(configs_1)
-dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+for i, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
+    vis_prompt = batch['corrupt_prompt'][0]
+    no_vis_prompt = batch['clean_prompt'][0]
+    target = batch['target']
+    # print(vis_prompt)
+    # print(no_vis_prompt)
+    # print(target)
 
-cached_acts = torch.empty(n_samples, model.config.num_hidden_layers, model.config.hidden_size)
-
-for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
-    prompt = data['prompt'][0]
-    
+    vis_acts, no_vis_acts = defaultdict(dict), defaultdict(dict)
     with torch.no_grad():
 
         with model.trace() as tracer:
 
-            with tracer.invoke(prompt):
+            with tracer.invoke(vis_prompt):
                 for l in range(model.config.num_hidden_layers):
-                    cached_acts[bi, l] = model.model.layers[l].output[0][0, -8].cpu().save()
+                    for t_idx, token_idx in enumerate([-8, -5, -1]):
+                        vis_acts[l][t_idx] = model.model.layers[l].output[0][0, token_idx].cpu().save()
 
-    if bi % 200 == 0 and bi != 0:
-        torch.save(cached_acts, "cached_acts.pt")
-        print("Cache saved at", bi)
+            with tracer.invoke(no_vis_prompt):
+                for l in range(model.config.num_hidden_layers):
+                    for t_idx, token_idx in enumerate([-8, -5, -1]):
+                        no_vis_acts[l][t_idx] = model.model.layers[l].output[0][0, token_idx].cpu().save()
+    
+    for l in range(model.config.num_hidden_layers):
+        for t_idx, token_idx in enumerate([-8, -5, -1]):
+            cached_acts[i, l, t_idx] = vis_acts[l][t_idx] - no_vis_acts[l][t_idx]
+    
+    del vis_acts, no_vis_acts
+    torch.cuda.empty_cache()
+
+    if i % 200 == 0:
+        torch.save(cached_acts, "visibility_diff_acts.pt")
+        print("Cache saved at", i)
