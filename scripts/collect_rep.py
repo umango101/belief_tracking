@@ -48,7 +48,7 @@ for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
 
 model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
 
-n_samples = 5000
+n_samples = 1000
 batch_size = 1
 
 configs_1, configs_2 = [], []
@@ -76,7 +76,7 @@ for _ in range(n_samples):
 dataset = DatasetV3(configs_1)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
-cached_acts = torch.empty(n_samples, model.config.num_hidden_layers, 8, model.config.hidden_size)
+cached_acts = torch.zeros(n_samples, model.config.num_hidden_layers, 8, model.config.hidden_size)
 
 for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
     prompt = data['prompt'][0]
