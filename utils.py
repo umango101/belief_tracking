@@ -900,7 +900,7 @@ def get_visibility_align_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": " " + clean_configs[idx].states[random_choice] if diff_visibility else " " + clean_configs[idx].states[1 ^ random_choice],
             }
         )
 
