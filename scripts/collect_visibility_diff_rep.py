@@ -46,7 +46,7 @@ for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
             names = json.load(f)
         DCT[file.split(".")[0]] = names
 
-model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
+model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", cache_dir="/disk/u/nikhil/.cache/huggingface/hub", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
 
 n_samples = 500
 batch_size = 1
@@ -89,5 +89,5 @@ for bi, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
     torch.cuda.empty_cache()
 
     if bi % 250 == 0 and bi != 0:
-        torch.save(cached_acts, "/media/sda/visibility_diff_cache.pt")
+        torch.save(cached_acts, "/disk/u/nikhil/mind/caches/toy/visibility_diff_cache.pt")
         print("Cache saved at", bi)

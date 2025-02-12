@@ -33,7 +33,7 @@ import warnings
 warnings.filterwarnings("ignore")
 CONFIG.APP.REMOTE_LOGGING = False
 
-model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
+model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", cache_dir="/disk/u/nikhil/.cache/huggingface/hub", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
 
 # Helper functions
 def get_ques_start_token_idx(tokenizer, prompt):
@@ -73,7 +73,9 @@ for i in range(len(df_false)):
     false_stories.append({"story": story, "question": question, "answer": answer, "distractor": distractor})
 
 dataset = []
-instruction = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only the final state of the queried object in fewest tokens possible, strictly based on the belief of the character, mentioned in the question. 5. Do not predict container or character as the final output."
+# instruction = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only the final state of the queried object in fewest tokens possible, strictly based on the belief of the character, mentioned in the question. 5. Do not predict container or character as the final output."
+instruction = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any belief about the container or its content which they cannot observe directly. 4. To answer the question, predict only the final state of the queried container in fewest tokens possible, strictly based on the belief of the character, mentioned in the question. 5. Do not predict the entire sentence with character or container as the final output."
+
 
 for i in range(min(len(true_stories), len(false_stories))):
     question = true_stories[i]['question']
@@ -143,7 +145,7 @@ for bi, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
     del vis_acts, no_vis_acts
     torch.cuda.empty_cache()
 
-    if bi % 25 == 0 and bi != 0:
-        torch.save(cached_acts, "/media/sda/visibility_diff_cache_bigtom.pt")
-        torch.save(token_lens, "/media/sda/token_lens_bigtom.pt")
-        print("Cache saved at", bi)
+    if bi % 50 == 0 and bi != 0:
+        torch.save(cached_acts, "/disk/u/nikhil/mind/caches/bigtom/visibility_diff_cache.pt")
+        torch.save(token_lens, "/disk/u/nikhil/mind/caches/bigtom/token_lens.pt")
+        print("\nCache saved at", bi)
