@@ -820,9 +820,9 @@ def get_visibility_align_exps(
     n_samples,
     question_type="state_question",
     diff_visibility=False,
+    both_directions=False,
 ):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
-    samples = []
+    clean_configs, corrupt_configs, orders, samples = [], [], [], []
 
     for idx in range(n_samples):
         template = STORY_TEMPLATES["templates"][0]
@@ -830,7 +830,7 @@ def get_visibility_align_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        no_vis_sample = SampleV3(
             template=template,
             characters=characters,
             containers=containers,
@@ -839,13 +839,12 @@ def get_visibility_align_exps(
             event_idx=None,
             event_noticed=False,
         )
-        clean_configs.append(sample)
 
         new_states = random.sample(all_states[template["state_type"]], 2)
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        vis_sample = SampleV3(
             template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
             characters=characters,
             containers=containers,
@@ -854,7 +853,15 @@ def get_visibility_align_exps(
             event_idx=None,
             event_noticed=False,
         )
-        corrupt_configs.append(sample)
+
+        order = random.choice([0, 1]) if both_directions else 0
+        if order == 0:
+            clean_configs.append(no_vis_sample)
+            corrupt_configs.append(vis_sample)
+        else:
+            clean_configs.append(vis_sample)
+            corrupt_configs.append(no_vis_sample)
+        orders.append(order)
 
     clean_dataset = DatasetV3(clean_configs)
     corrupt_dataset = DatasetV3(corrupt_configs)
@@ -900,7 +907,7 @@ def get_visibility_align_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[random_choice] if diff_visibility else " " + clean_configs[idx].states[1 ^ random_choice],
+                "target": " " + clean_configs[idx].states[random_choice] if orders[idx] == 0 else " unknown",
             }
         )
 
