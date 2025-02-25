@@ -62,17 +62,11 @@ class StoryGenerator:
             clean_word = re.sub(r"[^\w\s]", "", word)  # Remove punctuation
 
             if clean_word in self.characters:
-                colored_word = (
-                    f'<span style="color:skyblue; font-weight:bold;">{word}</span>'
-                )
+                colored_word = f'<span style="color:skyblue; font-weight:bold;">{word}</span>'
             elif clean_word in self.objects:
-                colored_word = (
-                    f'<span style="color:maroon; font-weight:bold;">{word}</span>'
-                )
+                colored_word = f'<span style="color:maroon; font-weight:bold;">{word}</span>'
             elif clean_word in self.states:
-                colored_word = (
-                    f'<span style="color:darkgreen; font-weight:bold;">{word}</span>'
-                )
+                colored_word = f'<span style="color:darkgreen; font-weight:bold;">{word}</span>'
             else:
                 colored_word = word
 
@@ -162,7 +156,9 @@ class StoryGenerator:
                 html_content += f"""<div class="box-wrapper"><div class="label">Original</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
 
         # Add target with label
-        html_content += f"""<div class="target-container">Target: {self.color_text(self.target)}</div>"""
+        html_content += (
+            f"""<div class="target-container">Target: {self.color_text(self.target)}</div>"""
+        )
 
         # Add SVG overlay for arrows
         for i, arrow in enumerate(self.arrows):
@@ -323,9 +319,7 @@ class StoryGenerator:
         buf.close()
 
         # Encode the plot as a base64 URI
-        plot_data_uri = (
-            f'data:image/png;base64,{base64.b64encode(plot_data).decode("utf-8")}'
-        )
+        plot_data_uri = f'data:image/png;base64,{base64.b64encode(plot_data).decode("utf-8")}'
         html_content += f'<img src="{plot_data_uri}" alt="Plot"/>'
 
         html_content += """
@@ -373,7 +367,9 @@ def get_value_fetcher_exps(
         )
         clean_configs.append(sample)
 
-        template = STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0]
+        template = (
+            STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0]
+        )
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
@@ -398,7 +394,7 @@ def get_value_fetcher_exps(
                 idx,
                 question_type=question_type,
                 set_character=random_choice,
-                set_container= 1 ^ random_choice if diff_visibility else random_choice,
+                set_container=1 ^ random_choice if diff_visibility else random_choice,
             )
             corrupt = corrupt_dataset.__getitem__(
                 idx,
@@ -466,7 +462,11 @@ def query_obj_pos(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template=(
+                STORY_TEMPLATES["templates"][1]
+                if diff_visibility
+                else STORY_TEMPLATES["templates"][0]
+            ),
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
@@ -520,7 +520,11 @@ def query_obj_pos(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": (
+                    clean_configs[idx].states[random_choice]
+                    if diff_visibility
+                    else clean_configs[idx].states[1 ^ random_choice]
+                ),
             }
         )
 
@@ -561,7 +565,11 @@ def query_charac_pos(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template=(
+                STORY_TEMPLATES["templates"][1]
+                if diff_visibility
+                else STORY_TEMPLATES["templates"][0]
+            ),
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
@@ -615,7 +623,11 @@ def query_charac_pos(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": (
+                    clean_configs[idx].states[random_choice]
+                    if diff_visibility
+                    else clean_configs[idx].states[1 ^ random_choice]
+                ),
             }
         )
 
@@ -635,19 +647,16 @@ def get_pos_trans_exps(
     samples = []
 
     for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][0]
+        template = STORY_TEMPLATES["templates"][2]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=2,
             characters=characters,
             containers=containers,
             states=states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
@@ -656,13 +665,10 @@ def get_pos_trans_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template_idx=3 if diff_visibility else 2,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -710,7 +716,11 @@ def get_pos_trans_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": (
+                    clean_configs[idx].states[random_choice]
+                    if diff_visibility
+                    else clean_configs[idx].states[1 ^ random_choice]
+                ),
             }
         )
 
@@ -751,7 +761,11 @@ def get_charac_pos_exp(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template=(
+                STORY_TEMPLATES["templates"][1]
+                if diff_visibility
+                else STORY_TEMPLATES["templates"][0]
+            ),
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
@@ -805,12 +819,99 @@ def get_charac_pos_exp(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": (
+                    clean_configs[idx].states[random_choice]
+                    if diff_visibility
+                    else clean_configs[idx].states[1 ^ random_choice]
+                ),
             }
         )
 
     return samples
-    
+
+
+def get_unidirectional_visibility_exps(
+    STORY_TEMPLATES,
+    all_characters,
+    all_containers,
+    all_states,
+    n_samples,
+    both_directions=False,
+):
+
+    clean_configs, corrupt_configs, orders, samples = [], [], [], []
+
+    for idx in range(n_samples):
+        template = STORY_TEMPLATES["templates"][0]
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        no_vis_sample = SampleV3(
+            template_idx=3,
+            characters=characters,
+            containers=containers,
+            states=states,
+        )
+
+        new_states = random.sample(all_states[template["state_type"]], 2)
+        while new_states[0] in states or new_states[1] in states:
+            new_states = random.sample(all_states[template["state_type"]], 2)
+
+        vis_sample = SampleV3(
+            template_idx=2,
+            characters=characters,
+            containers=containers,
+            states=new_states,
+        )
+
+        order = random.choice([0, 1]) if both_directions else 0
+        if order == 0:
+            clean_configs.append(no_vis_sample)
+            corrupt_configs.append(vis_sample)
+        else:
+            clean_configs.append(vis_sample)
+            corrupt_configs.append(no_vis_sample)
+        orders.append(order)
+
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(
+            idx,
+            set_character=0,
+            set_container=1,
+            question_type="belief_question",
+        )
+        corrupt = corrupt_dataset.__getitem__(
+            idx,
+            set_character=0,
+            set_container=1,
+            question_type="belief_question",
+        )
+
+        samples.append(
+            {
+                "clean_characters": clean["characters"],
+                "clean_objects": clean["objects"],
+                "clean_states": clean["states"],
+                "clean_story": clean["story"],
+                "clean_question": clean["question"],
+                "clean_prompt": clean["prompt"],
+                "clean_ans": clean["target"],
+                "corrupt_characters": corrupt["characters"],
+                "corrupt_objects": corrupt["objects"],
+                "corrupt_states": corrupt["states"],
+                "corrupt_story": corrupt["story"],
+                "corrupt_question": corrupt["question"],
+                "corrupt_prompt": corrupt["prompt"],
+                "corrupt_ans": corrupt["target"],
+                "target": (" " + clean_configs[idx].states[1] if orders[idx] == 0 else " unknown"),
+            }
+        )
+    return samples
+
 
 def get_visibility_align_exps(
     STORY_TEMPLATES,
@@ -818,7 +919,6 @@ def get_visibility_align_exps(
     all_containers,
     all_states,
     n_samples,
-    question_type="state_question",
     diff_visibility=False,
     both_directions=False,
 ):
@@ -845,7 +945,11 @@ def get_visibility_align_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         vis_sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template=(
+                STORY_TEMPLATES["templates"][1]
+                if diff_visibility
+                else STORY_TEMPLATES["templates"][0]
+            ),
             characters=characters,
             containers=containers,
             states=new_states,
@@ -907,7 +1011,11 @@ def get_visibility_align_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[random_choice] if orders[idx] == 0 else " unknown",
+                "target": (
+                    " " + clean_configs[idx].states[random_choice]
+                    if orders[idx] == 0
+                    else " unknown"
+                ),
             }
         )
 
@@ -1034,7 +1142,11 @@ def get_obj_pos_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=STORY_TEMPLATES["templates"][1] if diff_visibility else STORY_TEMPLATES["templates"][0],
+            template=(
+                STORY_TEMPLATES["templates"][1]
+                if diff_visibility
+                else STORY_TEMPLATES["templates"][0]
+            ),
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
@@ -1088,9 +1200,12 @@ def get_obj_pos_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[random_choice] if diff_visibility else clean_configs[idx].states[1 ^ random_choice],
+                "target": (
+                    clean_configs[idx].states[random_choice]
+                    if diff_visibility
+                    else clean_configs[idx].states[1 ^ random_choice]
+                ),
             }
         )
 
     return samples
- 

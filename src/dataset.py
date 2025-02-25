@@ -19,13 +19,10 @@ with open(STORY_TEMPLATE_PATH, "r") as f:
 
 @dataclass(frozen=False)
 class SampleV3(DataClassJsonMixin):
-    template: dict[str, str]
+    template_idx: int
     characters: list[str]
     containers: list[str]
     states: list[str]
-    visibility: bool = False
-    event_idx: Optional[Literal[0, 1, None]] = None  # which container is swapped?
-    event_noticed: bool = False  # the protagonist sees the swap?
 
     story: str | None = None
     character_belief: list[dict[str, str]] = None
@@ -74,6 +71,7 @@ class SampleV3(DataClassJsonMixin):
         )
 
     def set_story(self):
+        self.template = STORY_TEMPLATES["templates"][self.template_idx]
         self.story = self.template["context"]
 
         # true state
@@ -83,9 +81,16 @@ class SampleV3(DataClassJsonMixin):
         }
         self.character_belief = [self.world_state.copy(), self.world_state.copy()]
 
-        if not self.visibility:
+        if self.template_idx == 0:
+            # Neither can see each other's actions
             self.character_belief[0][self.containers[1]] = "unknown"
             self.character_belief[1][self.containers[0]] = "unknown"
+        elif self.template_idx == 2:
+            # Character 1 can see Character 2's actions, but not vice versa
+            self.character_belief[1][self.containers[0]] = "unknown"
+        elif self.template_idx == 3:
+            # Character 2 can see Character 1's actions, but not vice versa
+            self.character_belief[0][self.containers[1]] = "unknown"
 
         # set the common entity names
         self.set_entity_names()
@@ -102,7 +107,9 @@ class SampleV3(DataClassJsonMixin):
 @dataclass(frozen=False)
 class DatasetV3(DataClassJsonMixin):
     samples: list[SampleV3]
-    instruction: str = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
+    instruction: str = (
+        "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
+    )
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -114,7 +121,7 @@ class DatasetV3(DataClassJsonMixin):
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
         question_type: Literal["belief_question", "state_question"] = "belief_question",
-    ) -> tuple[str, Literal["yes", "no"]]:
+    ):
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
@@ -159,75 +166,5 @@ class DatasetV3(DataClassJsonMixin):
             "prompt": prompt,
             "character_idx": set_character,
             "object_idx": set_container,
-            "visibility": sample.visibility,
+            "template_idx": sample.template_idx,
         }
-
-
-@dataclass(frozen=True)
-class BigToMSample(DataClassJsonMixin):
-    story: str
-    question: str
-    answer: str
-    distractor: str
-
-
-@dataclass(frozen=True)
-class BigToMDataset(DataClassJsonMixin):
-    samples: list[BigToMSample]
-    instruction: str = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
-
-
-    def __len__(self) -> int:
-        return len(self.samples)
-
-    def __getitem__(
-        self,
-        idx: int,
-        tags: tuple[int, int] = ["a", "b"],
-        correct_ans_idx: Literal[0, 1] = None,
-    ) -> BigToMSample:
-        prompt = f"Instruction: {self.instruction.strip()}\n\n"
-        prompt += f"Story: {self.samples[idx].story.strip()}\n"
-        prompt += f"Question: {question}\n"
-        prompt += f"Answer:"
-
-        prompt = f"Instruction: {self.instruction.strip().replace('<op1>', tags[0]).replace('<op2>', tags[1])}\n\n"
-        prompt += f"Story: {self.samples[idx].story.strip()}\n\n"
-        prompt += f"Question: {self.samples[idx].question.strip()}\n"
-
-        correct_ans_idx = (
-            random.choice([0, 1]) if correct_ans_idx is None else correct_ans_idx
-        )
-        distractor_idx = 1 - correct_ans_idx
-        option_dict = {
-            tags[correct_ans_idx]: self.samples[idx].answer,
-            tags[distractor_idx]: self.samples[idx].distractor,
-        }
-        prompt += f"{tags[0]}) {option_dict[tags[0]].strip()}\n"
-        prompt += f"{tags[1]}) {option_dict[tags[1]].strip()}\n"
-        prompt += "Choose one of the following:\n"
-        prompt += f"Answer:"
-
-        return prompt, tags[correct_ans_idx]
-
-
-# world_state: "bigtom_worldstate.csv",
-# TOM dataset: "bigtom/0_forward_belief_false_control/stories.csv"
-def load_TOM_dataset(
-    file_name: str = "bigtom/0_forward_belief_false_belief/stories.csv",
-):
-    ws_csv = pd.read_csv(
-        os.path.join(env_utils.DEFAULT_DATA_DIR, file_name),
-        delimiter=";",
-    )
-    samples: list[BigToMSample] = []
-    for idx, row in ws_csv.iterrows():
-        samples.append(
-            BigToMSample(
-                story=row["story"],
-                question=row["question"],
-                answer=row["answer"],
-                distractor=row["distractor"],
-            )
-        )
-    return BigToMDataset(samples=samples)
