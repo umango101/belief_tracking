@@ -441,19 +441,17 @@ def query_obj_pos(
     samples = []
 
     for idx in range(n_samples):
+        template_idx = 0
         template = STORY_TEMPLATES["templates"][0]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=characters,
             containers=containers,
             states=states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
@@ -462,17 +460,10 @@ def query_obj_pos(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=(
-                STORY_TEMPLATES["templates"][1]
-                if diff_visibility
-                else STORY_TEMPLATES["templates"][0]
-            ),
+            template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -544,19 +535,17 @@ def query_charac_pos(
     samples = []
 
     for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][0]
+        template_idx = 0
+        template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=characters,
             containers=containers,
             states=states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
@@ -565,17 +554,10 @@ def query_charac_pos(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=(
-                STORY_TEMPLATES["templates"][1]
-                if diff_visibility
-                else STORY_TEMPLATES["templates"][0]
-            ),
+            template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -647,13 +629,13 @@ def get_pos_trans_exps(
     samples = []
 
     for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][2]
+        template = STORY_TEMPLATES["templates"][1]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template_idx=2,
+            template_idx=1,
             characters=characters,
             containers=containers,
             states=states,
@@ -665,7 +647,7 @@ def get_pos_trans_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template_idx=3 if diff_visibility else 2,
+            template_idx=1,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
@@ -848,24 +830,30 @@ def get_unidirectional_visibility_exps(
         states = random.sample(all_states[template["state_type"]], 2)
 
         no_vis_sample = SampleV3(
-            template_idx=3,
+            template_idx=0,
             characters=characters,
             containers=containers,
             states=states,
         )
 
         new_states = random.sample(all_states[template["state_type"]], 2)
+        new_characters = random.sample(all_characters, 2)
+        new_containers = random.sample(all_containers[template["container_type"]], 2)
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
+        while new_characters[0] in characters or new_characters[1] in characters:
+            new_characters = random.sample(all_characters, 2)
+        while new_containers[0] in containers or new_containers[1] in containers:
+            new_containers = random.sample(all_containers[template["container_type"]], 2)
 
         vis_sample = SampleV3(
-            template_idx=2,
+            template_idx=1,
             characters=characters,
             containers=containers,
-            states=new_states,
+            states=states,
         )
 
-        order = random.choice([0, 1]) if both_directions else 0
+        order = 0
         if order == 0:
             clean_configs.append(no_vis_sample)
             corrupt_configs.append(vis_sample)
