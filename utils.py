@@ -848,9 +848,9 @@ def get_unidirectional_visibility_exps(
 
         vis_sample = SampleV3(
             template_idx=1,
-            characters=characters,
-            containers=containers,
-            states=states,
+            characters=new_characters,
+            containers=new_containers,
+            states=new_states,
         )
 
         order = 0
