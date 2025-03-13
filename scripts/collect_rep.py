@@ -1,20 +1,13 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
+
 import json
 import random
-import os
-import math
 import sys
 import torch
 from torch.utils.data import DataLoader
-import matplotlib.pyplot as plt
 from tqdm import tqdm
-from typing import Any, List, Optional
-import nnsight
 from nnsight import CONFIG, LanguageModel
-import numpy as np
-from collections import defaultdict
-from einops import einsum
-import time
-from einops import rearrange, reduce
 
 sys.path.append("../")
 from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
@@ -46,37 +39,39 @@ for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
             names = json.load(f)
         DCT[file.split(".")[0]] = names
 
-model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
+model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", cache_dir="/disk/u/nikhil/.cache/huggingface/hub/", device_map="auto", torch_dtype=torch.float16, dispatch=True)
 
-n_samples = 1000
+n_samples = 500
 batch_size = 1
 
-configs_1, configs_2 = [], []
+charac_indices = [131, 133, 146, 147, 158, 159]
+object_indices = [150, 151, 162, 163]
+state_indices = [155, 156, 167, 168]
+query_sent = [i for i in range(169, 181)]
+
+configs = []
 for _ in range(n_samples):
-    template_1 = STORY_TEMPLATES['templates'][0]
-    template_2 = STORY_TEMPLATES['templates'][1]
+    template_idx = 2
+    template = STORY_TEMPLATES["templates"][template_idx]
     characters = random.sample(all_characters, 2)
-    containers = random.sample(all_containers[template_1["container_type"]], 2)
-    states = random.sample(all_states[template_1["state_type"]], 2)
-    event_idx = None
-    event_noticed = False
-    visibility = random.choice([True, False])
+    containers = random.sample(all_containers[template["container_type"]], 2)
+    states = random.sample(all_states[template["state_type"]], 2)
 
     sample = SampleV3(
-        template=template_1 if not visibility else template_2,
+        template_idx=template_idx,
         characters=characters,
         containers=containers,
         states=states,
-        visibility=visibility,
-        event_idx=event_idx,
-        event_noticed=event_noticed,
     )
-    configs_1.append(sample)
+    configs.append(sample)
 
-dataset = DatasetV3(configs_1)
+dataset = DatasetV3(configs)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
-cached_acts = torch.zeros(n_samples, model.config.num_hidden_layers, 8, model.config.hidden_size)
+charac_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(charac_indices), model.config.hidden_size)
+object_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(object_indices), model.config.hidden_size)
+state_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(state_indices), model.config.hidden_size)
+query_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(query_sent), model.config.hidden_size)
 
 for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
     prompt = data['prompt'][0]
@@ -87,9 +82,23 @@ for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
 
             with tracer.invoke(prompt):
                 for l in range(model.config.num_hidden_layers):
-                    for t_idx, t in enumerate(range(-8, 0)):
-                        cached_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    # for t_idx, t in enumerate(range(-8, 0)):
+                    #     charac_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
 
-    if bi % 500 == 0 and bi != 0:
-        torch.save(cached_acts, "/media/sda/cached_acts.pt")
-        print("Cache saved at", bi)
+                    for t_idx, t in enumerate(charac_indices):
+                        charac_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    
+                    for t_idx, t in enumerate(object_indices):
+                        object_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    
+                    for t_idx, t in enumerate(state_indices):
+                        state_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    
+                    for t_idx, t in enumerate(query_sent):
+                        query_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+
+torch.save(charac_acts, "../caches/belief_tracking/charac_acts.pt")
+torch.save(object_acts, "../caches/belief_tracking/object_acts.pt")
+torch.save(state_acts, "../caches/belief_tracking/state_acts.pt")
+torch.save(query_acts, "../caches/belief_tracking/query_acts.pt")
+print("Done!")

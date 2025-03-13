@@ -434,108 +434,13 @@ def query_obj_pos(
     all_containers,
     all_states,
     n_samples,
-    question_type="state_question",
-    diff_visibility=False,
+    question_type="belief_question"
 ):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    clean_configs, corrupt_configs = [], []
     samples = []
 
     for idx in range(n_samples):
-        template_idx = 0
-        template = STORY_TEMPLATES["templates"][0]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = SampleV3(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        new_states = random.sample(all_states[template["state_type"]], 2)
-        while new_states[0] in states or new_states[1] in states:
-            new_states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = SampleV3(
-            template_idx=template_idx,
-            characters=list(reversed(characters)),
-            containers=list(reversed(containers)),
-            states=new_states,
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
-
-    for idx in range(n_samples):
-        random_choice = 0
-
-        if question_type == "belief_question":
-            clean = clean_dataset.__getitem__(
-                idx,
-                set_container=random_choice,
-                set_character=random_choice if diff_visibility else 1 ^ random_choice,
-                question_type=question_type,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice,
-                question_type=question_type,
-            )
-
-        else:
-            clean = clean_dataset.__getitem__(
-                idx, set_container=random_choice, question_type=question_type
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=1 ^ random_choice, question_type=question_type
-            )
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": (
-                    clean_configs[idx].states[random_choice]
-                    if diff_visibility
-                    else clean_configs[idx].states[1 ^ random_choice]
-                ),
-            }
-        )
-
-    return samples
-
-
-def query_charac_pos(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="state_question",
-    diff_visibility=False,
-):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 0
+        template_idx = 2
         template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
@@ -565,13 +470,13 @@ def query_charac_pos(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 1
+        random_choice = random.choice([0, 1])
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
                 idx,
-                set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice if diff_visibility else random_choice,
+                set_container=random_choice,
+                set_character=1 ^ random_choice,
                 question_type=question_type,
             )
             corrupt = corrupt_dataset.__getitem__(
@@ -605,11 +510,96 @@ def query_charac_pos(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": (
-                    clean_configs[idx].states[random_choice]
-                    if diff_visibility
-                    else clean_configs[idx].states[1 ^ random_choice]
-                ),
+                "target": clean_configs[idx].states[1 ^ random_choice]
+            }
+        )
+
+    return samples
+
+
+def query_charac_pos(
+    STORY_TEMPLATES,
+    all_characters,
+    all_containers,
+    all_states,
+    n_samples,
+    question_type="belief_question",
+):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template_idx = 2
+        template = STORY_TEMPLATES["templates"][template_idx]
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=containers,
+            states=states,
+        )
+        clean_configs.append(sample)
+
+        new_states = random.sample(all_states[template["state_type"]], 2)
+        while new_states[0] in states or new_states[1] in states:
+            new_states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=list(reversed(characters)),
+            containers=list(reversed(containers)),
+            states=new_states,
+        )
+        corrupt_configs.append(sample)
+
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        random_choice = random.choice([0, 1])
+
+        if question_type == "belief_question":
+            clean = clean_dataset.__getitem__(
+                idx,
+                set_container=1 ^ random_choice,
+                set_character=random_choice,
+                question_type=question_type,
+            )
+            corrupt = corrupt_dataset.__getitem__(
+                idx,
+                set_container=1 ^ random_choice,
+                set_character=1 ^ random_choice,
+                question_type=question_type,
+            )
+
+        else:
+            clean = clean_dataset.__getitem__(
+                idx, set_container=random_choice, question_type=question_type
+            )
+            corrupt = corrupt_dataset.__getitem__(
+                idx, set_container=1 ^ random_choice, question_type=question_type
+            )
+
+        samples.append(
+            {
+                "clean_characters": clean["characters"],
+                "clean_objects": clean["objects"],
+                "clean_states": clean["states"],
+                "clean_story": clean["story"],
+                "clean_question": clean["question"],
+                "clean_prompt": clean["prompt"],
+                "clean_ans": clean["target"],
+                "corrupt_characters": corrupt["characters"],
+                "corrupt_objects": corrupt["objects"],
+                "corrupt_states": corrupt["states"],
+                "corrupt_story": corrupt["story"],
+                "corrupt_question": corrupt["question"],
+                "corrupt_prompt": corrupt["prompt"],
+                "corrupt_ans": corrupt["target"],
+                "target": clean_configs[idx].states[1 ^ random_choice]
             }
         )
 
@@ -715,26 +705,23 @@ def get_charac_pos_exp(
     all_containers,
     all_states,
     n_samples,
-    question_type="state_question",
-    diff_visibility=False,
+    question_type="belief_question"
 ):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    clean_configs, corrupt_configs = [], []
     samples = []
 
     for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][0]
+        template_idx = 2
+        template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=characters,
             containers=containers,
             states=states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
@@ -743,17 +730,10 @@ def get_charac_pos_exp(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=(
-                STORY_TEMPLATES["templates"][1]
-                if diff_visibility
-                else STORY_TEMPLATES["templates"][0]
-            ),
+            template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -761,13 +741,13 @@ def get_charac_pos_exp(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 0
+        random_choice = random.choice([0, 1])
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
                 idx,
                 set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice if diff_visibility else random_choice,
+                set_character=random_choice,
                 question_type=question_type,
             )
             corrupt = corrupt_dataset.__getitem__(
@@ -801,11 +781,7 @@ def get_charac_pos_exp(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": (
-                    clean_configs[idx].states[random_choice]
-                    if diff_visibility
-                    else clean_configs[idx].states[1 ^ random_choice]
-                ),
+                "target": " " + clean_configs[idx].states[1 ^ random_choice]
             }
         )
 
@@ -1022,28 +998,25 @@ def get_state_pos_exps(
     samples = []
 
     for idx in range(n_samples):
-        template = random.choice(STORY_TEMPLATES["templates"])
+        template_idx = 2
+        template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=characters,
             containers=containers,
             states=states,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=list(reversed(states)),
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -1051,7 +1024,7 @@ def get_state_pos_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_container_idx = 0
+        random_container_idx = random.choice([0, 1])
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
@@ -1089,7 +1062,7 @@ def get_state_pos_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": clean_configs[idx].states[1 ^ random_container_idx],
+                "target": " " + clean_configs[idx].states[1 ^ random_container_idx],
             }
         )
 
@@ -1102,26 +1075,23 @@ def get_obj_pos_exps(
     all_containers,
     all_states,
     n_samples,
-    question_type="state_question",
-    diff_visibility=False,
+    question_type="belief_question",
 ):
-    clean_configs, corrupt_configs, intervention_pos = [], [], []
+    clean_configs, corrupt_configs = [], []
     samples = []
 
     for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][0]
+        template_idx = 2
+        template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=template,
+            template_idx=template_idx,
             characters=characters,
             containers=containers,
             states=states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         clean_configs.append(sample)
 
@@ -1130,17 +1100,10 @@ def get_obj_pos_exps(
             new_states = random.sample(all_states[template["state_type"]], 2)
 
         sample = SampleV3(
-            template=(
-                STORY_TEMPLATES["templates"][1]
-                if diff_visibility
-                else STORY_TEMPLATES["templates"][0]
-            ),
+            template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
             states=new_states,
-            visibility=False,
-            event_idx=None,
-            event_noticed=False,
         )
         corrupt_configs.append(sample)
 
@@ -1148,13 +1111,13 @@ def get_obj_pos_exps(
     corrupt_dataset = DatasetV3(corrupt_configs)
 
     for idx in range(n_samples):
-        random_choice = 0
+        random_choice = random.choice([0, 1])
 
         if question_type == "belief_question":
             clean = clean_dataset.__getitem__(
                 idx,
                 set_container=random_choice,
-                set_character=random_choice if diff_visibility else 1 ^ random_choice,
+                set_character=1 ^ random_choice,
                 question_type=question_type,
             )
             corrupt = corrupt_dataset.__getitem__(
@@ -1188,11 +1151,7 @@ def get_obj_pos_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": (
-                    clean_configs[idx].states[random_choice]
-                    if diff_visibility
-                    else clean_configs[idx].states[1 ^ random_choice]
-                ),
+                "target": " " + clean_configs[idx].states[1 ^ random_choice]
             }
         )
 

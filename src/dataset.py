@@ -30,10 +30,10 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        # assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
-        # assert self.states[0] != self.states[1]
-        # assert self.containers[0] != self.containers[1]
-        # assert self.characters[0] != self.characters[1]
+        assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
+        assert self.states[0] != self.states[1]
+        assert self.containers[0] != self.containers[1]
+        assert self.characters[0] != self.characters[1]
 
         self.set_story()
 
@@ -70,11 +70,6 @@ class SampleV3(DataClassJsonMixin):
         self.template = STORY_TEMPLATES["templates"][self.template_idx]
         self.story = self.template["context"]
 
-        # if self.template_idx == 3:
-        #     self.story = self.story.split(".")
-        #     self.story = ".".join(self.story[:-2])
-        #     self.story += "."
-
         # true state
         self.world_state = {
             self.containers[0]: self.states[0],
@@ -82,16 +77,11 @@ class SampleV3(DataClassJsonMixin):
         }
         self.character_belief = [self.world_state.copy(), self.world_state.copy()]
 
-        if self.template_idx == 0:
-            # Neither can see each other's actions
+        # set the character beliefs
+        if self.template_idx == 0 or self.template_idx == 2:
             self.character_belief[0][self.containers[1]] = "unknown"
             self.character_belief[1][self.containers[0]] = "unknown"
-        elif self.template_idx == 3 or self.template_idx == 2:
-            # Character 1 can see Character 2's actions, but not vice versa
-            self.character_belief[0][self.containers[1]] = "unknown"
-            self.character_belief[1][self.containers[0]] = "unknown"
-        elif self.template_idx == 4:
-            # Character 2 can see Character 1's actions, but not vice versa
+        elif self.template_idx == 1:
             self.character_belief[1][self.containers[0]] = "unknown"
 
         # set the common entity names
@@ -128,13 +118,14 @@ class DatasetV3(DataClassJsonMixin):
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
 
         sample = self.samples[idx]
+        
         set_character = random.choice([0, 1]) if set_character is None else set_character
         q_actor = sample.characters[set_character]
         belief_states = sample.character_belief[set_character]
         initial_states = sample.world_state
+        
         set_container = random.choice([0, 1]) if set_container is None else set_container
         q_container = sample.containers[set_container]
-        # q_container = random.choice(sample.containers) if set_container is None else sample.containers[set_container]
 
         if question_type == "belief_question":
             if q_container in belief_states:
