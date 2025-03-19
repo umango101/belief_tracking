@@ -782,19 +782,19 @@ def get_unidirectional_visibility_exps(
     all_containers,
     all_states,
     n_samples,
-    both_directions=False,
+    additional_characs=False,
 ):
 
-    clean_configs, corrupt_configs, orders, samples = [], [], [], []
+    clean_configs, corrupt_configs, samples = [], [], []
 
     for idx in range(n_samples):
         template = STORY_TEMPLATES["templates"][0]
-        characters = random.sample(all_characters, 2)
+        characters = random.sample(all_characters, 2) if not additional_characs else random.sample(all_characters, 4)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         no_vis_sample = SampleV3(
-            template_idx=0,
+            template_idx=0 if not additional_characs else 3,
             characters=characters,
             containers=containers,
             states=states,
@@ -817,14 +817,8 @@ def get_unidirectional_visibility_exps(
             states=new_states,
         )
 
-        order = 0
-        if order == 0:
-            clean_configs.append(no_vis_sample)
-            corrupt_configs.append(vis_sample)
-        else:
-            clean_configs.append(vis_sample)
-            corrupt_configs.append(no_vis_sample)
-        orders.append(order)
+        clean_configs.append(no_vis_sample)
+        corrupt_configs.append(vis_sample)
 
     clean_dataset = DatasetV3(clean_configs)
     corrupt_dataset = DatasetV3(corrupt_configs)
@@ -859,7 +853,7 @@ def get_unidirectional_visibility_exps(
                 "corrupt_question": corrupt["question"],
                 "corrupt_prompt": corrupt["prompt"],
                 "corrupt_ans": corrupt["target"],
-                "target": (" " + clean_configs[idx].states[1] if orders[idx] == 0 else " unknown"),
+                "target": " " + clean_configs[idx].states[1],
             }
         )
     return samples

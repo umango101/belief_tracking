@@ -30,10 +30,11 @@ class SampleV3(DataClassJsonMixin):
     def __post_init__(self):
         if len(self.characters) == 1:
             self.characters.append("<N/A>")
-        assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
-        assert self.states[0] != self.states[1]
-        assert self.containers[0] != self.containers[1]
-        assert self.characters[0] != self.characters[1]
+        # assert len(self.states) == 2 and len(self.containers) == 2 and len(self.characters) == 2
+        # No Duplicates
+        assert len(list(set(self.states))) == len(self.states)
+        assert len(list(set(self.containers))) == len(self.containers)
+        assert len(list(set(self.characters))) == len(self.characters)
 
         self.set_story()
 
@@ -78,7 +79,7 @@ class SampleV3(DataClassJsonMixin):
         self.character_belief = [self.world_state.copy(), self.world_state.copy()]
 
         # set the character beliefs
-        if self.template_idx == 0 or self.template_idx == 2:
+        if self.template_idx in [0, 2, 3]:
             self.character_belief[0][self.containers[1]] = "unknown"
             self.character_belief[1][self.containers[0]] = "unknown"
         elif self.template_idx == 1:
