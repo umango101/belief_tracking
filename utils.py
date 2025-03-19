@@ -1138,3 +1138,175 @@ def get_obj_pos_exps(
         )
 
     return samples
+
+
+def get_character_tracing_exps(STORY_TEMPLATES,
+                               all_characters,
+                               all_containers,
+                               all_states,
+                               n_samples):
+
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template_idx = 2
+        template = STORY_TEMPLATES['templates'][template_idx]
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=containers,
+            states=states,
+        )
+        corrupt_configs.append(sample)
+
+        random_character = random.choice(all_characters)
+        while random_character in characters:
+            random_character = random.choice(all_characters)
+        new_characters = [random_character, characters[1]]
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=new_characters,
+            containers=containers,
+            states=states,
+        )
+        clean_configs.append(sample)
+
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_character=0, set_container=0)
+        corrupt = corrupt_dataset.__getitem__(idx, set_character=0, set_container=0)
+
+        # Replace question in clean with corrupt and create new clean prompt
+        clean['prompt'] = clean['prompt'].replace(clean['question'], corrupt['question'])
+        clean['target'] = "unknown"
+
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": " " + clean_configs[idx].states[0]
+        })
+
+    return samples
+
+
+def get_obj_tracing_exps(STORY_TEMPLATES,
+                          all_characters,
+                          all_containers,
+                          all_states,
+                          n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template_idx = 2
+        template = STORY_TEMPLATES['templates'][template_idx]
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=containers,
+            states=states,
+        )
+        corrupt_configs.append(sample)
+
+        random_container = random.choice(all_containers[template["container_type"]])
+        while random_container in containers:
+            random_container = random.choice(all_containers[template["container_type"]])
+        new_containers = containers.copy()
+        new_containers[0] = random_container
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=new_containers,
+            states=states,
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_container=0, set_character=0)
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=0, set_character=0)
+        
+        # Replace question in clean with corrupt and create new clean prompt
+        clean['prompt'] = clean['prompt'].replace(clean['question'], corrupt['question'])
+        clean['target'] = "unknown"
+
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": " " + clean_configs[idx].states[0]
+        })
+    
+    return samples
+
+
+def get_state_tracing_exps(STORY_TEMPLATES,
+                           all_characters,
+                           all_containers,
+                           all_states,
+                           n_samples):
+    clean_configs, corrupt_configs = [], []
+    samples = []
+
+    for idx in range(n_samples):
+        template_idx = 2
+        template = STORY_TEMPLATES['templates'][template_idx]
+        characters = random.sample(all_characters, 2)
+        containers = random.sample(all_containers[template["container_type"]], 2)
+        states = random.sample(all_states[template["state_type"]], 2)
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=containers,
+            states=states,
+        )
+        corrupt_configs.append(sample)
+
+        random_state = random.choice(all_states[template["state_type"]])
+        while random_state in states:
+            random_state = random.choice(all_states[template["state_type"]])
+        new_states = states.copy()
+        new_states[0] = random_state
+
+        sample = SampleV3(
+            template_idx=template_idx,
+            characters=characters,
+            containers=containers,
+            states=new_states,
+        )
+        clean_configs.append(sample)
+    
+    clean_dataset = DatasetV3(clean_configs)
+    corrupt_dataset = DatasetV3(corrupt_configs)
+
+    for idx in range(n_samples):
+        clean = clean_dataset.__getitem__(idx, set_container=0, set_character=0)
+        corrupt = corrupt_dataset.__getitem__(idx, set_container=0, set_character=0)
+        samples.append({
+            "clean_prompt": clean['prompt'],
+            "clean_ans": clean['target'],
+            "corrupt_prompt": corrupt['prompt'],
+            "corrupt_ans": corrupt['target'],
+            "target": " " + corrupt_configs[idx].states[0]
+        })
+    
+    return samples
