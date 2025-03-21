@@ -980,7 +980,7 @@ def get_state_pos_exps(
     samples = []
 
     for idx in range(n_samples):
-        template_idx = 2
+        template_idx = 0
         template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)

@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3,4"
 
 import json
 import random
@@ -44,6 +44,8 @@ model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", cache_dir="/disk/u
 n_samples = 500
 batch_size = 1
 
+first_visibility_sent = [i for i in range(169, 176)]
+second_visibility_sent = [i for i in range(176, 183)]
 charac_indices = [131, 133, 146, 147, 158, 159]
 object_indices = [150, 151, 162, 163]
 state_indices = [155, 156, 167, 168]
@@ -51,7 +53,7 @@ query_sent = [i for i in range(169, 181)]
 
 configs = []
 for _ in range(n_samples):
-    template_idx = 2
+    template_idx = 0
     template = STORY_TEMPLATES["templates"][template_idx]
     characters = random.sample(all_characters, 2)
     containers = random.sample(all_containers[template["container_type"]], 2)
@@ -68,37 +70,24 @@ for _ in range(n_samples):
 dataset = DatasetV3(configs)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
-charac_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(charac_indices), model.config.hidden_size)
-object_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(object_indices), model.config.hidden_size)
-state_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(state_indices), model.config.hidden_size)
-query_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(query_sent), model.config.hidden_size)
+first_visibility_sent_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(first_visibility_sent), model.config.hidden_size)
+second_visibility_sent_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(second_visibility_sent), model.config.hidden_size)
 
 for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
     prompt = data['prompt'][0]
-    
+
     with torch.no_grad():
 
         with model.trace() as tracer:
 
             with tracer.invoke(prompt):
                 for l in range(model.config.num_hidden_layers):
-                    # for t_idx, t in enumerate(range(-8, 0)):
-                    #     charac_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    for t_idx, t in enumerate(first_visibility_sent):
+                        first_visibility_sent_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    
+                    for t_idx, t in enumerate(second_visibility_sent):
+                        second_visibility_sent_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
 
-                    for t_idx, t in enumerate(charac_indices):
-                        charac_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
-                    
-                    for t_idx, t in enumerate(object_indices):
-                        object_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
-                    
-                    for t_idx, t in enumerate(state_indices):
-                        state_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
-                    
-                    for t_idx, t in enumerate(query_sent):
-                        query_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
-
-torch.save(charac_acts, "../caches/belief_tracking/charac_acts.pt")
-torch.save(object_acts, "../caches/belief_tracking/object_acts.pt")
-torch.save(state_acts, "../caches/belief_tracking/state_acts.pt")
-torch.save(query_acts, "../caches/belief_tracking/query_acts.pt")
+torch.save(first_visibility_sent_acts, "../caches/belief_tracking/first_visibility_sent_acts.pt")
+torch.save(second_visibility_sent_acts, "../caches/belief_tracking/second_visibility_sent_acts.pt")
 print("Done!")
