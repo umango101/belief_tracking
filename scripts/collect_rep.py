@@ -49,7 +49,9 @@ second_visibility_sent = [i for i in range(176, 183)]
 charac_indices = [131, 133, 146, 147, 158, 159]
 object_indices = [150, 151, 162, 163]
 state_indices = [155, 156, 167, 168]
-query_sent = [i for i in range(169, 181)]
+query_sent = [i for i in range(183, 195)]
+first_visibility_sent = [i for i in range(169, 176)]
+second_visibility_sent = [i for i in range(176, 183)]
 
 configs = []
 for _ in range(n_samples):
@@ -72,6 +74,7 @@ dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
 first_visibility_sent_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(first_visibility_sent), model.config.hidden_size)
 second_visibility_sent_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(second_visibility_sent), model.config.hidden_size)
+query_sent_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(query_sent), model.config.hidden_size)
 
 for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
     prompt = data['prompt'][0]
@@ -87,7 +90,11 @@ for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
                     
                     for t_idx, t in enumerate(second_visibility_sent):
                         second_visibility_sent_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
+                    
+                    for t_idx, t in enumerate(query_sent):
+                        query_sent_acts[bi, l, t_idx] = model.model.layers[l].output[0][0, t].cpu().save()
 
 torch.save(first_visibility_sent_acts, "../caches/belief_tracking/first_visibility_sent_acts.pt")
 torch.save(second_visibility_sent_acts, "../caches/belief_tracking/second_visibility_sent_acts.pt")
+torch.save(query_sent_acts, "../caches/belief_tracking/query_sent_with_vis_acts.pt")
 print("Done!")
