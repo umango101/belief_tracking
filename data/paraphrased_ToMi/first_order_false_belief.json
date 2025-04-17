@@ -1,7 +1,0 @@
-[
-    {
-        "input": "Avery stepped into the staircase, followed closely by Alexander and Charlotte. Inside the staircase, there was a crate with a cabbage in it. After a moment, Charlotte decided to leave. Alexander then took the cabbage from the crate and placed it into a suitcase that was also in the staircase.\nQuestion: Where will Charlotte look for the cabbage?\nAnswer:",
-        "category": "first_order_false_belief",
-        "target": " crate"
-    }
-]
