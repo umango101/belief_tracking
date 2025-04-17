@@ -8,10 +8,10 @@ import pandas as pd
 from dataclasses_json import DataClassJsonMixin
 from torch.utils.data import Dataset
 
-from src.utils import env_utils
+# from src.utils import env_utils
 
 
-STORY_TEMPLATE_PATH = os.path.join(env_utils.DEFAULT_DATA_DIR, "story_templates.json")
+STORY_TEMPLATE_PATH = "../data/story_templates.json"
 
 with open(STORY_TEMPLATE_PATH, "r") as f:
     STORY_TEMPLATES = json.load(f)

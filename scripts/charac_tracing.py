@@ -1,160 +1,222 @@
+"""
+Causal Mediation Analysis experiments with language models
+"""
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3,4,5,6,7"
-
-import json
 import random
 import sys
 import torch
 from torch.utils.data import DataLoader
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-from typing import Any, List, Optional
-import nnsight
-from nnsight import CONFIG, LanguageModel
-import numpy as np
-from collections import defaultdict
-from einops import einsum
-import time
-from einops import rearrange, reduce
+import json
+from dotenv import load_dotenv
+import fire
+from enum import Enum, auto
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Local imports
 sys.path.append("../")
-from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
-from src.utils import env_utils
-from utils import *
+from src.dataset import STORY_TEMPLATES
+from tracer_utils import (
+    get_character_tracing_exps,
+    get_object_tracing_exps,
+    get_state_tracing_exps,
+    load_entity_data,
+    load_model,
+    find_correct_samples,
+    run_tracing_experiment
+)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-random.seed(10)
-
-CONFIG.set_default_api_key("d9e00ab7d4f74643b3176de0913f24a7")
-os.environ["HF_TOKEN"] = "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"
-
-# Ignore warnings
+# Import nnsight after warnings are suppressed
 import warnings
-
 warnings.filterwarnings("ignore")
-CONFIG.APP.REMOTE_LOGGING = False
+
+from nnsight import CONFIG
 
 
-all_states = {}
-all_containers = {}
-all_characters = json.load(
-    open(os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "characters.json"), "r")
-)
-
-for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
-    ROOT = os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", TYPE)
-    for file in os.listdir(ROOT):
-        file_path = os.path.join(ROOT, file)
-        with open(file_path, "r") as f:
-            names = json.load(f)
-        DCT[file.split(".")[0]] = names
+# Define entity types
+class EntityType(str, Enum):
+    CHARACTER = "character"
+    OBJECT = "object"
+    STATE = "state"
 
 
-model = LanguageModel(
-    "meta-llama/Meta-Llama-3-70B-Instruct",
-    cache_dir="/disk/u/nikhil/.cache/huggingface/hub/",
-    device_map="auto",
-    torch_dtype=torch.float16,
-    dispatch=True,
-)
+class Tracer:
+    """Run Causal Mediation Analysis experiments with language models"""
+    
+    def __init__(
+        self,
+        entity_type="character",
+        model_name="meta-llama/Meta-Llama-3-70B-Instruct",
+        cache_dir="/disk/u/nikhil/.cache/huggingface/hub/",
+        data_dir="../data",
+        results_dir="../tracing_results",
+        num_samples=50,
+        batch_size=10,
+        tracing_batch_size=25,
+        random_seed=10,
+        start_token=180,
+        start_layer=0
+    ):
+        """
+        Initialize Causal Mediation Analysis experiment
+        
+        Args:
+            entity_type: Type of entity to trace (character, object, or state)
+            model_name: Name of the model to use
+            cache_dir: Directory to cache model files
+            data_dir: Directory containing the dataset
+            results_dir: Directory to save results
+            num_samples: Number of samples to generate
+            batch_size: Initial batch size for finding correct samples
+            tracing_batch_size: Batch size for tracing experiments
+            random_seed: Random seed for reproducibility
+            start_token: Starting token index for tracing
+            start_layer: Starting layer index for tracing
+        """
+        # Validate entity type
+        if entity_type not in [e.value for e in EntityType]:
+            raise ValueError(f"Invalid entity type: {entity_type}. Must be one of: {', '.join([e.value for e in EntityType])}")
+        
+        self.entity_type = entity_type
+        self.model_name = model_name
+        self.cache_dir = cache_dir
+        self.data_dir = data_dir
+        self.results_dir = results_dir
+        self.num_samples = num_samples
+        self.batch_size = batch_size
+        self.tracing_batch_size = tracing_batch_size
+        self.random_seed = random_seed
+        self.start_token = start_token
+        self.start_layer = start_layer
+        
+        # Ensure results directory exists
+        os.makedirs(self.results_dir, exist_ok=True)
+        
+        # Set up configuration
+        random.seed(self.random_seed)
+        CONFIG.APP.REMOTE_LOGGING = False
+        
+        # Get credentials from environment variables
+        nnsight_api_key = os.getenv("NNSIGHT_API_KEY")
+        hf_token = os.getenv("HF_TOKEN")
+        
+        # Set credentials
+        CONFIG.set_default_api_key(nnsight_api_key)
+        os.environ["HF_TOKEN"] = hf_token
+
+    def _get_dataset_generator(self):
+        """Get the appropriate dataset generator based on entity type"""
+        if self.entity_type == EntityType.CHARACTER:
+            return get_character_tracing_exps
+        elif self.entity_type == EntityType.OBJECT:
+            return get_object_tracing_exps
+        elif self.entity_type == EntityType.STATE:
+            return get_state_tracing_exps
+        else:
+            raise ValueError(f"Unsupported entity type: {self.entity_type}")
+
+    def run(self):
+        """Run the Causal Mediation Analysis experiment"""
+        # Create results directory if it doesn't exist
+        os.makedirs(self.results_dir, exist_ok=True)
+        results_path = os.path.join(self.results_dir, f"{self.entity_type}.json")
+        
+        print(f"Running {self.entity_type} tracing experiment...")
+        
+        # Load data
+        all_characters, all_states, all_containers = load_entity_data(self.data_dir)
+        
+        # Load model
+        model = load_model(self.model_name, self.cache_dir)
+        
+        # Get the appropriate dataset generator
+        dataset_generator = self._get_dataset_generator()
+        
+        # Create dataset
+        dataset = dataset_generator(
+            STORY_TEMPLATES, all_characters, all_containers, all_states, self.num_samples*2
+        )
+        
+        # Find correct samples
+        corrects = find_correct_samples(
+            model, dataset, batch_size=self.batch_size, num_samples=self.num_samples
+        )
+        
+        # Create dataloader with correct samples
+        correct_dataset = [dataset[i] for i in corrects]
+        correct_dataloader = DataLoader(
+            correct_dataset, batch_size=self.tracing_batch_size, shuffle=False
+        )
+        print(
+            f"Dataset size: {len(correct_dataloader.dataset)}, "
+            f"Batch size: {self.tracing_batch_size}"
+        )
+        
+        # Run tracing experiment
+        tracing_results = run_tracing_experiment(
+            model, correct_dataloader, self.start_token, self.start_layer, results_path
+        )
+        
+        # Save final results
+        with open(results_path, "w") as f:
+            json.dump(tracing_results, f, indent=4)
+            
+        print(f"Results saved to {results_path}")
+        return results_path
 
 
-n_samples = 100
-batch_size = 10
+class CharacterTracer(Tracer):
+    """Run character tracing experiments with language models"""
+    
+    def __init__(self, **kwargs):
+        """Initialize character tracer"""
+        super().__init__(entity_type=EntityType.CHARACTER, **kwargs)
 
-dataset = get_character_tracing_exps(
-    STORY_TEMPLATES, all_characters, all_containers, all_states, n_samples
-)
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-corrects = []
-for bi, batch in enumerate(dataloader):
-    corrupt_prompt = batch["corrupt_prompt"]
-    clean_prompt = batch["clean_prompt"]
-    corrupt_target = batch["corrupt_ans"]
-    clean_target = batch["clean_ans"]
+class ObjectTracer(Tracer):
+    """Run object tracing experiments with language models"""
+    
+    def __init__(self, **kwargs):
+        """Initialize object tracer"""
+        super().__init__(entity_type=EntityType.OBJECT, **kwargs)
 
-    with torch.no_grad():
 
-        with model.trace() as tracer:
+class StateTracer(Tracer):
+    """Run state tracing experiments with language models"""
+    
+    def __init__(self, **kwargs):
+        """Initialize state tracer"""
+        super().__init__(entity_type=EntityType.STATE, **kwargs)
 
-            with tracer.invoke(clean_prompt):
-                clean_pred = model.lm_head.output[:, -1].argmax(dim=-1).save()
 
-            with tracer.invoke(corrupt_prompt):
-                corrupt_pred = model.lm_head.output[:, -1].argmax(dim=-1).save()
+def main():
+    """
+    Main entry point for CLI usage.
+    
+    Example usage:
+    python tracer.py --entity_type=character --model_name=meta-llama/Meta-Llama-3-70B-Instruct
+    python tracer.py --entity_type=object
+    """
+    def run_tracer(**kwargs):
+        """Create and run the appropriate tracer based on entity_type"""
+        entity_type = kwargs.pop('entity_type', 'character')
+        
+        if entity_type == EntityType.CHARACTER:
+            tracer = CharacterTracer(**kwargs)
+        elif entity_type == EntityType.OBJECT:
+            tracer = ObjectTracer(**kwargs)
+        elif entity_type == EntityType.STATE:
+            tracer = StateTracer(**kwargs)
+        else:
+            tracer = Tracer(entity_type=entity_type, **kwargs)
+            
+        # Automatically run the tracer
+        return tracer.run()
+    
+    # Create a Fire CLI that directly runs the tracer
+    fire.Fire(run_tracer)
 
-    for i in range(batch_size):
-        clean_pred_token = model.tokenizer.decode([clean_pred[i]]).lower().strip()
-        corrupt_pred_token = model.tokenizer.decode([corrupt_pred[i]]).lower().strip()
-        clean_target_token = clean_target[i].lower().strip()
-        corrupt_target_token = corrupt_target[i].lower().strip()
-        index = bi * batch_size + i
-        if clean_pred_token == clean_target_token and corrupt_pred_token == corrupt_target_token:
-            corrects.append(index)
 
-    del clean_pred, corrupt_pred
-    torch.cuda.empty_cache()
-
-    if len(corrects) >= 50:
-        corrects = corrects[:50]
-        break
-
-batch_size = 25
-correct_dataloader = DataLoader(
-    [dataset[i] for i in corrects], batch_size=batch_size, shuffle=False
-)
-print("Correct dataset size:", len(correct_dataloader.dataset), "Batch size:", batch_size)
-
-# Check if character.json exists
-if os.path.exists("../tracing_results/character.json"):
-    with open("../tracing_results/character.json", "r") as f:
-        tracing_results = json.load(f)
-    start_token = int(list(tracing_results.keys())[-1])
-    start_layer = int(list(tracing_results[start_token].keys())[-1]) + 1
-else:
-    tracing_results = defaultdict(dict)
-    start_token = 180
-    start_layer = 0
-
-tracing_results = defaultdict(dict)
-for t in tqdm(range(start_token, 128, -1)):
-    for layer_idx in range(start_layer, model.config.num_hidden_layers):
-        correct, total = 0, 0
-
-        for bi, batch in enumerate(correct_dataloader):
-            corrupt_prompt = batch["corrupt_prompt"]
-            clean_prompt = batch["clean_prompt"]
-            target = batch["target"]
-            batch_size = len(target)
-
-            corrupt_layer_out = defaultdict(dict)
-            with torch.no_grad():
-
-                with model.trace() as tracer:
-
-                    with tracer.invoke(corrupt_prompt):
-                        corrupt_layer_out = model.model.layers[layer_idx].output[0][:, t].clone()
-
-                    with tracer.invoke(clean_prompt):
-                        model.model.layers[layer_idx].output[0][:, t] = corrupt_layer_out
-
-                        pred = model.lm_head.output[:, -1].argmax(dim=-1).save()
-
-            for i in range(batch_size):
-                pred_token = model.tokenizer.decode([pred[i]]).lower().strip()
-                target_token = target[i].lower().strip()
-                if pred_token == target_token:
-                    correct += 1
-                total += 1
-
-            del corrupt_layer_out, pred
-            torch.cuda.empty_cache()
-
-        acc = round(correct / total, 2)
-        tracing_results[t][layer_idx] = acc
-        print(f"Token: {t} | Layer: {layer_idx} | Accuracy: {acc}")
-
-        if (layer_idx + 1) % 10 == 0:
-            with open("../tracing_results/character.json", "w") as f:
-                json.dump(tracing_results, f, indent=4)
+if __name__ == "__main__":
+    main()
