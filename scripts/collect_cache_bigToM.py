@@ -71,12 +71,14 @@ query_charac_acts = torch.zeros(
 visibility_sent_acts = torch.zeros(
     n_samples, model.config.num_hidden_layers, max_len, model.config.hidden_size
 )
+visibility_sent_lens = torch.zeros(n_samples)
 
 
 for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
     prompt = data["prompt"][0]
     ques_start_idx = get_ques_start_token_idx(model.tokenizer, prompt)
     visibility_sent_start_idx = get_visitibility_sent_start_idx(model.tokenizer, prompt)
+    visibility_sent_lens[bi] = ques_start_idx - visibility_sent_start_idx
 
     with torch.no_grad():
 
@@ -101,4 +103,5 @@ for bi, data in tqdm(enumerate(dataloader), total=len(dataloader)):
 torch.save(last_token_acts, "../caches/Llama-70B-Instruct/BigToM/last_token_acts.pt")
 torch.save(query_charac_acts, "../caches/Llama-70B-Instruct/BigToM/query_charac_acts.pt")
 torch.save(visibility_sent_acts, "../caches/Llama-70B-Instruct/BigToM/visibility_sent_acts.pt")
+torch.save(visibility_sent_lens, "../caches/Llama-70B-Instruct/BigToM/visibility_sent_lens.pt")
 print("Done!")

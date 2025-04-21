@@ -1,309 +1,321 @@
-import json
-import random
-import os
-import math
 import sys
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-from typing import Any, List, Optional
-import nnsight
-from nnsight import CONFIG, LanguageModel
-import numpy as np
-from collections import defaultdict
-from einops import einsum
-import time
-from einops import rearrange, reduce
 import pandas as pd
+import numpy as np
+from tqdm import tqdm
+from collections import defaultdict
+import os
+import argparse
+from einops import rearrange, reduce, einsum
 
 sys.path.append("../")
-from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
-from src.utils import env_utils
 from utils import *
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-random.seed(10)
+# Import nnsight for model access
+import nnsight
+from nnsight import CONFIG, LanguageModel
 
-CONFIG.set_default_api_key("d9e00ab7d4f74643b3176de0913f24a7")
-os.environ["HF_TOKEN"] = "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"
-
-# Ignore warnings
-import warnings
-warnings.filterwarnings("ignore")
+# Set up configuration
+CONFIG.set_default_api_key("YOUR_API_KEY")
+os.environ["HF_TOKEN"] = "YOUR_HF_TOKEN"
 CONFIG.APP.REMOTE_LOGGING = False
 
-# Define random seed
+# Set random seed for reproducibility
 seed = 10
-random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
 
-# model = LanguageModel("meta-llama/Meta-Llama-3.1-405B")
-model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", cache_dir="/disk/u/nikhil/.cache/huggingface/hub/", device_map="auto", load_in_4bit=True, torch_dtype=torch.float16, dispatch=True)
-
+# Define helper functions
 def get_ques_start_token_idx(batch_size, tokenizer, prompt, padding_side="right"):
     input_tokens = tokenizer(prompt, return_tensors="pt", padding=True, padding_side=padding_side).input_ids
     colon_token = tokenizer.encode(":", return_tensors="pt").squeeze()[-1].item()
     ques_start_idx = (input_tokens == colon_token).nonzero()[torch.arange(2, 4*batch_size, 4)][:, 1] - 1
-
     return ques_start_idx
 
 def get_prompt_token_len(tokenizer, prompt, padding_side="right"):
     input_tokens = tokenizer(prompt, return_tensors="pt", padding=True, padding_side=padding_side)
     return input_tokens.attention_mask.sum(dim=-1)
 
-def check_pred(pred, target):
-    prompt = f"Instruction: Check if the following ground truth and prediction are same or different. If they are the same, then predict 'Yes', else 'No'.\nGround truth: {target}\nPrediction: {pred}\nAnswer:"
-
-    with torch.no_grad():
-        with model.generate(prompt, max_new_tokens=5, do_sample=False, num_return_sequences=1, pad_token_id=model.tokenizer.pad_token_id):
-            out = model.generator.output.save()
-
-    prompt_len = get_prompt_token_len(model.tokenizer, prompt)
-
-    return out, prompt_len
-
-# Read a csv file
-df_false = pd.read_csv("../data/bigtom/0_forward_belief_false_belief/stories.csv", delimiter=";")
-df_true = pd.read_csv("../data/bigtom/0_forward_belief_true_belief/stories.csv", delimiter=";")
-
-# For each row in the dataframe extract story, answer, and distractor
-true_stories, false_stories = [], []
-for i in range(len(df_true)):
-    story = df_true.iloc[i]['story']
-    question = df_true.iloc[i]['question']
-    answer = df_true.iloc[i]['answer']
-    distractor = df_true.iloc[i]['distractor']
-    true_stories.append({"story": story, "question": question, "answer": answer, "distractor": distractor})
-
-for i in range(len(df_false)):
-    story = df_false.iloc[i]['story']
-    question = df_true.iloc[i]['question']
-    answer = df_false.iloc[i]['answer']
-    distractor = df_false.iloc[i]['distractor']
-    false_stories.append({"story": story, "question": question, "answer": answer, "distractor": distractor})
-
-dataset = []
-instruction = "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any belief about the container or its content which they cannot observe directly. 4. To answer the question, predict only the final state of the queried container in fewest tokens possible, strictly based on the belief of the character, mentioned in the question. 5. Do not predict the entire sentence with character or container as the final output."
-
-for i in range(min(len(true_stories), len(false_stories))):
-    question = true_stories[i]['question']
-    visible_prompt = f"Instructions: {instruction}\n\nStory: {true_stories[i]['story']}\nQuestion: {question}\nAnswer:"
-
-    question = false_stories[i]['question']
-    invisible_prompt = f"Instructions: {instruction}\n\nStory: {false_stories[i]['story']}\nQuestion: {question}\nAnswer:"
-
-    visible_ans = true_stories[i]['answer'].split()
-    invisible_ans = false_stories[i]['answer'].split()
-
-    # Find the index of first word which is different in both answers
-    diff_idx = 0
-    for idx, (v, j) in enumerate(zip(visible_ans, invisible_ans)):
-        if v != j:
-            diff_idx = idx
-            break
+def train_mask(model, dataset_func, layer_range, lambs, n_epochs=2, train_size=80, valid_size=40, test_size=80, variable_name='answer', batch_size=1):
+    """Train masks for specified layers using the given dataset function"""
     
-    visible_ans = " ".join(visible_ans[diff_idx:])[:-1]
-    invisible_ans = " ".join(invisible_ans[diff_idx:])[:-1]
+    # Load dataset
+    df_false = pd.read_csv("../data/bigtom/0_forward_belief_false_belief/stories.csv", delimiter=";")
+    df_true = pd.read_csv("../data/bigtom/0_forward_belief_true_belief/stories.csv", delimiter=";")
+    
+    dataset = dataset_func(df_false, df_true, train_size+valid_size+test_size)
+    train_dataset = dataset[:train_size]
+    valid_dataset = dataset[train_size:train_size+valid_size]
+    test_dataset = dataset[train_size+valid_size:]
+    
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    random_choice = random.choice([0, 1])
-
-    dataset.append({
-        "alt_story": true_stories[i]['story'] if random_choice == 0 else false_stories[i]['story'],
-        "alt_question": true_stories[i]['question'] if random_choice == 0 else false_stories[i]['question'],
-        "alt_prompt": visible_prompt if random_choice == 0 else invisible_prompt,
-        "alt_ans": visible_ans if random_choice == 0 else invisible_ans,
-        "org_story": false_stories[i]['story'] if random_choice == 0 else true_stories[i]['story'],
-        "org_question": false_stories[i]['question'] if random_choice == 0 else true_stories[i]['question'],
-        "org_prompt": invisible_prompt if random_choice == 0 else visible_prompt,
-        "org_ans": invisible_ans if random_choice == 0 else visible_ans,
-        "target": visible_ans if random_choice == 0 else invisible_ans,
-    })
-
-
-train_size = 80
-valid_size = 40
-batch_size = 4
-
-train_dataset = dataset[:train_size]
-valid_dataset = dataset[train_size:train_size+valid_size]
-
-train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
-valid_dataloader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
-
-sing_vecs = defaultdict(dict)
-for l in range(41):
-    sing_vecs[l] = torch.load(f"../svd_results/bigtom/singular_vecs/{l}.pt").cpu()
-
-valid_accs_dcm, rank_dcm, preds = {}, {}, {}
-
-valid_accs = defaultdict(dict)
-for layer_idx in [i for i in range(30, 34, 2)] + [i for i in range(0, 40, 10)] + [i for i in range(22, 30, 2)]:
-    preds[layer_idx] = {"correct": [], "incorrect": []}
-    model.tokenizer.padding_side = "right"
-
-    modules = [i for i in range(sing_vecs[layer_idx].shape[0])]
-    mask = torch.ones(len(modules), requires_grad=True, device="cuda", dtype=torch.bfloat16)
-    optimizer = torch.optim.Adam([mask], lr=1e-1)
-    n_epochs = 1
-    lamb = 0.03
-
-    print(f"Training layer: {layer_idx}")
-    for epoch in range(n_epochs):
-        epoch_loss = 0
-
-        for bi, batch in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
-            alt_prompt = batch["alt_prompt"]
-            org_prompt = batch["org_prompt"]
-            target = batch["target"]
-            target_token = model.tokenizer(target, return_tensors="pt", padding=True, padding_side="right")
-            target_input_ids = target_token.input_ids[:, 1:]
-            target_attention_mask = target_token.attention_mask[:, 1:]
-            batch_size = target_input_ids.size(0)
-
-            alt_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, alt_prompt, padding_side="right")
-            alt_prompt_len = get_prompt_token_len(model.tokenizer, alt_prompt, padding_side="right")
-            org_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, org_prompt, padding_side="right")
-            org_prompt_len = get_prompt_token_len(model.tokenizer, org_prompt, padding_side="right")
-
-            optimizer.zero_grad()
-
-            with model.trace() as tracer:
-
-                alt_acts = defaultdict(dict)
-                with tracer.invoke(alt_prompt):
-                    for j in range(batch_size):
-                        alt_acts[j] = model.model.layers[layer_idx].output[0][j, alt_ques_idx[j]:alt_prompt_len[j]].clone().save()
-
-                with tracer.invoke(org_prompt):
-                    sing_vec = sing_vecs[layer_idx].cuda()
-                    masked_vec = sing_vec * mask.unsqueeze(-1)
-                    proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
-
-                    for j in range(batch_size):
-                        curr_output = model.model.layers[layer_idx].output[0][j, org_ques_idx[j]:org_prompt_len[j]].clone()
-
-                        alt_proj = torch.matmul(alt_acts[j], proj_matrix)
-                        org_proj = torch.matmul(curr_output, proj_matrix)
-
-                        modified_out = curr_output - org_proj + alt_proj
-                        model.model.layers[layer_idx].output[0][j, org_ques_idx[j]:org_prompt_len[j]] = modified_out
-
-                    logits = model.lm_head.output[torch.arange(batch_size), org_prompt_len-1].save()
-
-                    del sing_vec, proj_matrix, masked_vec
-                    torch.cuda.empty_cache()
-
-            target_logit = 0
-            for j in range(batch_size):
-                target_logit += logits[j, target_input_ids[j, target_attention_mask[j] == 1]].sum()
-            task_loss = -(target_logit/batch_size)
-            l1_loss = lamb * torch.norm(mask, p=1)
-            loss = task_loss + l1_loss.to(task_loss.device)
+    # Load singular vectors for each layer
+    sing_vecs = defaultdict(dict)
+    for l in range(model.config.num_hidden_layers):
+        if dataset_func.__name__ == "get_bigtom_value_fetcher_exps":
+            sing_vecs[l] = torch.load(f"../svd_results/BigToM/last_token/singular_vecs/{l}.pt").cpu()
+        elif dataset_func.__name__ == "get_bigtom_answer_state_exps":
+            sing_vecs[l] = torch.load(f"../svd_results/BigToM/last_token/singular_vecs/{l}.pt").cpu()
+        elif dataset_func.__name__ == "get_bigtom_query_charac":
+            sing_vecs[l] = torch.load(f"../svd_results/BigToM/query_charac_new/singular_vecs/{l}.pt").cpu()
+    
+    valid_accs = defaultdict(dict)
+    
+    # Set padding side for tokenization
+    model.tokenizer.padding_side = "left"
+    
+    # Train masks for each layer and regularization parameter
+    for layer_idx in layer_range:
+        for lamb in lambs:
+            print(f"Training layer: {layer_idx}, lambda: {lamb}")
             
-            epoch_loss += loss.item()
+            # Initialize mask
+            modules = [i for i in range(sing_vecs[layer_idx].size(0))]
+            mask = torch.ones(len(modules), requires_grad=True, device="cuda", dtype=torch.bfloat16)
+            optimizer = torch.optim.Adam([mask], lr=1e-1)
             
-            if bi % 4 == 0:
-                mean_loss = epoch_loss / (bi + 1)
-                print(f"Epoch: {epoch}, Batch: {bi}, Task Loss: {task_loss.item():.4f}, "
-                    f"L1 Loss: {l1_loss.item():.4f}, Total Loss: {mean_loss:.4f}")
-                with torch.no_grad():
-                    mask.data.clamp_(0, 1)
-                    rounded = torch.round(mask)
-                    print(f"#Causal SVs: {(rounded == 1).sum().item()}")
+            # Training loop
+            for epoch in range(n_epochs):
+                epoch_loss = 0
+                
+                for bi, batch in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
+                    alt_prompt = batch["alt_prompt"]
+                    org_prompt = batch["org_prompt"]
+                    target = batch["target"]
+                    target_token = model.tokenizer(target, return_tensors="pt", padding=True, padding_side="right")
+                    target_input_ids = target_token.input_ids[:, 1:]
+                    batch_size = target_input_ids.size(0)
+                    
+                    alt_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, alt_prompt, padding_side="right")
+                    alt_prompt_len = get_prompt_token_len(model.tokenizer, alt_prompt, padding_side="right")
+                    org_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, org_prompt, padding_side="right")
+                    org_prompt_len = get_prompt_token_len(model.tokenizer, org_prompt, padding_side="right")
+                    
+                    optimizer.zero_grad()
+                    
+                    with model.trace() as tracer:
+                        # Different handling based on the dataset type
+                        if dataset_func.__name__ in ["get_bigtom_value_fetcher_exps", "get_bigtom_answer_state_exps"]:
+                            # For Answer Variable and Answer State OID Variable
+                            with tracer.invoke(alt_prompt):
+                                alt_acts = model.model.layers[layer_idx].output[0][0, -1].clone().save()
+                            
+                            with tracer.invoke(org_prompt):
+                                sing_vec = sing_vecs[layer_idx].cuda()
+                                masked_vec = sing_vec * mask.unsqueeze(-1)
+                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                
+                                curr_output = model.model.layers[layer_idx].output[0][0, -1].clone()
+                                
+                                alt_proj = torch.matmul(alt_acts, proj_matrix)
+                                org_proj = torch.matmul(curr_output, proj_matrix)
+                                
+                                modified_out = curr_output - org_proj + alt_proj
+                                model.model.layers[layer_idx].output[0][0, -1] = modified_out
+                                
+                                logits = model.lm_head.output[0, -1].save()
+                                
+                                del sing_vec, proj_matrix, masked_vec
+                                torch.cuda.empty_cache()
+                                
+                        else:
+                            # For Query Character Variable
+                            alt_acts = defaultdict(dict)
+                            with tracer.invoke(alt_prompt):
+                                for t_idx, t in enumerate([i for i in range(alt_ques_idx+3, alt_ques_idx+5)]):
+                                    alt_acts[t_idx] = model.model.layers[layer_idx].output[0][0, t].clone().save()
+                            
+                            with tracer.invoke(org_prompt):
+                                sing_vec = sing_vecs[layer_idx].cuda()
+                                masked_vec = sing_vec * mask.unsqueeze(-1)
+                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                
+                                for t_idx, t in enumerate([i for i in range(org_ques_idx+3, org_ques_idx+5)]):
+                                    curr_output = model.model.layers[layer_idx].output[0][0, t].clone()
+                                    
+                                    alt_proj = torch.matmul(alt_acts[t_idx], proj_matrix)
+                                    org_proj = torch.matmul(curr_output, proj_matrix)
+                                    
+                                    modified_out = curr_output - org_proj + alt_proj
+                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                
+                                logits = model.lm_head.output[0, -1].save()
+                                
+                                del sing_vec, proj_matrix, masked_vec
+                                torch.cuda.empty_cache()
+                    
+                    target_logit = logits[target_input_ids[0]].sum()
+                    
+                    task_loss = -(target_logit/batch_size)
+                    l1_loss = lamb * torch.norm(mask, p=1)
+                    loss = task_loss + l1_loss.to(task_loss.device)
+                    
+                    epoch_loss += loss.item()
+                    
+                    if bi % 4 == 0:
+                        mean_loss = epoch_loss / (bi + 1)
+                        print(f"Epoch: {epoch}, Batch: {bi}, Task Loss: {task_loss.item():.4f}, "
+                              f"L1 Loss: {l1_loss.item():.4f}, Total Loss: {mean_loss:.4f}")
+                        with torch.no_grad():
+                            mask.data.clamp_(0, 1)
+                            rounded = torch.round(mask)
+                            print(f"#Rank: {(rounded == 1).sum().item()}")
+                    
+                    loss.backward()
+                    optimizer.step()
+                    
+                    with torch.no_grad():
+                        mask.data.clamp_(0, 1)
             
-            loss.backward()
-            optimizer.step()
-
-            with torch.no_grad():
-                mask.data.clamp_(0, 1)
+            print(f"Training finished for layer: {layer_idx}, lambda: {lamb}")
+            
+            # Validation
+            print(f"Validation started for layer: {layer_idx}, lambda: {lamb}")
+            correct, total = 0, 0
+            
+            with torch.inference_mode():
+                mask_data = mask.data.clone()
+                mask_data.clamp_(0, 1)
+                rounded = torch.round(mask)
+                
+                print(f"Rank: {(rounded == 1).sum().item()}")
+                
+                # Save the mask
+                os.makedirs(f"../masks/BigToM/{variable_name}", exist_ok=True)
+                mask_name = f"{layer_idx}.pt"
+                torch.save(mask_data, f"../masks/BigToM/{variable_name}/{mask_name}")
+                
+                for bi, batch in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
+                    alt_prompt = batch["alt_prompt"]
+                    org_prompt = batch["org_prompt"]
+                    alt_ans = batch["alt_ans"]
+                    target = batch["target"][0]
+                    batch_size = len(alt_ans)
+                    
+                    alt_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, alt_prompt, padding_side="left")
+                    alt_prompt_len = get_prompt_token_len(model.tokenizer, alt_prompt, padding_side="left")
+                    org_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, org_prompt, padding_side="left")
+                    org_prompt_len = get_prompt_token_len(model.tokenizer, org_prompt, padding_side="left")
+                    
+                    with model.session() as session:
+                        # Different handling based on the dataset type
+                        if dataset_func.__name__ in ["get_bigtom_value_fetcher_exps", "get_bigtom_answer_state_exps"]:
+                            # For Answer Variable and Answer State OID Variable
+                            with model.trace(alt_prompt):
+                                alt_acts = model.model.layers[layer_idx].output[0][0, -1].save()
+                            
+                            with model.generate(org_prompt, max_new_tokens=2, do_sample=False, num_return_sequences=1, 
+                                              pad_token_id=model.tokenizer.pad_token_id, eos_token_id=model.tokenizer.eos_token_id):
+                                sing_vec = sing_vecs[layer_idx].cuda()
+                                masked_vec = sing_vec * rounded.unsqueeze(-1)
+                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                
+                                curr_output = model.model.layers[layer_idx].output[0][0, -1].clone()
+                                
+                                alt_proj = torch.matmul(alt_acts, proj_matrix)
+                                org_proj = torch.matmul(curr_output, proj_matrix)
+                                
+                                modified_out = curr_output - org_proj + alt_proj
+                                model.model.layers[layer_idx].output[0][0, -1] = modified_out
+                                
+                                out = model.generator.output.save()
+                                
+                            del alt_acts
+                            torch.cuda.empty_cache()
+                            
+                        else:
+                            # For Query Character Variable
+                            alt_layer_out = defaultdict(dict)
+                            with model.trace(alt_prompt):
+                                for t_idx, t in enumerate([i for i in range(alt_ques_idx+3, alt_ques_idx+5)]):
+                                    alt_layer_out[t_idx] = model.model.layers[layer_idx].output[0][0, t].save()
+                            
+                            with model.generate(org_prompt, max_new_tokens=2, do_sample=False, num_return_sequences=1, 
+                                              pad_token_id=model.tokenizer.pad_token_id, eos_token_id=model.tokenizer.eos_token_id):
+                                sing_vec = sing_vecs[layer_idx].cuda()
+                                masked_vec = sing_vec * rounded.unsqueeze(-1)
+                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                
+                                for t_idx, t in enumerate([i for i in range(org_ques_idx+3, org_ques_idx+5)]):
+                                    curr_output = model.model.layers[layer_idx].output[0][0, t].clone()
+                                    alt_proj = torch.matmul(alt_layer_out[t_idx], proj_matrix)
+                                    org_proj = torch.matmul(curr_output, proj_matrix)
+                                    modified_out = curr_output - org_proj + alt_proj
+                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                
+                                out = model.generator.output.save()
+                                
+                            del alt_layer_out
+                            torch.cuda.empty_cache()
+                    
+                    pred = model.tokenizer.decode(out[0][org_prompt_len:-1]).strip()
+                    # print(f"Prediction: {pred} | Target: {target}")
+                    if pred.lower() in target.lower():
+                        correct += 1
+                    total += 1
+                
+                print(f"Validation accuracy: {correct / total:.2f} | Correct: {correct} | Total: {total}\n")
+                valid_accs[lamb][layer_idx] = round(correct / total, 2)
     
-    del alt_acts, alt_prompt, org_prompt, target, target_token, target_input_ids, target_attention_mask, logits, task_loss, l1_loss, loss
-    torch.cuda.empty_cache()
+    return valid_accs
 
-    print(f"Training finished for layer: {layer_idx}, lambda: {lamb}")
+def main():
+    parser = argparse.ArgumentParser(description="Train masks for ToM variables")
+    parser.add_argument('--variable', type=str, required=True, choices=['answer', 'answer_state', 'query_character'],
+                        help='Which variable to train: answer, answer_state, or query_character')
+    parser.add_argument('--layer_start', type=int, default=0, help='Starting layer index')
+    parser.add_argument('--layer_end', type=int, default=80, help='Ending layer index (exclusive)')
+    parser.add_argument('--layer_step', type=int, default=2, help='Step between layers')
+    parser.add_argument('--lambda_values', type=float, nargs='+', default=[0.05, 0.005], help='Regularization parameters')
+    parser.add_argument('--epochs', type=int, default=2, help='Number of training epochs')
+    parser.add_argument('--cache_dir', type=str, default="/disk/u/nikhil/.cache/huggingface/hub/", help='Cache directory for huggingface')
+    args = parser.parse_args()
 
-    print(f"Validation started for layer: {layer_idx}")
-    correct, total = 0, 0
+    # Print arguments
+    print(f"Arguments: {args}")
+    print(f"Variable: {args.variable}, Layer Range: {args.layer_start}-{args.layer_end}, "
+            f"Lambda Values: {args.lambda_values}, Epochs: {args.epochs}")
 
-    with torch.inference_mode():
-        model.tokenizer.padding_side = "left"
-        mask_data = mask.data.clone()
-        mask_data.clamp_(0, 1)
-        rounded = torch.round(mask)
-        print(f"Rank: {(rounded == 1).sum().item()}")
-        rank_dcm[layer_idx] = (rounded == 1).sum().item()
-
-        # Save the mask
-        torch.save(mask_data, f"../masks/bigtom/{layer_idx}.pt")
-
-        for bi, batch in tqdm(enumerate(valid_dataloader), total=len(valid_dataloader)):
-            alt_prompt = batch["alt_prompt"]
-            org_prompt = batch["org_prompt"]
-            alt_ans = batch["alt_ans"]
-            batch_size = len(alt_ans)
-
-            alt_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, alt_prompt, padding_side="left")
-            alt_prompt_len = get_prompt_token_len(model.tokenizer, alt_prompt, padding_side="left")
-            org_ques_idx = get_ques_start_token_idx(batch_size, model.tokenizer, org_prompt, padding_side="left")
-            org_prompt_len = get_prompt_token_len(model.tokenizer, org_prompt, padding_side="left")
-
-            with model.session() as session:
-
-                alt_acts = defaultdict(dict)
-                with model.trace(alt_prompt):
-                    for j in range(batch_size):
-                        alt_acts[j] = model.model.layers[layer_idx].output[0][j, alt_ques_idx[j]:].save()
-
-                with model.generate(org_prompt, max_new_tokens=8, do_sample=False, num_return_sequences=1, pad_token_id=model.tokenizer.pad_token_id, eos_token_id=model.tokenizer.eos_token_id):
-                    sing_vec = sing_vecs[layer_idx].cuda()
-                    masked_vec = sing_vec.to(rounded.device) * rounded.unsqueeze(-1)
-                    proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
-
-                    for j in range(batch_size):
-                        curr_output = model.model.layers[layer_idx].output[0][j, org_ques_idx[j]:].clone()
-
-                        alt_proj = torch.matmul(alt_acts[j], proj_matrix)
-                        org_proj = torch.matmul(curr_output, proj_matrix)
-
-                        modified_out = curr_output - org_proj + alt_proj
-                        model.model.layers[layer_idx].output[0][j, org_ques_idx[j]:] = modified_out
-
-                    out = model.generator.output.save()
-
-                    del sing_vec, proj_matrix
-                    torch.cuda.empty_cache()
-
-            for j in range(batch_size):
-                check_out, prompt_len = check_pred(model.tokenizer.decode(out[j, max(org_prompt_len):]), alt_ans[j])
-                check = model.tokenizer.decode(check_out[0, prompt_len:-1]).strip()
-
-                if check == "Yes":
-                    correct += 1
-                    preds[layer_idx]['correct'].append({
-                        'pred': model.tokenizer.decode(out[j]).replace("<|eot_id|>", "").replace("<|begin_of_text|>", "").strip(),
-                        'ground_truth': alt_ans[j],
-                    })
-                else:
-                    preds[layer_idx]['incorrect'].append({
-                        'pred': model.tokenizer.decode(out[j]).replace("<|eot_id|>", "").replace("<|begin_of_text|>", "").strip(),
-                        'ground_truth': alt_ans[j],
-                    })
-                total += 1
-
-            del alt_acts, alt_prompt, org_prompt, alt_ans, out
-            torch.cuda.empty_cache()
-
-        print(f"Validation accuracy: {correct / total:.2f} | Correct: {correct} | Total: {total}\n")
-        valid_accs_dcm[layer_idx] = round(correct / total, 2)
+    # Load the model
+    model = LanguageModel("meta-llama/Meta-Llama-3-70B-Instruct", 
+                          cache_dir=args.cache_dir, 
+                          device_map="auto", 
+                          load_in_4bit=True, 
+                          torch_dtype=torch.float16, 
+                          dispatch=True)
     
-    with open(f"../predictions/bigtom/SVs/{layer_idx}.json", "w") as f:
-        json.dump(preds[layer_idx], f, indent=4)
+    # Set model to evaluation mode
+    model.eval()
+    for param in model.parameters():
+        param.requires_grad_(False)
     
-    # Save valid_accs and rank_dcm as json file
-    with open(f"../valid_accs_dcm.json", "w") as f:
-        json.dump(valid_accs_dcm, f, indent=4)
-    with open(f"../rank_dcm.json", "w") as f:
-        json.dump(rank_dcm, f, indent=4)
+    # Set up layer range
+    layer_range = range(args.layer_start, args.layer_end, args.layer_step)
+    
+    # Select dataset function based on variable
+    if args.variable == 'answer':
+        dataset_func = get_bigtom_value_fetcher_exps
+    elif args.variable == 'answer_state':
+        dataset_func = get_bigtom_answer_state_exps
+    else:  # query_character
+        dataset_func = get_bigtom_query_charac
+    
+    # Train masks
+    results = train_mask(model, dataset_func, layer_range, args.lambda_values, n_epochs=args.epochs, variable_name=args.variable)
+    
+    # Save results
+    results_df = pd.DataFrame.from_dict({(i, j): results[i][j] 
+                                         for i in results.keys() 
+                                         for j in results[i].keys()}, 
+                                        orient='index')
+    results_df.to_csv(f"bigtom_{args.variable}_results.csv")
+    
+    print("Complete! Results saved to CSV.")
+
+if __name__ == "__main__":
+    main()

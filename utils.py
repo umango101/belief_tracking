@@ -1157,7 +1157,7 @@ def get_bigtom_samples(
     df_false,
     df_true,
     n_samples,
-    type="false_belief"
+    belief_type="false_belief"
 ):
     true_stories, false_stories = [], []
     for i in range(len(df_true)):
@@ -1191,7 +1191,7 @@ def get_bigtom_samples(
         tb_ans = " ".join(tb_ans[diff_idx:])[:-1]
         fb_ans = " ".join(fb_ans[diff_idx:])[:-1]
 
-        if type == "true_belief":
+        if belief_type == "true_belief":
             question = true_stories[idx]["question"]
             tb_prompt = f"Instructions: {instruction}\n\nStory: {true_stories[idx]['story']}\nQuestion: {question}\nAnswer:"
             samples.append({
