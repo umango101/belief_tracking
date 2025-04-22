@@ -8,19 +8,11 @@ from tqdm import tqdm
 from collections import defaultdict
 import os
 import argparse
-from einops import rearrange, reduce, einsum
 
 sys.path.append("../")
 from utils import *
 
-# Import nnsight for model access
-import nnsight
-from nnsight import CONFIG, LanguageModel
-
-# Set up configuration
-CONFIG.set_default_api_key("YOUR_API_KEY")
-os.environ["HF_TOKEN"] = "YOUR_HF_TOKEN"
-CONFIG.APP.REMOTE_LOGGING = False
+from nnsight import LanguageModel
 
 # Set random seed for reproducibility
 seed = 10
