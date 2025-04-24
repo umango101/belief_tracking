@@ -2,15 +2,15 @@ import torch
 
 
 def get_ques_start_token_idx(tokenizer, prompt):
-    input_tokens = tokenizer.encode(prompt, return_tensors="pt").squeeze()
-    corrolary_token = tokenizer.encode(":", return_tensors="pt").squeeze()[-1].item()
+    input_tokens = tokenizer(prompt, return_tensors="pt").input_ids.squeeze()
+    corrolary_token = tokenizer(":", return_tensors="pt").input_ids.squeeze()[-1].item()
     ques_start_idx = (input_tokens == corrolary_token).nonzero()[2].item()
 
     return ques_start_idx - 1
 
 
 def get_visitibility_sent_start_idx(tokenizer, prompt):
-    input_tokens = tokenizer.encode(prompt, return_tensors="pt").squeeze()
+    input_tokens = tokenizer(prompt, return_tensors="pt").input_ids.squeeze()
 
     story_start_idx = (input_tokens == 18422).nonzero()[0].item()
     period_idx = (input_tokens == 13).nonzero(as_tuple=True)[0]
@@ -20,7 +20,7 @@ def get_visitibility_sent_start_idx(tokenizer, prompt):
 
 
 def get_prompt_token_len(tokenizer, prompt):
-    input_tokens = tokenizer.encode(prompt, return_tensors="pt").squeeze()
+    input_tokens = tokenizer(prompt, return_tensors="pt").input_ids.squeeze()
     return len(input_tokens)
 
 
