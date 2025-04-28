@@ -373,16 +373,12 @@ def main():
             df_false, df_true, args.train_size + args.valid_size + args.test_size
         )
     elif args.experiment_type == "visibility_sent":
-        args.patch_layers = [i for i in range(0, 41, 1)] + [
-            i for i in range(50, model.config.num_hidden_layers, 10)
-        ]
+        args.patch_layers = [i for i in range(0, model.config.num_hidden_layers, 1)]
         dataset = get_bigtom_visibility_exps(
             df_false, df_true, args.train_size + args.valid_size + args.test_size
         )
     elif args.experiment_type == "query_sent":
-        args.patch_layers = [i for i in range(0, 30, 10)] + [
-            i for i in range(21, model.config.num_hidden_layers, 1)
-        ]
+        args.patch_layers = [i for i in range(0, model.config.num_hidden_layers, 1)]
         dataset = get_bigtom_visibility_exps(
             df_false, df_true, args.train_size + args.valid_size + args.test_size
         )
