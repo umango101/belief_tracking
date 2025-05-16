@@ -17,7 +17,7 @@ load_dotenv()
 # Local imports
 sys.path.append("../")
 from src.dataset import STORY_TEMPLATES
-from tracer_utils import (
+from causal_mediation_analysis.utils import (
     get_character_tracing_exps,
     get_object_tracing_exps,
     get_state_tracing_exps,

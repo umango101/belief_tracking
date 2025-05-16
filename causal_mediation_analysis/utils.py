@@ -1,5 +1,5 @@
 """
-Utility functions for entity tracing experiments
+Utility functions for causal mediation analysis experiments
 """
 
 import os
@@ -16,8 +16,8 @@ from utils import SampleV3, DatasetV3
 random.seed(10)
 
 
-class TracingDataset(Dataset):
-    """Base class for tracing datasets"""
+class CMAExperimentDataset(Dataset):
+    """Base class for causal mediation analysis datasets"""
 
     def __init__(self, samples):
         self.samples = samples
