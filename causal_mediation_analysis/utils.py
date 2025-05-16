@@ -3,6 +3,7 @@ Utility functions for causal mediation analysis experiments
 """
 
 import os
+import sys
 import random
 import json
 import torch
@@ -10,9 +11,12 @@ from torch.utils.data import DataLoader, Dataset
 from collections import defaultdict
 from tqdm import tqdm
 from nnsight import LanguageModel
-from utils import SampleV3, DatasetV3
 
-# Set random seed for reproducibility
+# Add the parent directory to Python path to allow importing from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.dataset import Sample, Dataset
+
+
 random.seed(10)
 
 
@@ -167,7 +171,7 @@ def get_character_tracing_exps(
     
     for idx in range(num_samples):
         # For corrupt config, use the original characters
-        corrupt_config = SampleV3(
+        corrupt_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
             containers=containers_list[idx],
@@ -182,7 +186,7 @@ def get_character_tracing_exps(
         
         modified_characters = [random_character, characters_list[idx][1]]
         
-        clean_config = SampleV3(
+        clean_config = Sample(
             template_idx=2,
             characters=modified_characters,
             containers=containers_list[idx],
@@ -192,7 +196,7 @@ def get_character_tracing_exps(
     
     # Create samples from configurations
     samples = _create_samples_from_configs(
-        clean_configs, corrupt_configs, DatasetV3, use_corrupt_question=True
+        clean_configs, corrupt_configs, Dataset, use_corrupt_question=True
     )
     
     # Set the target for each sample (first state from clean config)
@@ -234,7 +238,7 @@ def get_object_tracing_exps(
     
     for idx in range(num_samples):
         # For corrupt config, use the original containers
-        corrupt_config = SampleV3(
+        corrupt_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
             containers=containers_list[idx],
@@ -250,7 +254,7 @@ def get_object_tracing_exps(
         modified_containers = containers_list[idx].copy()
         modified_containers[0] = random_container
         
-        clean_config = SampleV3(
+        clean_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
             containers=modified_containers,
@@ -260,7 +264,7 @@ def get_object_tracing_exps(
     
     # Create samples from configurations
     samples = _create_samples_from_configs(
-        clean_configs, corrupt_configs, DatasetV3, use_corrupt_question=True
+        clean_configs, corrupt_configs, Dataset, use_corrupt_question=True
     )
     
     # Set the target for each sample (first state from clean config)
@@ -302,7 +306,7 @@ def get_state_tracing_exps(
     
     for idx in range(num_samples):
         # For corrupt config, use the original states
-        corrupt_config = SampleV3(
+        corrupt_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
             containers=containers_list[idx],
@@ -318,7 +322,7 @@ def get_state_tracing_exps(
         modified_states = states_list[idx].copy()
         modified_states[0] = random_state
         
-        clean_config = SampleV3(
+        clean_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
             containers=containers_list[idx],
@@ -328,7 +332,7 @@ def get_state_tracing_exps(
     
     # Create samples from configurations
     samples = _create_samples_from_configs(
-        clean_configs, corrupt_configs, DatasetV3, use_corrupt_question=False
+        clean_configs, corrupt_configs, Dataset, use_corrupt_question=False
     )
     
     # For state tracing, the target is the first state from corrupt config (different from other tracers)
@@ -340,6 +344,10 @@ def get_state_tracing_exps(
 
 def load_entity_data(data_dir):
     """Load character, state, and container data"""
+    # Convert relative path to absolute path if needed
+    if not os.path.isabs(data_dir):
+        data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), data_dir.lstrip('./'))
+    
     # Load characters
     characters_path = os.path.join(data_dir, "synthetic_entities", "characters.json")
     with open(characters_path, "r") as f:
@@ -349,16 +357,25 @@ def load_entity_data(data_dir):
     all_states = {}
     all_containers = {}
 
-    for entity_type, collection in {
-        "states": all_states,
-        "containers": all_containers,
-    }.items():
-        root_dir = os.path.join(data_dir, "synthetic_entities", entity_type)
-        for file in os.listdir(root_dir):
-            file_path = os.path.join(root_dir, file)
-            with open(file_path, "r") as f:
-                names = json.load(f)
-            collection[file.split(".")[0]] = names
+    # Map file names to entity types
+    entity_type_map = {
+        "bottles": "containers",
+        "drinks": "states"
+    }
+
+    # Load all JSON files in synthetic_entities directory
+    entities_dir = os.path.join(data_dir, "synthetic_entities")
+    for file in os.listdir(entities_dir):
+        if file.endswith('.json') and file != 'characters.json':
+            file_path = os.path.join(entities_dir, file)
+            entity_type = entity_type_map.get(file.split('.')[0])
+            if entity_type:
+                with open(file_path, "r") as f:
+                    names = json.load(f)
+                if entity_type == "states":
+                    all_states[file.split('.')[0]] = names
+                else:
+                    all_containers[file.split('.')[0]] = names
 
     return all_characters, all_states, all_containers
 

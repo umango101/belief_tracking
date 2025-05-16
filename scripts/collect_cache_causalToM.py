@@ -11,7 +11,7 @@ import nnsight
 from nnsight import CONFIG, LanguageModel
 
 sys.path.append("../")
-from src.dataset import SampleV3, DatasetV3, STORY_TEMPLATES
+from src.dataset import Sample, Dataset, STORY_TEMPLATES
 from src.utils import env_utils
 from utils import *
 
@@ -61,7 +61,7 @@ for _ in range(n_samples):
     containers = random.sample(all_containers[template["container_type"]], 2)
     states = random.sample(all_states[template["state_type"]], 2)
 
-    sample = SampleV3(
+    sample = Sample(
         template_idx=template_idx,
         characters=characters,
         containers=containers,
@@ -76,7 +76,7 @@ query_vis_acts = torch.zeros(n_samples, model.config.num_hidden_layers, len(quer
 
 for i in tqdm(range(len(configs)//20)):
     n_samples = 20
-    dataset = DatasetV3(configs[i*20:(i+1)*20])
+    dataset = Dataset(configs[i*20:(i+1)*20])
     dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
     with model.session(remote=True) as session:

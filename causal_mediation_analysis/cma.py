@@ -14,10 +14,7 @@ from enum import Enum, auto
 # Load environment variables from .env file
 load_dotenv()
 
-# Local imports
-sys.path.append("../")
-from src.dataset import STORY_TEMPLATES
-from causal_mediation_analysis.utils import (
+from utils import (
     get_character_tracing_exps,
     get_object_tracing_exps,
     get_state_tracing_exps,
@@ -27,7 +24,6 @@ from causal_mediation_analysis.utils import (
     run_tracing_experiment
 )
 
-# Import nnsight after warnings are suppressed
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -40,6 +36,14 @@ class EntityType(str, Enum):
     OBJECT = "object"
     STATE = "state"
 
+# Get the absolute path to the data directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+STORY_TEMPLATE_PATH = os.path.join(PROJECT_ROOT, "data", "story_templates.json")
+
+with open(STORY_TEMPLATE_PATH, "r") as f:
+    STORY_TEMPLATES = json.load(f)
+
 
 class Tracer:
     """Run Causal Mediation Analysis experiments with language models"""
@@ -49,8 +53,8 @@ class Tracer:
         entity_type="character",
         model_name="meta-llama/Meta-Llama-3-70B-Instruct",
         cache_dir="/disk/u/nikhil/.cache/huggingface/hub/",
-        data_dir="../data",
-        results_dir="../tracing_results",
+        data_dir="data",
+        results_dir="tracing_results",
         num_samples=50,
         batch_size=10,
         tracing_batch_size=25,
@@ -81,8 +85,11 @@ class Tracer:
         self.entity_type = entity_type
         self.model_name = model_name
         self.cache_dir = cache_dir
-        self.data_dir = data_dir
-        self.results_dir = results_dir
+        
+        # Convert relative paths to absolute paths
+        self.data_dir = os.path.join(PROJECT_ROOT, data_dir)
+        self.results_dir = os.path.join(PROJECT_ROOT, results_dir)
+        
         self.num_samples = num_samples
         self.batch_size = batch_size
         self.tracing_batch_size = tracing_batch_size

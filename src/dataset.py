@@ -10,15 +10,17 @@ from torch.utils.data import Dataset
 
 # from src.utils import env_utils
 
-
-STORY_TEMPLATE_PATH = "../data/story_templates.json"
+# Get the absolute path to the data directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+STORY_TEMPLATE_PATH = os.path.join(PROJECT_ROOT, "data", "story_templates.json")
 
 with open(STORY_TEMPLATE_PATH, "r") as f:
     STORY_TEMPLATES = json.load(f)
 
 
 @dataclass(frozen=False)
-class SampleV3(DataClassJsonMixin):
+class Sample(DataClassJsonMixin):
     template_idx: int
     characters: list[str]
     containers: list[str]
@@ -39,7 +41,7 @@ class SampleV3(DataClassJsonMixin):
         self.set_story()
 
     def __eq__(self, other) -> bool:
-        assert isinstance(other, SampleV3)
+        assert isinstance(other, Sample)
         return self.story == other.story
 
     def set_entity_names(self):
@@ -98,8 +100,8 @@ class SampleV3(DataClassJsonMixin):
 
 
 @dataclass(frozen=False)
-class DatasetV3(DataClassJsonMixin):
-    samples: list[SampleV3]
+class Dataset(DataClassJsonMixin):
+    samples: list[Sample]
     instruction: str = (
         "1. Track the belief of each character as described in the story. 2. A character's belief is formed only when they perform an action themselves or can observe the action taking place. 3. A character does not have any beliefs about the container and its contents which they cannot observe. 4. To answer the question, predict only what is inside the queried container, strictly based on the belief of the character, mentioned in the question. 5. If the queried character has no belief about the container in question, then predict 'unknown'. 6. Do not predict container or character as the final output."
     )

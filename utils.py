@@ -5,337 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from html2image import Html2Image
 from typing import List, Dict, Set
-from src.dataset import SampleV3, DatasetV3
-from io import BytesIO
+from src.dataset import Sample, Dataset
 
 random.seed(10)
-
-token_pos_coords = {
-    "e1_last": (95, 170),
-    "e2_last": (95, 325),
-    "e1_query_obj_real": (400, 145),
-    "e1_query_obj_belief": (450, 145),
-    "e2_query_obj_real": (400, 300),
-    "e2_query_obj_belief": (450, 300),
-    "e1_query_charac": (260, 145),
-    "e2_query_charac": (260, 300),
-    "e1_obj1": (360, 105),
-    "e1_obj2": (280, 125),
-    "e2_obj1": (360, 260),
-    "e2_obj2": (280, 280),
-    "e1_state1": (610, 105),
-    "e1_state2": (550, 125),
-    "e2_state1": (610, 260),
-    "e2_state2": (550, 280),
-    "e1_charac1": (120, 105),
-    "e1_charac2": (730, 105),
-    "e2_charac1": (120, 255),
-    "e2_charac2": (720, 250),
-}
-
-
-class StoryGenerator:
-    def __init__(
-        self,
-        characters: Set,
-        objects: Set,
-        states: Set,
-        stories: List[Dict],
-        target: str,
-        arrows: List[Dict],
-        plot_data: Dict,
-    ):
-        self.characters = characters
-        self.objects = objects
-        self.states = states
-        self.arrows = arrows
-        self.stories = stories
-        self.target = target
-        self.plot_data = plot_data
-
-    def color_text(self, text: str) -> str:
-        """Apply color formatting to specific words in the text."""
-        words = text.split()
-        colored_words = []
-
-        for word in words:
-            clean_word = re.sub(r"[^\w\s]", "", word)  # Remove punctuation
-
-            if clean_word in self.characters:
-                colored_word = f'<span style="color:skyblue; font-weight:bold;">{word}</span>'
-            elif clean_word in self.objects:
-                colored_word = f'<span style="color:maroon; font-weight:bold;">{word}</span>'
-            elif clean_word in self.states:
-                colored_word = f'<span style="color:darkgreen; font-weight:bold;">{word}</span>'
-            else:
-                colored_word = word
-
-            colored_words.append(colored_word)
-
-        return " ".join(colored_words)
-
-    def generate_html(self) -> str:
-        """Generate HTML content with stories, arrows, and a right-aligned plot."""
-        html_content = """
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body {
-            font-family: monospace;
-            white-space: pre-wrap;
-            line-height: 1.2;
-            margin: 0 5px;
-            background-color: white;
-            position: relative;
-            font-size: 18px;
-            display: flex;
-            height: 400px;
-            width: 1300px;
-        }
-        .left-container {
-            flex: 1;
-            display: flex;
-            max-width: 60%;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-        .right-container {
-            display: flex;
-            flex-direction: column;
-            flex: 0 0 40%;
-        }
-        .story-container {
-            position: relative;
-            border: 1px solid black;
-            padding: 5px;
-        }
-        .target-container {
-            border: 1px solid black;
-            display: inline-block;
-            padding: 5px;
-        }
-        .svg-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .label {
-            background-color: brown;
-            color: white;
-            padding: 2px 5px;
-            margin-bottom: 2px;
-            display: inline-block;
-            font-weight: bold;
-        }
-        img {
-            height: 93%;
-            width: -webkit-fill-available;
-            margin: auto;
-            position: relative;
-            top: 15px;
-        }
-    </style>
-</head>
-<body>
-<div class="left-container">
-"""
-
-        # Add story blocks with labels
-        for i, story in enumerate(self.stories):
-            colored_story = self.color_text(story["story"])
-            colored_question = self.color_text(story["question"])
-            colored_answer = self.color_text(story["answer"])
-
-            if i == 0:
-                html_content += f"""<div class="box-wrapper"><div class="label">Alternate</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
-            else:
-                html_content += f"""<div class="box-wrapper"><div class="label">Original</div><div class="story-container" id="story-{i}">Story: {colored_story}<br>Question: {colored_question}<br>Answer: {colored_answer}</div></div>"""
-
-        # Add target with label
-        html_content += (
-            f"""<div class="target-container">Target: {self.color_text(self.target)}</div>"""
-        )
-
-        # Add SVG overlay for arrows
-        for i, arrow in enumerate(self.arrows):
-            try:
-                start_x, start_y = arrow["start"]
-                end_x, end_y = arrow["end"]
-                color = arrow.get("color", "black")
-
-                if start_x == end_x and start_y == end_y:
-                    html_content += f"""
-<svg class="svg-container">
-    <path d="M {start_x},{start_y} C {start_x + 75},{start_y - 75} {end_x - 75},{end_y - 75} {end_x - 10},{end_y}"
-          fill="none"
-          stroke="{color}"
-          stroke-width="4"
-          style="paint-order: stroke fill;"
-          marker-end="url(#arrowhead_{i})"/>
-    <defs>
-        <marker id="arrowhead_{i}" markerWidth="6" markerHeight="4.2" refX="4.5" refY="2.1" orient="auto">
-            <polygon points="0 0, 6 2.1, 0 4.2" fill="{color}"/>
-        </marker>
-    </defs>
-</svg>
-"""
-                else:
-                    html_content += f"""
-<svg class="svg-container">
-    <path d="M {start_x},{start_y} {end_x},{end_y}"
-          fill="none"
-          stroke="{color}"
-          stroke-width="4"
-          style="paint-order: stroke fill;"
-          marker-end="url(#arrowhead_{i})"/>
-    <defs>
-        <marker id="arrowhead_{i}" markerWidth="6" markerHeight="4.2" refX="4.5" refY="2.1" orient="auto">
-            <polygon points="0 0, 6 2.1, 0 4.2" fill="{color}"/>
-        </marker>
-    </defs>
-</svg>
-"""
-            except KeyError as e:
-                print(f"Arrow configuration error: {e}")
-
-        html_content += """
-</div>
-<div class="right-container">
-"""
-
-        # Generate the line plot
-        x = np.arange(len(self.plot_data["labels"]))
-        fig, ax = plt.subplots(figsize=(6, 4))
-
-        if "acc_one_layer" in self.plot_data:
-            ax.plot(
-                x,
-                self.plot_data["acc_one_layer"],
-                marker="o",
-                color="black",
-                linestyle="-",
-                label="One layer",
-            )
-        if "acc_upto_layer" in self.plot_data:
-            ax.plot(
-                x,
-                self.plot_data["acc_upto_layer"],
-                marker="*",
-                color="black",
-                linestyle="-",
-                label="Upto layer",
-            )
-        if "acc_from_layer" in self.plot_data:
-            ax.plot(
-                x,
-                self.plot_data["acc_from_layer"],
-                marker="^",
-                color="black",
-                linestyle="-",
-                label="From layer",
-            )
-
-        ax.set_xticks(x)
-        ax.set_xticklabels(self.plot_data["labels"])
-        ax.set_title(self.plot_data["title"])
-        ax.set_xlabel(self.plot_data["x_label"])
-        ax.set_ylabel(self.plot_data["y_label"], color="black")
-        ax.set_ylim(-0.1, 1.1)
-        ax.tick_params(axis="y", labelcolor="black")
-        ax.legend(loc="upper left")
-        ax.grid(True)
-
-        # Increase the marker size
-        for line in ax.get_lines():
-            line.set_markersize(8)
-
-        if "prob_one_layer" in self.plot_data:
-            # Rotate the x-axis labels
-            plt.xticks(rotation=90)
-
-            ax2 = ax.twinx()
-            ax2.set_ylabel("Probability", color="deeppink")
-            ax2.set_ylim(-0.1, 1.1)
-            ax2.tick_params(axis="y", labelcolor="deeppink")
-
-            ax2.plot(
-                x,
-                self.plot_data["prob_one_layer"],
-                marker="o",
-                color="hotpink",
-                linestyle="--",
-                label="One layer",
-            )
-            ax2.plot(
-                x,
-                self.plot_data["prob_upto_layer"],
-                marker="*",
-                color="hotpink",
-                linestyle="--",
-                label="Upto layer",
-            )
-            ax2.plot(
-                x,
-                self.plot_data["prob_from_layer"],
-                marker="^",
-                color="hotpink",
-                linestyle="--",
-                label="From layer",
-            )
-
-            # Change the opacity of plot lines
-            for line in ax2.get_lines():
-                line.set_alpha(0.5)
-
-            # Change the font family to times new roman
-            for item in (
-                [ax.title, ax.xaxis.label, ax.yaxis.label, ax2.yaxis.label]
-                + ax.get_xticklabels()
-                + ax.get_yticklabels()
-                + ax2.get_yticklabels()
-            ):
-                item.set_fontsize(18)
-                item.set_fontname("Times New Roman")
-
-        else:
-            # Change the font family to times new roman
-            for item in (
-                [ax.title, ax.xaxis.label, ax.yaxis.label]
-                + ax.get_xticklabels()
-                + ax.get_yticklabels()
-            ):
-                item.set_fontsize(18)
-                item.set_fontname("Times New Roman")
-
-        plt.tight_layout()
-
-        buf = BytesIO()
-        plt.savefig(buf, format="png", dpi=300)
-        plot_data = buf.getvalue()
-        buf.close()
-
-        # Encode the plot as a base64 URI
-        plot_data_uri = f'data:image/png;base64,{base64.b64encode(plot_data).decode("utf-8")}'
-        html_content += f'<img src="{plot_data_uri}" alt="Plot"/>'
-
-        html_content += """
-</div>
-</body>
-</html>"""
-
-        return html_content
-
-    def save_html(self, filename: str = "../plots/experiments/output.html"):
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(self.generate_html())
-
-    def save_image(self, filename: str = "output.png"):
-        hti = Html2Image(output_path="../plots/experiments/")
-        hti.screenshot(html_str=self.generate_html(), save_as=filename)
 
 
 def get_value_fetcher_exps(
@@ -357,7 +29,7 @@ def get_value_fetcher_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -368,7 +40,7 @@ def get_value_fetcher_exps(
         characters = random.sample(all_characters, 2)
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -376,8 +48,8 @@ def get_value_fetcher_exps(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         if question_type == "belief_question":
@@ -438,7 +110,7 @@ def query_obj_pos(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -450,7 +122,7 @@ def query_obj_pos(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -458,8 +130,8 @@ def query_obj_pos(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
@@ -527,7 +199,7 @@ def query_charac_pos(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -539,7 +211,7 @@ def query_charac_pos(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -547,8 +219,8 @@ def query_charac_pos(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
@@ -616,7 +288,7 @@ def get_pos_trans_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -628,7 +300,7 @@ def get_pos_trans_exps(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -636,8 +308,8 @@ def get_pos_trans_exps(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
@@ -705,7 +377,7 @@ def get_charac_pos_exp(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -717,7 +389,7 @@ def get_charac_pos_exp(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -725,8 +397,8 @@ def get_charac_pos_exp(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
@@ -793,7 +465,7 @@ def get_unidirectional_visibility_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        no_vis_sample = SampleV3(
+        no_vis_sample = Sample(
             template_idx=0 if not additional_characs else 3,
             characters=characters,
             containers=containers,
@@ -810,7 +482,7 @@ def get_unidirectional_visibility_exps(
         while new_containers[0] in containers or new_containers[1] in containers:
             new_containers = random.sample(all_containers[template["container_type"]], 2)
 
-        vis_sample = SampleV3(
+        vis_sample = Sample(
             template_idx=1,
             characters=new_characters,
             containers=new_containers,
@@ -820,8 +492,8 @@ def get_unidirectional_visibility_exps(
         clean_configs.append(no_vis_sample)
         corrupt_configs.append(vis_sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         clean = clean_dataset.__getitem__(
@@ -876,7 +548,7 @@ def get_visibility_align_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        no_vis_sample = SampleV3(
+        no_vis_sample = Sample(
             template=template,
             characters=characters,
             containers=containers,
@@ -890,7 +562,7 @@ def get_visibility_align_exps(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        vis_sample = SampleV3(
+        vis_sample = Sample(
             template=(
                 STORY_TEMPLATES["templates"][1]
                 if diff_visibility
@@ -913,8 +585,8 @@ def get_visibility_align_exps(
             corrupt_configs.append(no_vis_sample)
         orders.append(order)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = 0
@@ -986,7 +658,7 @@ def get_state_pos_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -994,7 +666,7 @@ def get_state_pos_exps(
         )
         clean_configs.append(sample)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -1002,8 +674,8 @@ def get_state_pos_exps(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_container_idx = random.choice([0, 1])
@@ -1069,7 +741,7 @@ def get_obj_pos_exps(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -1081,7 +753,7 @@ def get_obj_pos_exps(
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -1089,8 +761,8 @@ def get_obj_pos_exps(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
@@ -1466,7 +1138,7 @@ def get_source_info(
         containers = random.sample(all_containers[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=characters,
             containers=containers,
@@ -1484,7 +1156,7 @@ def get_source_info(
         while new_containers[0] in containers or new_containers[1] in containers:
             new_containers = random.sample(all_containers[template["container_type"]], 2)
 
-        sample = SampleV3(
+        sample = Sample(
             template_idx=template_idx,
             characters=list(reversed(characters)),
             containers=list(reversed(containers)),
@@ -1492,8 +1164,8 @@ def get_source_info(
         )
         corrupt_configs.append(sample)
 
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
+    clean_dataset = Dataset(clean_configs)
+    corrupt_dataset = Dataset(corrupt_configs)
 
     for idx in range(n_samples):
         random_choice = random.choice([0, 1])
