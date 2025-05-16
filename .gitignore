@@ -8,6 +8,7 @@ generated_tomi_old.json
 finetuning_output/
 pca_results/
 old_masks/
+additionals/
 *.pt
 
 # debug logs
