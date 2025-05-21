@@ -3,13 +3,11 @@ Causal Mediation Analysis experiments with language models
 """
 import os
 import random
-import sys
-import torch
 from torch.utils.data import DataLoader
 import json
 from dotenv import load_dotenv
 import fire
-from enum import Enum, auto
+from enum import Enum
 
 # Load environment variables from .env file
 load_dotenv()

@@ -1,6 +1,5 @@
 import sys
 import torch
-import torch.nn as nn
 from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
@@ -79,7 +78,7 @@ def train_mask(
     test_accs = defaultdict(dict)
 
     # Create a results directory if it doesn't exist
-    results_dir = f"../bigtom_dcm_results/"
+    results_dir = "../bigtom_dcm_results/"
     os.makedirs(results_dir, exist_ok=True)
 
     # Set padding side for tokenization

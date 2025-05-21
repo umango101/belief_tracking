@@ -2,9 +2,8 @@ import json
 import os
 import random
 from dataclasses import dataclass
-from typing import Literal, Optional, List
+from typing import Literal
 
-import pandas as pd
 from dataclasses_json import DataClassJsonMixin
 from torch.utils.data import Dataset
 
@@ -48,7 +47,7 @@ class Sample(DataClassJsonMixin):
         # characters
         for i, character in enumerate(self.characters):
             self.story = self.story.replace(
-                STORY_TEMPLATES["placeholders"]["entity"][f"character"][i], character
+                STORY_TEMPLATES["placeholders"]["entity"]["character"][i], character
             )
 
         # containers
@@ -151,7 +150,7 @@ class Dataset(DataClassJsonMixin):
         )
 
         prompt += f"Question: {question}\n"
-        prompt += f"Answer:"
+        prompt += "Answer:"
         return {
             "characters": sample.characters,
             "objects": sample.containers,
