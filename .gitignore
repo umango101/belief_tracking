@@ -40,4 +40,4 @@ __pycache__/
 *.log
 
 env.yml
-results/
+results_/
