@@ -114,7 +114,6 @@ class Dataset(DataClassJsonMixin):
         set_container: Literal[0, 1] | None = None,
         set_state: Literal[0, 1] | None = None,
         set_character: Literal[0, 1] | None = None,
-        question_type: Literal["belief_question", "state_question"] = "belief_question",
     ):
         prompt = f"Instruction: {self.instruction.strip()}\n\n"
         prompt += f"Story: {self.samples[idx].story.strip()}\n"
@@ -124,23 +123,16 @@ class Dataset(DataClassJsonMixin):
         set_character = random.choice([0, 1]) if set_character is None else set_character
         q_actor = sample.characters[set_character]
         belief_states = sample.character_belief[set_character]
-        initial_states = sample.world_state
         
         set_container = random.choice([0, 1]) if set_container is None else set_container
         q_container = sample.containers[set_container]
 
-        if question_type == "belief_question":
-            if q_container in belief_states:
-                ans = belief_states[q_container]
-            else:
-                ans = "unknown"
+        if q_container in belief_states:
+            ans = belief_states[q_container]
         else:
-            if q_container in initial_states:
-                ans = initial_states[q_container]
-            else:
-                ans = "unknown"
+            ans = "unknown"
 
-        question = sample.template[question_type]
+        question = sample.template["question"]
 
         question = question.replace(
             STORY_TEMPLATES["placeholders"]["question"]["character"], q_actor

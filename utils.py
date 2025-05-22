@@ -5,359 +5,10 @@ from src.dataset import Dataset, Sample
 random.seed(10)
 
 
-def get_value_fetcher_exps(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="state_question",
-    diff_visibility=False,
-):
-    clean_configs, corrupt_configs = [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 2
-        template = STORY_TEMPLATES["templates"][template_idx]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-        sample = Sample(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = Dataset(clean_configs)
-    corrupt_dataset = Dataset(corrupt_configs)
-
-    for idx in range(n_samples):
-        if question_type == "belief_question":
-            random_choice = random.choice([0, 1])
-            clean = clean_dataset.__getitem__(
-                idx,
-                question_type=question_type,
-                set_character=random_choice,
-                set_container=1 ^ random_choice if diff_visibility else random_choice,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                question_type=question_type,
-                set_character=random_choice,
-                set_container=random_choice,
-            )
-        else:
-            clean = clean_dataset.__getitem__(idx, question_type=question_type)
-            corrupt = corrupt_dataset.__getitem__(idx, question_type=question_type)
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_target": " " + clean["target"],
-                "clean_prompt": clean["prompt"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_target": " " + corrupt["target"],
-                "corrupt_prompt": corrupt["prompt"],
-            }
-        )
-
-    return samples
-
-
-def query_obj_pos(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="belief_question",
-):
-    clean_configs, corrupt_configs = [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 2
-        template = STORY_TEMPLATES["templates"][template_idx]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        new_states = random.sample(all_states[template["state_type"]], 2)
-        while new_states[0] in states or new_states[1] in states:
-            new_states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=list(reversed(characters)),
-            containers=list(reversed(containers)),
-            states=new_states,
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = Dataset(clean_configs)
-    corrupt_dataset = Dataset(corrupt_configs)
-
-    for idx in range(n_samples):
-        random_choice = random.choice([0, 1])
-
-        if question_type == "belief_question":
-            clean = clean_dataset.__getitem__(
-                idx,
-                set_container=random_choice,
-                set_character=1 ^ random_choice,
-                question_type=question_type,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice,
-                question_type=question_type,
-            )
-
-        else:
-            clean = clean_dataset.__getitem__(
-                idx, set_container=random_choice, question_type=question_type
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=1 ^ random_choice, question_type=question_type
-            )
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[1 ^ random_choice],
-            }
-        )
-
-    return samples
-
-
-def query_charac_pos(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="belief_question",
-):
-    clean_configs, corrupt_configs = [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 2
-        template = STORY_TEMPLATES["templates"][template_idx]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        new_states = random.sample(all_states[template["state_type"]], 2)
-        while new_states[0] in states or new_states[1] in states:
-            new_states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=list(reversed(characters)),
-            containers=list(reversed(containers)),
-            states=new_states,
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = Dataset(clean_configs)
-    corrupt_dataset = Dataset(corrupt_configs)
-
-    for idx in range(n_samples):
-        random_choice = random.choice([0, 1])
-
-        if question_type == "belief_question":
-            clean = clean_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_choice,
-                set_character=random_choice,
-                question_type=question_type,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice,
-                question_type=question_type,
-            )
-
-        else:
-            clean = clean_dataset.__getitem__(
-                idx, set_container=random_choice, question_type=question_type
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=1 ^ random_choice, question_type=question_type
-            )
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[1 ^ random_choice],
-            }
-        )
-
-    return samples
-
-
-def get_pos_trans_exps_nikhil(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="belief_question",
-):
-    clean_configs, corrupt_configs = [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 2
-        template = STORY_TEMPLATES["templates"][template_idx]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = SampleV3(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        new_states = random.sample(all_states[template["state_type"]], 2)
-        while new_states[0] in states or new_states[1] in states:
-            new_states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = SampleV3(
-            template_idx=template_idx,
-            characters=list(reversed(characters)),
-            containers=list(reversed(containers)),
-            states=new_states,
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = DatasetV3(clean_configs)
-    corrupt_dataset = DatasetV3(corrupt_configs)
-
-    for idx in range(n_samples):
-        random_choice = random.choice([0, 1])
-
-        if question_type == "belief_question":
-            clean = clean_dataset.__getitem__(
-                idx,
-                set_container=random_choice,
-                set_character=random_choice,
-                question_type=question_type,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_choice,
-                set_character=1 ^ random_choice,
-                question_type=question_type,
-            )
-
-        else:
-            clean = clean_dataset.__getitem__(
-                idx, set_container=random_choice, question_type=question_type
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=1 ^ random_choice, question_type=question_type
-            )
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[1 ^ random_choice],
-            }
-        )
-
-    return samples
-
-
 def get_charac_pos_exp(
     STORY_TEMPLATES,
     all_characters,
-    all_containers,
+    all_objects,
     all_states,
     n_samples,
     question_type="belief_question",
@@ -369,7 +20,7 @@ def get_charac_pos_exp(
         template_idx = 2
         template = STORY_TEMPLATES["templates"][template_idx]
         characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
+        containers = random.sample(all_objects[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         sample = Sample(
@@ -446,12 +97,11 @@ def get_charac_pos_exp(
 def get_unidirectional_visibility_exps(
     STORY_TEMPLATES,
     all_characters,
-    all_containers,
+    all_objects,
     all_states,
     n_samples,
     additional_characs=False,
 ):
-
     clean_configs, corrupt_configs, samples = [], [], []
 
     for idx in range(n_samples):
@@ -461,7 +111,7 @@ def get_unidirectional_visibility_exps(
             if not additional_characs
             else random.sample(all_characters, 4)
         )
-        containers = random.sample(all_containers[template["container_type"]], 2)
+        containers = random.sample(all_objects[template["container_type"]], 2)
         states = random.sample(all_states[template["state_type"]], 2)
 
         no_vis_sample = Sample(
@@ -473,15 +123,13 @@ def get_unidirectional_visibility_exps(
 
         new_states = random.sample(all_states[template["state_type"]], 2)
         new_characters = random.sample(all_characters, 2)
-        new_containers = random.sample(all_containers[template["container_type"]], 2)
+        new_containers = random.sample(all_objects[template["container_type"]], 2)
         while new_states[0] in states or new_states[1] in states:
             new_states = random.sample(all_states[template["state_type"]], 2)
         while new_characters[0] in characters or new_characters[1] in characters:
             new_characters = random.sample(all_characters, 2)
         while new_containers[0] in containers or new_containers[1] in containers:
-            new_containers = random.sample(
-                all_containers[template["container_type"]], 2
-            )
+            new_containers = random.sample(all_objects[template["container_type"]], 2)
 
         vis_sample = Sample(
             template_idx=1,
@@ -635,89 +283,6 @@ def get_visibility_align_exps(
                     if orders[idx] == 0
                     else " unknown"
                 ),
-            }
-        )
-
-    return samples
-
-
-def get_state_pos_exps(
-    STORY_TEMPLATES,
-    all_characters,
-    all_containers,
-    all_states,
-    n_samples,
-    question_type="state_question",
-):
-    clean_configs, corrupt_configs = [], []
-    samples = []
-
-    for idx in range(n_samples):
-        template_idx = 0
-        template = STORY_TEMPLATES["templates"][template_idx]
-        characters = random.sample(all_characters, 2)
-        containers = random.sample(all_containers[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-        clean_configs.append(sample)
-
-        sample = Sample(
-            template_idx=template_idx,
-            characters=list(reversed(characters)),
-            containers=list(reversed(containers)),
-            states=list(reversed(states)),
-        )
-        corrupt_configs.append(sample)
-
-    clean_dataset = Dataset(clean_configs)
-    corrupt_dataset = Dataset(corrupt_configs)
-
-    for idx in range(n_samples):
-        random_container_idx = random.choice([0, 1])
-
-        if question_type == "belief_question":
-            clean = clean_dataset.__getitem__(
-                idx,
-                set_container=random_container_idx,
-                set_character=random_container_idx,
-                question_type=question_type,
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx,
-                set_container=1 ^ random_container_idx,
-                set_character=1 ^ random_container_idx,
-                question_type=question_type,
-            )
-        else:
-            clean = clean_dataset.__getitem__(
-                idx, set_container=1 ^ random_container_idx, question_type=question_type
-            )
-            corrupt = corrupt_dataset.__getitem__(
-                idx, set_container=random_container_idx, question_type=question_type
-            )
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[1 ^ random_container_idx],
             }
         )
 
