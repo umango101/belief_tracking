@@ -11,6 +11,17 @@ random.seed(10)
 
 
 def error_detection(model, dataloader, is_remote=False):
+    """
+    Evaluates model performance and identifies errors by comparing predictions on clean and corrupt prompts.
+
+    Args:
+        model: The language model to evaluate
+        dataloader: DataLoader containing clean and corrupt prompts
+        is_remote (bool): Whether to run model inference remotely
+
+    Returns:
+        tuple: (accuracy, list of error indices)
+    """
     correct, total = 0, 0
     errors = []
 
@@ -49,6 +60,18 @@ def error_detection(model, dataloader, is_remote=False):
 
 
 def get_binding_addr_and_payload(all_characters, all_objects, all_states, n_samples):
+    """
+    Generates samples for binding address and payload by creating clean and corrupt configurations.
+
+    Args:
+        all_characters (list): List of available characters
+        all_objects (list): List of available objects/containers
+        all_states (list): List of available states
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and corrupt samples with their configurations
+    """
     clean_configs, corrupt_configs = [], []
     samples = []
 
@@ -115,6 +138,19 @@ def get_binding_addr_and_payload(all_characters, all_objects, all_states, n_samp
 
 
 def get_answer_lookback_pointer(all_characters, all_objects, all_states, n_samples):
+    """
+    Generates samples for answer lookback pointer by creating clean and corrupt configurations
+    with different states.
+
+    Args:
+        all_characters (list): List of available characters
+        all_objects (list): List of available objects/containers
+        all_states (list): List of available states
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and corrupt samples with their configurations
+    """
     clean_configs, corrupt_configs = [], []
     samples = []
 
@@ -190,6 +226,19 @@ def get_query_charac_oi(
     all_states,
     n_samples,
 ):
+    """
+    Generates samples for aligning queried character OI by creating clean and corrupt configurations
+    with different states and character-object mappings.
+
+    Args:
+        all_characters (list): List of available characters
+        all_objects (list): List of available objects/containers
+        all_states (list): List of available states
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and corrupt samples with their configurations
+    """
     clean_configs, corrupt_configs = [], []
     samples = []
 
@@ -265,6 +314,19 @@ def get_query_object_oi(
     all_states,
     n_samples,
 ):
+    """
+    Generates samples for aligning queried object OI by creating clean and corrupt configurations
+    with different states and object-character mappings.
+
+    Args:
+        all_characters (list): List of available characters
+        all_objects (list): List of available objects/containers
+        all_states (list): List of available states
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and corrupt samples with their configurations
+    """
     clean_configs, corrupt_configs = [], []
     samples = []
 
@@ -340,6 +402,19 @@ def get_answer_lookback_payload(
     all_states,
     n_samples,
 ):
+    """
+    Generates samples for answer lookback payload by creating clean and corrupt configurations
+    with different character-object-state mappings.
+
+    Args:
+        all_characters (list): List of available characters
+        all_objects (list): List of available objects/containers
+        all_states (list): List of available states
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and corrupt samples with their configurations
+    """
     clean_configs, corrupt_configs = [], []
     samples = []
 
