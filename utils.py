@@ -2,8 +2,6 @@ import random
 
 from src.dataset import Dataset, Sample
 
-random.seed(10)
-
 
 def get_charac_pos_exp(
     STORY_TEMPLATES,
@@ -91,92 +89,6 @@ def get_charac_pos_exp(
             }
         )
 
-    return samples
-
-
-def get_unidirectional_visibility_exps(
-    STORY_TEMPLATES,
-    all_characters,
-    all_objects,
-    all_states,
-    n_samples,
-    additional_characs=False,
-):
-    clean_configs, corrupt_configs, samples = [], [], []
-
-    for idx in range(n_samples):
-        template = STORY_TEMPLATES["templates"][0]
-        characters = (
-            random.sample(all_characters, 2)
-            if not additional_characs
-            else random.sample(all_characters, 4)
-        )
-        containers = random.sample(all_objects[template["container_type"]], 2)
-        states = random.sample(all_states[template["state_type"]], 2)
-
-        no_vis_sample = Sample(
-            template_idx=0 if not additional_characs else 3,
-            characters=characters,
-            containers=containers,
-            states=states,
-        )
-
-        new_states = random.sample(all_states[template["state_type"]], 2)
-        new_characters = random.sample(all_characters, 2)
-        new_containers = random.sample(all_objects[template["container_type"]], 2)
-        while new_states[0] in states or new_states[1] in states:
-            new_states = random.sample(all_states[template["state_type"]], 2)
-        while new_characters[0] in characters or new_characters[1] in characters:
-            new_characters = random.sample(all_characters, 2)
-        while new_containers[0] in containers or new_containers[1] in containers:
-            new_containers = random.sample(all_objects[template["container_type"]], 2)
-
-        vis_sample = Sample(
-            template_idx=1,
-            characters=new_characters,
-            containers=new_containers,
-            states=new_states,
-        )
-
-        clean_configs.append(no_vis_sample)
-        corrupt_configs.append(vis_sample)
-
-    clean_dataset = Dataset(clean_configs)
-    corrupt_dataset = Dataset(corrupt_configs)
-
-    for idx in range(n_samples):
-        clean = clean_dataset.__getitem__(
-            idx,
-            set_character=0,
-            set_container=1,
-            question_type="belief_question",
-        )
-        corrupt = corrupt_dataset.__getitem__(
-            idx,
-            set_character=0,
-            set_container=1,
-            question_type="belief_question",
-        )
-
-        samples.append(
-            {
-                "clean_characters": clean["characters"],
-                "clean_objects": clean["objects"],
-                "clean_states": clean["states"],
-                "clean_story": clean["story"],
-                "clean_question": clean["question"],
-                "clean_prompt": clean["prompt"],
-                "clean_ans": clean["target"],
-                "corrupt_characters": corrupt["characters"],
-                "corrupt_objects": corrupt["objects"],
-                "corrupt_states": corrupt["states"],
-                "corrupt_story": corrupt["story"],
-                "corrupt_question": corrupt["question"],
-                "corrupt_prompt": corrupt["prompt"],
-                "corrupt_ans": corrupt["target"],
-                "target": " " + clean_configs[idx].states[1],
-            }
-        )
     return samples
 
 

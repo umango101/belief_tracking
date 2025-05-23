@@ -1,6 +1,0 @@
-MODEL_DIR: "models"
-RESULTS_DIR: "results"
-HPARAMS_DIR: "hparams"
-DATA_DIR: "data"
-
-NDIF_KEY: ""

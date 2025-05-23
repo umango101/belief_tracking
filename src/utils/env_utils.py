@@ -18,15 +18,6 @@ try:
         config = yaml.safe_load(f)
         DEFAULT_MODELS_DIR = config["MODEL_DIR"]
         DEFAULT_DATA_DIR = os.path.join(PROJECT_ROOT, config["DATA_DIR"])
-        DEFAULT_RESULTS_DIR = os.path.join(PROJECT_ROOT, config["RESULTS_DIR"])
-
-        for dir in [
-            DEFAULT_MODELS_DIR,
-            DEFAULT_DATA_DIR,
-            DEFAULT_RESULTS_DIR,
-        ]:
-            if not os.path.exists(dir):
-                os.makedirs(dir)
 
 except FileNotFoundError:
     logger.error(
@@ -39,7 +30,6 @@ Other defaults are set to:
     )
     DEFAULT_MODELS_DIR = ""
     DEFAULT_DATA_DIR = "data"
-    DEFAULT_RESULTS_DIR = "results"
 
 
 def load_env_var(var: str) -> Union[str, None]:
