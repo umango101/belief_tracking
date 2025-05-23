@@ -17,7 +17,7 @@ from utils import (
     get_bigtom_visibility_exps,
 )
 
-from experiments.bigToM.bigtom_utils import (
+from experiments.bigToM.utils import (
     get_ques_start_token_idx,
     get_visitibility_sent_start_idx,
     get_prompt_token_len,

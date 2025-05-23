@@ -4,7 +4,7 @@ import sys
 import torch
 from tqdm import tqdm
 
-sys.path.append("..")
+sys.path.append("../..")
 from src.dataset import Dataset, Sample
 
 random.seed(10)

@@ -10,7 +10,7 @@ from nnsight import CONFIG, LanguageModel
 
 sys.path.append("../")
 from utils import *
-from experiments.bigToM.bigtom_utils import *
+from experiments.bigToM.utils import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 random.seed(10)

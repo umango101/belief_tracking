@@ -361,15 +361,19 @@ def load_entity_data(data_dir):
     return all_characters, all_objects, all_states
 
 
-def load_model(model_name, cache_dir=None):
+def load_model(model_name, is_remote=False, cache_dir=None):
     """Load the language model"""
-    return LanguageModel(
-        model_name,
-        cache_dir=cache_dir,
-        device_map="auto",
-        torch_dtype=torch.float16,
-        dispatch=True,
-    )
+
+    if is_remote:
+        model = LanguageModel("meta-llama/Llama-3.1-70B")
+    else:
+        model = LanguageModel(
+            "meta-llama/Meta-Llama-3-70B-Instruct",
+            device_map="auto",
+            torch_dtype=torch.float16,
+            dispatch=True,
+        )
+    return model
 
 
 def find_correct_samples(model, dataset, batch_size=10, num_samples=50):

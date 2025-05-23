@@ -58,6 +58,7 @@ class Tracer:
         random_seed=10,
         start_token=180,
         start_layer=0,
+        is_remote=False,
     ):
         """
         Initialize Causal Mediation Analysis experiment
@@ -131,7 +132,7 @@ class Tracer:
 
         all_characters, all_states, all_containers = load_entity_data(self.data_dir)
 
-        model = load_model(self.model_name)
+        model = load_model(self.model_name, is_remote=self.is_remote)
 
         dataset_generator = self._get_dataset_generator()
 
