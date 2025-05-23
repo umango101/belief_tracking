@@ -2,20 +2,25 @@
 Utility functions for causal mediation analysis experiments
 """
 
-import os
-import sys
-import random
 import json
-import torch
-from torch.utils.data import DataLoader, Dataset
+import os
+import random
+import sys
 from collections import defaultdict
-from tqdm import tqdm
+
+import torch
 from nnsight import LanguageModel
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
-# Add the parent directory to Python path to allow importing from src
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.dataset import Sample, Dataset
+# Add the project root directory to Python path to allow importing from src
+project_root = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+sys.path.append(project_root)
 
+from src.dataset import Dataset, Sample
+from src.utils import env_utils
 
 random.seed(10)
 
@@ -34,15 +39,18 @@ class CMAExperimentDataset(Dataset):
 
 
 def _create_base_configurations(
-    story_templates, all_characters, all_containers, all_states, num_samples, template_idx=2
+    all_characters,
+    all_containers,
+    all_states,
+    num_samples,
 ):
     """
     Create base configurations for tracing experiments.
-    
+
     This helper function generates the common base configurations needed for all types
     of tracing experiments. It selects characters, containers, and states based on the
     template requirements.
-    
+
     Args:
         story_templates (dict): Dictionary containing story templates
         all_characters (list): List of all available characters
@@ -50,37 +58,29 @@ def _create_base_configurations(
         all_states (dict): Dictionary mapping state types to lists of states
         num_samples (int): Number of samples to generate
         template_idx (int, optional): Index of the template to use. Defaults to 2.
-        
+
     Returns:
         tuple: Tuple containing (template, characters_list, containers_list, states_list)
                where each *_list contains num_samples randomly selected pairs
     """
-    template = story_templates["templates"][template_idx]
-    container_type = template["container_type"]
-    state_type = template["state_type"]
-    
-    # Initialize lists to store selected entities for each sample
+
     characters_list = []
     containers_list = []
     states_list = []
-    
+
     # Generate configurations for each sample
     for _ in range(num_samples):
-        # Select two random characters
         sample_characters = random.sample(all_characters, 2)
-        
-        # Select two random containers of the appropriate type
-        sample_containers = random.sample(all_containers[container_type], 2)
-        
-        # Select two random states of the appropriate type
-        sample_states = random.sample(all_states[state_type], 2)
-        
-        # Store the selected entities
+
+        sample_containers = random.sample(all_containers, 2)
+
+        sample_states = random.sample(all_states, 2)
+
         characters_list.append(sample_characters)
         containers_list.append(sample_containers)
         states_list.append(sample_states)
-    
-    return template, characters_list, containers_list, states_list
+
+    return characters_list, containers_list, states_list
 
 
 def _create_samples_from_configs(
@@ -88,37 +88,38 @@ def _create_samples_from_configs(
 ):
     """
     Create samples from clean and corrupt configurations.
-    
+
     This helper function generates samples for tracing experiments by combining
     clean and corrupt configurations according to the experiment's requirements.
-    
+
     Args:
         clean_configs (list): List of clean configuration objects
         corrupt_configs (list): List of corrupt configuration objects
         dataset_class (class): Dataset class to use for generating samples
-        use_corrupt_question (bool, optional): If True, use the corrupt question in the 
+        use_corrupt_question (bool, optional): If True, use the corrupt question in the
                                               clean prompt. Defaults to True.
-        
+
     Returns:
         list: List of sample dictionaries with clean and corrupt prompts and answers
     """
-    # Create datasets from configurations
     clean_dataset = dataset_class(clean_configs)
     corrupt_dataset = dataset_class(corrupt_configs)
-    
+
     samples = []
     num_samples = len(clean_configs)
-    
+
     for idx in range(num_samples):
         # Get items from datasets with specific settings
         clean_item = clean_dataset.__getitem__(idx, set_character=0, set_container=0)
-        corrupt_item = corrupt_dataset.__getitem__(idx, set_character=0, set_container=0)
-        
+        corrupt_item = corrupt_dataset.__getitem__(
+            idx, set_character=0, set_container=0
+        )
+
         clean_prompt = clean_item["prompt"]
         clean_target = clean_item["target"]
         corrupt_prompt = corrupt_item["prompt"]
         corrupt_target = corrupt_item["target"]
-        
+
         # If using corrupt question, replace the question in the clean prompt
         if use_corrupt_question:
             clean_prompt = clean_prompt.replace(
@@ -126,7 +127,7 @@ def _create_samples_from_configs(
             )
             # Set clean target to "unknown" since we modified the question
             clean_target = "unknown"
-        
+
         # Create sample with clean and corrupt prompts and targets
         sample = {
             "clean_prompt": clean_prompt,
@@ -135,9 +136,9 @@ def _create_samples_from_configs(
             "corrupt_ans": corrupt_target,
             # The target depends on the specific experiment type and is set by the caller
         }
-        
+
         samples.append(sample)
-    
+
     return samples
 
 
@@ -146,29 +147,27 @@ def get_character_tracing_exps(
 ):
     """
     Generate samples for character tracing experiments.
-    
+
     This function creates samples where the character entity is modified between
     clean and corrupt configurations. The experiment tests whether the model can
     trace information about characters through its layers.
-    
+
     Args:
         story_templates (dict): Dictionary containing story templates
         all_characters (list): List of all available characters
         all_containers (dict): Dictionary mapping container types to lists of containers
         all_states (dict): Dictionary mapping state types to lists of states
         num_samples (int): Number of samples to generate
-        
+
     Returns:
         list: List of sample dictionaries for character tracing experiments
     """
-    # Create base configurations
-    template, characters_list, containers_list, states_list = _create_base_configurations(
-        story_templates, all_characters, all_containers, all_states, num_samples
+    characters_list, containers_list, states_list = _create_base_configurations(
+        all_characters, all_containers, all_states, num_samples
     )
-    
-    # Initialize clean and corrupt configuration lists
+
     clean_configs, corrupt_configs = [], []
-    
+
     for idx in range(num_samples):
         # For corrupt config, use the original characters
         corrupt_config = Sample(
@@ -178,14 +177,14 @@ def get_character_tracing_exps(
             states=states_list[idx],
         )
         corrupt_configs.append(corrupt_config)
-        
+
         # For clean config, replace the first character with a random different one
         random_character = random.choice(all_characters)
         while random_character in characters_list[idx]:
             random_character = random.choice(all_characters)
-        
+
         modified_characters = [random_character, characters_list[idx][1]]
-        
+
         clean_config = Sample(
             template_idx=2,
             characters=modified_characters,
@@ -193,16 +192,15 @@ def get_character_tracing_exps(
             states=states_list[idx],
         )
         clean_configs.append(clean_config)
-    
-    # Create samples from configurations
+
     samples = _create_samples_from_configs(
         clean_configs, corrupt_configs, Dataset, use_corrupt_question=True
     )
-    
+
     # Set the target for each sample (first state from clean config)
     for idx, sample in enumerate(samples):
         sample["target"] = " " + clean_configs[idx].states[0]
-    
+
     return samples
 
 
@@ -211,31 +209,27 @@ def get_object_tracing_exps(
 ):
     """
     Generate samples for object (container) tracing experiments.
-    
+
     This function creates samples where the container entity is modified between
     clean and corrupt configurations. The experiment tests whether the model can
     trace information about containers through its layers.
-    
+
     Args:
         story_templates (dict): Dictionary containing story templates
         all_characters (list): List of all available characters
         all_containers (dict): Dictionary mapping container types to lists of containers
         all_states (dict): Dictionary mapping state types to lists of states
         num_samples (int): Number of samples to generate
-        
+
     Returns:
         list: List of sample dictionaries for object tracing experiments
     """
-    # Create base configurations
-    template, characters_list, containers_list, states_list = _create_base_configurations(
-        story_templates, all_characters, all_containers, all_states, num_samples
+    characters_list, containers_list, states_list = _create_base_configurations(
+        all_characters, all_containers, all_states, num_samples
     )
-    
-    # Initialize clean and corrupt configuration lists
+
     clean_configs, corrupt_configs = [], []
-    
-    container_type = template["container_type"]
-    
+
     for idx in range(num_samples):
         # For corrupt config, use the original containers
         corrupt_config = Sample(
@@ -245,15 +239,15 @@ def get_object_tracing_exps(
             states=states_list[idx],
         )
         corrupt_configs.append(corrupt_config)
-        
+
         # For clean config, replace the first container with a random different one
-        random_container = random.choice(all_containers[container_type])
+        random_container = random.choice(all_containers)
         while random_container in containers_list[idx]:
-            random_container = random.choice(all_containers[container_type])
-        
+            random_container = random.choice(all_containers)
+
         modified_containers = containers_list[idx].copy()
         modified_containers[0] = random_container
-        
+
         clean_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
@@ -261,16 +255,16 @@ def get_object_tracing_exps(
             states=states_list[idx],
         )
         clean_configs.append(clean_config)
-    
+
     # Create samples from configurations
     samples = _create_samples_from_configs(
         clean_configs, corrupt_configs, Dataset, use_corrupt_question=True
     )
-    
+
     # Set the target for each sample (first state from clean config)
     for idx, sample in enumerate(samples):
         sample["target"] = " " + clean_configs[idx].states[0]
-    
+
     return samples
 
 
@@ -279,31 +273,27 @@ def get_state_tracing_exps(
 ):
     """
     Generate samples for state tracing experiments.
-    
+
     This function creates samples where the state entity is modified between
     clean and corrupt configurations. The experiment tests whether the model can
     trace information about states through its layers.
-    
+
     Args:
         story_templates (dict): Dictionary containing story templates
         all_characters (list): List of all available characters
         all_containers (dict): Dictionary mapping container types to lists of containers
         all_states (dict): Dictionary mapping state types to lists of states
         num_samples (int): Number of samples to generate
-        
+
     Returns:
         list: List of sample dictionaries for state tracing experiments
     """
-    # Create base configurations
-    template, characters_list, containers_list, states_list = _create_base_configurations(
-        story_templates, all_characters, all_containers, all_states, num_samples
+    characters_list, containers_list, states_list = _create_base_configurations(
+        all_characters, all_containers, all_states, num_samples
     )
-    
-    # Initialize clean and corrupt configuration lists
+
     clean_configs, corrupt_configs = [], []
-    
-    state_type = template["state_type"]
-    
+
     for idx in range(num_samples):
         # For corrupt config, use the original states
         corrupt_config = Sample(
@@ -313,15 +303,15 @@ def get_state_tracing_exps(
             states=states_list[idx],
         )
         corrupt_configs.append(corrupt_config)
-        
+
         # For clean config, replace the first state with a random different one
-        random_state = random.choice(all_states[state_type])
+        random_state = random.choice(all_states)
         while random_state in states_list[idx]:
-            random_state = random.choice(all_states[state_type])
-        
+            random_state = random.choice(all_states)
+
         modified_states = states_list[idx].copy()
         modified_states[0] = random_state
-        
+
         clean_config = Sample(
             template_idx=2,
             characters=characters_list[idx],
@@ -329,58 +319,49 @@ def get_state_tracing_exps(
             states=modified_states,
         )
         clean_configs.append(clean_config)
-    
-    # Create samples from configurations
+
     samples = _create_samples_from_configs(
         clean_configs, corrupt_configs, Dataset, use_corrupt_question=False
     )
-    
+
     # For state tracing, the target is the first state from corrupt config (different from other tracers)
     for idx, sample in enumerate(samples):
         sample["target"] = " " + corrupt_configs[idx].states[0]
-    
+
     return samples
 
 
 def load_entity_data(data_dir):
     """Load character, state, and container data"""
-    # Convert relative path to absolute path if needed
-    if not os.path.isabs(data_dir):
-        data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), data_dir.lstrip('./'))
-    
-    # Load characters
-    characters_path = os.path.join(data_dir, "synthetic_entities", "characters.json")
-    with open(characters_path, "r") as f:
-        all_characters = json.load(f)
+    all_characters = json.load(
+        open(
+            os.path.join(
+                env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "characters.json"
+            ),
+            "r",
+        )
+    )
+    all_objects = json.load(
+        open(
+            os.path.join(
+                env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "bottles.json"
+            ),
+            "r",
+        )
+    )
+    all_states = json.load(
+        open(
+            os.path.join(
+                env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "drinks.json"
+            ),
+            "r",
+        )
+    )
 
-    # Load states and containers
-    all_states = {}
-    all_containers = {}
-
-    # Map file names to entity types
-    entity_type_map = {
-        "bottles": "containers",
-        "drinks": "states"
-    }
-
-    # Load all JSON files in synthetic_entities directory
-    entities_dir = os.path.join(data_dir, "synthetic_entities")
-    for file in os.listdir(entities_dir):
-        if file.endswith('.json') and file != 'characters.json':
-            file_path = os.path.join(entities_dir, file)
-            entity_type = entity_type_map.get(file.split('.')[0])
-            if entity_type:
-                with open(file_path, "r") as f:
-                    names = json.load(f)
-                if entity_type == "states":
-                    all_states[file.split('.')[0]] = names
-                else:
-                    all_containers[file.split('.')[0]] = names
-
-    return all_characters, all_states, all_containers
+    return all_characters, all_objects, all_states
 
 
-def load_model(model_name, cache_dir):
+def load_model(model_name, cache_dir=None):
     """Load the language model"""
     return LanguageModel(
         model_name,
@@ -471,9 +452,9 @@ def run_tracing_experiment(model, dataloader, start_token, start_layer, results_
                             )
 
                         with tracer.invoke(clean_prompt):
-                            model.model.layers[layer_idx].output[0][
-                                :, t
-                            ] = corrupt_layer_out
+                            model.model.layers[layer_idx].output[0][:, t] = (
+                                corrupt_layer_out
+                            )
                             pred = model.lm_head.output[:, -1].argmax(dim=-1).save()
 
                 for i in range(batch_size):
