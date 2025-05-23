@@ -15,9 +15,6 @@ from experiments.bigToM.utils import *
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 random.seed(10)
 
-CONFIG.set_default_api_key("d9e00ab7d4f74643b3176de0913f24a7")
-os.environ["HF_TOKEN"] = "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"
-
 # Ignore warnings
 import warnings
 
