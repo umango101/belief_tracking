@@ -13,7 +13,7 @@ from nnsight import CONFIG, LanguageModel
 sys.path.append("../")
 from src.dataset import Sample, Dataset, STORY_TEMPLATES
 from src.utils import env_utils
-from utils import *
+from additionals.utils import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 random.seed(10)

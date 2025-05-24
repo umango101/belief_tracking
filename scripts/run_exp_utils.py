@@ -5,7 +5,6 @@ import json
 import os
 import random
 import threading
-from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any, Callable, Literal
 
@@ -16,7 +15,6 @@ from nnsight import LanguageModel
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from src.dataset import STORY_TEMPLATES
 from src.utils import env_utils
 
 
@@ -124,83 +122,80 @@ def send_request_to_ndif(nnsight_request: Callable, timeout=72000, n_try=5) -> A
     )
 
 
-from utils import (
-    get_charac_pos_exp,
-    get_obj_pos_exps,
-    get_pos_trans_exps,
+from experiments.causalToM_novis.utils import (
+    get_answer_lookback_payload,
+    get_answer_lookback_pointer,
     get_binding_addr_and_payload,
-    get_unidirectional_visibility_exps,
-    get_value_fetcher_exps,
-    query_charac_pos,
-    query_obj_pos,
+    get_query_charac_oi,
+    get_query_object_oi,
 )
+from experiments.causalToM_vis.utils import get_visibility_lookback_data
 
 exp_to_ds_func_map = {
-    # "position_transmitter": get_pos_trans_exps,
-    "position_transmitter": get_pos_trans_exps,
-    "position_transmitter_nikhil": get_pos_trans_exps,
-    "value_fetcher": get_value_fetcher_exps,
-    "query_object": query_obj_pos,
-    "query_character": query_charac_pos,
-    "state_position": get_binding_addr_and_payload,
-    "object_position": get_obj_pos_exps,
-    "character_position": get_charac_pos_exp,
-    "vis_2nd": get_unidirectional_visibility_exps,
-    "vis_ques": get_unidirectional_visibility_exps,
-    "vis_2nd_and_ques": get_unidirectional_visibility_exps,
-    "vis_2nd_to_1st_and_ques": get_unidirectional_visibility_exps,
-    "source_1": get_pos_trans_exps,
-    "source_2": get_pos_trans_exps,
-    "pointer": get_pos_trans_exps,
+    "answer_lookback-pointer": get_answer_lookback_pointer,
+    "answer_lookback-payload": get_answer_lookback_payload,
+    "binding_lookback-pointer_object": get_query_object_oi,
+    "binding_lookback-pointer_character": get_query_charac_oi,
+    "binding_lookback-address_and_payload": get_binding_addr_and_payload,
+    "visibility_lookback-payload": get_visibility_lookback_data,
+    "visibility_lookback-source": get_visibility_lookback_data,
+    "visibility_lookback-address_and_payload": get_visibility_lookback_data,
+    "vis_2nd_to_1st_and_ques": get_visibility_lookback_data,
+    "binding_lookback-source_1": get_answer_lookback_pointer,
+    "binding_lookback-source_2": get_answer_lookback_pointer,
+    "binding_lookback-pointer_charac_and_object": get_answer_lookback_pointer,
 }
 
 exp_to_vec_type = {
-    "position_transmitter": "last_token",
-    "value_fetcher": "last_token",
-    "query_object": "query_obj_ordering_id",
-    "query_character": "query_charac_ordering_id",
-    "state_position": "state_ordering_id",
-    "object_position": "object_ordering_id",
-    "character_position": "character_ordering_id",
-    "vis_2nd": "second_visibility_sent",
-    "vis_ques": None,
-    "vis_2nd_and_ques": None,
+    "answer_lookback-pointer": "last_token",
+    "answer_lookback-payload": "last_token",
+    "binding_lookback-pointer_object": "query_obj_ordering_id",
+    "binding_lookback-pointer_character": "query_charac_ordering_id",
+    "binding_lookback-address_and_payload": "state_ordering_id",
+    "binding_lookback-object_oi": "object_ordering_id",
+    "binding_lookback-character_oi": "character_ordering_id",
+    "visibility_lookback-payload": "second_visibility_sent",
+    "visibility_lookback-source": None,
+    "visibility_lookback-address_and_payload": None,
     "vis_2nd_to_1st_and_ques": None,
-    "source_1": ["object_ordering_id", "character_ordering_id"],
-    "source_2": ["object_ordering_id", "character_ordering_id"],
-    "pointer": ["query_obj_ordering_id", "query_charac_ordering_id"],
+    "binding_lookback-source_1": ["object_ordering_id", "character_ordering_id"],
+    "binding_lookback-source_2": ["object_ordering_id", "character_ordering_id"],
+    "binding_lookback-pointer_charac_and_object": [
+        "query_obj_ordering_id",
+        "query_charac_ordering_id",
+    ],
 }
 
 exp_to_intervention_positions = {
-    "position_transmitter": {
+    "answer_lookback-pointer": {
         "cache": [-1],
         "patch": [-1],
     },
-    "value_fetcher": {
+    "answer_lookback-payload": {
         "cache": [-1],
         "patch": [-1],
     },
-    "query_object": {
+    "binding_lookback-pointer_object": {
         "cache": [-5, -4],
         "patch": [-5, -4],
     },
-    "query_character": {
+    "binding_lookback-pointer_character": {
         "cache": [-8, -7],
         "patch": [-8, -7],
     },
-    "state_position": {
+    "binding_lookback-address_and_payload": {
         "cache": [155, 156, 167, 168],
         "patch": [167, 168, 155, 156],
     },
-    "vis_2nd": {
+    "visibility_lookback-payload": {
         "cache": [i for i in range(176, 183)],
         "patch": [i for i in range(176, 183)],
     },
-    "vis_ques": {
+    "visibility_lookback-source": {
         "cache": [i for i in range(183, 195)],
         "patch": [i for i in range(183, 195)],
     },
-    "vis_2nd_and_ques": {
+    "visibility_lookback-address_and_payload": {
         "cache": [i for i in range(176, 195)],  # second visibility + question
         "patch": [i for i in range(176, 195)],  # second visibility + question
     },
@@ -210,8 +205,12 @@ exp_to_intervention_positions = {
         "patch": [i for i in range(169, 176)]
         + [i for i in range(183, 195)],  # first visibility + question
     },
-    "pointer": {
-        "cache": [-5, -4] + [-8, -7],  # query_object + query_character
+    "binding_lookback-pointer_charac_and_object": {
+        "cache": [-5, -4]
+        + [
+            -8,
+            -7,
+        ],  # binding_lookback-pointer_object + binding_lookback-pointer_character
         "patch": [-5, -4] + [-8, -7],
     },
 }
@@ -226,13 +225,12 @@ def set_seed(seed: int) -> None:
 
 
 directions_folder = {
-    "singular_vecs": "svd_results",
-    "principal_components": "pca_results",
+    "singular_vecs": "svd/CausalToM",
 }
 
 
 def load_basis_directions(
-    direction_type: Literal["singular_vecs", "principal_components"],
+    direction_type: Literal["singular_vecs"],
     vector_type: (
         Literal[
             "last_token",
@@ -245,16 +243,15 @@ def load_basis_directions(
         ]
         | None
     ),
-    path: str = "belief_tracking",
     prefix: str = "",
 ) -> dict[int, torch.Tensor]:
     if vector_type is None:
         print("WARNING: No direction type specified")
         return None
     path = os.path.join(
-        prefix, directions_folder[direction_type], path, vector_type, direction_type
+        prefix, directions_folder[direction_type], vector_type, direction_type
     )
-    directions = defaultdict(torch.Tensor)
+    directions = {}
     for file in os.listdir(path):
         idx = int(file.split(".")[0])
         directions[idx] = torch.load(os.path.join(path, file)).cpu()
@@ -262,6 +259,7 @@ def load_basis_directions(
     print(
         f"""Loaded {len(directions)} {direction_type} directions for {vector_type} | shape: {directions[0].shape}"""
     )
+    print(type(directions))
 
     return directions
 
@@ -343,8 +341,6 @@ def prepare_dataset(
     lm: LanguageModel | None = None,
     remote: bool = False,
 ):
-    all_states = {}
-    all_containers = {}
     all_characters = json.load(
         open(
             os.path.join(
@@ -353,29 +349,28 @@ def prepare_dataset(
             "r",
         )
     )
-
-    for TYPE, DCT in {"states": all_states, "containers": all_containers}.items():
-        ROOT = os.path.join(env_utils.DEFAULT_DATA_DIR, "synthetic_entities", TYPE)
-        for file in os.listdir(ROOT):
-            file_path = os.path.join(ROOT, file)
-            with open(file_path, "r") as f:
-                names = json.load(f)
-            DCT[file.split(".")[0]] = names
-
-    specific_kwargs = {}
-    if experiment_name.startswith("vis"):
-        specific_kwargs["additional_characs"] = (
-            experiment_name == "vis_2nd_to_1st_and_ques"
+    all_objects = json.load(
+        open(
+            os.path.join(
+                env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "bottles.json"
+            ),
+            "r",
         )
-    else:
-        specific_kwargs["question_type"] = "belief_question"
+    )
+    all_states = json.load(
+        open(
+            os.path.join(
+                env_utils.DEFAULT_DATA_DIR, "synthetic_entities", "drinks.json"
+            ),
+            "r",
+        )
+    )
+
     dataset = exp_to_ds_func_map[experiment_name](
-        STORY_TEMPLATES,
         all_characters,
-        all_containers,
+        all_objects,
         all_states,
         2 * (train_size + valid_size),
-        **specific_kwargs,
     )
 
     if lm is not None:

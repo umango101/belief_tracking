@@ -365,7 +365,7 @@ def load_model(model_name, is_remote=False, cache_dir=None):
     """Load the language model"""
 
     if is_remote:
-        model = LanguageModel("meta-llama/Llama-3.1-70B")
+        model = LanguageModel("meta-llama/Meta-Llama-3.1-405B-Instruct")
     else:
         model = LanguageModel(
             "meta-llama/Meta-Llama-3-70B-Instruct",

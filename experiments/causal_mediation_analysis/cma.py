@@ -12,7 +12,7 @@ import fire
 from nnsight import CONFIG
 from torch.utils.data import DataLoader
 
-from utils import (
+from additionals.utils import (
     find_correct_samples,
     get_character_tracing_exps,
     get_object_tracing_exps,

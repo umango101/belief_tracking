@@ -1,24 +1,28 @@
-import sys
-import torch
-from torch.utils.data import DataLoader
-import pandas as pd
-import numpy as np
-from tqdm import tqdm
-from collections import defaultdict
-import os
 import argparse
 import json
+import os
+import sys
+from collections import defaultdict
 
-sys.path.append("../")
-from utils import *
+import numpy as np
+import pandas as pd
+import torch
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
-from experiments.bigToM.utils import (
-    get_ques_start_token_idx,
-    get_visitibility_sent_start_idx,
-    get_prompt_token_len,
+# Add the root directory to Python path
+root_dir = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
+sys.path.append(root_dir)
 
 from nnsight import LanguageModel
+
+from experiments.bigToM.utils import (
+    get_prompt_token_len,
+    get_ques_start_token_idx,
+    get_visitibility_sent_start_idx,
+)
 
 # Set random seed for reproducibility
 seed = 10
@@ -44,7 +48,9 @@ def train_mask(
     df_false = pd.read_csv(
         "../data/bigtom/0_forward_belief_false_belief/stories.csv", delimiter=";"
     )
-    df_true = pd.read_csv("../data/bigtom/0_forward_belief_true_belief/stories.csv", delimiter=";")
+    df_true = pd.read_csv(
+        "../data/bigtom/0_forward_belief_true_belief/stories.csv", delimiter=";"
+    )
 
     dataset = dataset_func(df_false, df_true, train_size + valid_size + test_size)
     train_dataset = dataset[:train_size]
@@ -91,18 +97,24 @@ def train_mask(
 
             # Initialize mask
             modules = [i for i in range(sing_vecs[layer_idx].size(0))]
-            mask = torch.ones(len(modules), requires_grad=True, device="cuda", dtype=torch.bfloat16)
+            mask = torch.ones(
+                len(modules), requires_grad=True, device="cuda", dtype=torch.bfloat16
+            )
             optimizer = torch.optim.Adam([mask], lr=1e-1)
 
             # Training loop
             for epoch in range(n_epochs):
                 epoch_loss = 0
 
-                for bi, batch in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
+                for bi, batch in tqdm(
+                    enumerate(train_dataloader), total=len(train_dataloader)
+                ):
                     alt_prompt = batch["alt_prompt"]
                     org_prompt = batch["org_prompt"]
                     target = batch["target"]
-                    target_token = model.tokenizer(target, return_tensors="pt", padding=True)
+                    target_token = model.tokenizer(
+                        target, return_tensors="pt", padding=True
+                    )
                     target_input_ids = target_token.input_ids[:, 1:]
                     batch_size = target_input_ids.size(0)
 
@@ -122,21 +134,32 @@ def train_mask(
                             # For Answer Variable and Answer State OID Variable
                             with tracer.invoke(alt_prompt):
                                 alt_acts = (
-                                    model.model.layers[layer_idx].output[0][0, -1].clone().save()
+                                    model.model.layers[layer_idx]
+                                    .output[0][0, -1]
+                                    .clone()
+                                    .save()
                                 )
 
                             with tracer.invoke(org_prompt):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * mask.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
-                                curr_output = model.model.layers[layer_idx].output[0][0, -1].clone()
+                                curr_output = (
+                                    model.model.layers[layer_idx]
+                                    .output[0][0, -1]
+                                    .clone()
+                                )
 
                                 alt_proj = torch.matmul(alt_acts, proj_matrix)
                                 org_proj = torch.matmul(curr_output, proj_matrix)
 
                                 modified_out = curr_output - org_proj + alt_proj
-                                model.model.layers[layer_idx].output[0][0, -1] = modified_out
+                                model.model.layers[layer_idx].output[0][0, -1] = (
+                                    modified_out
+                                )
 
                                 logits = model.lm_head.output[0, -1].save()
 
@@ -148,29 +171,50 @@ def train_mask(
                             alt_acts = defaultdict(dict)
                             with tracer.invoke(alt_prompt):
                                 for t_idx, t in enumerate(
-                                    [i for i in range(alt_ques_idx + 3, alt_ques_idx + 5)]
+                                    [
+                                        i
+                                        for i in range(
+                                            alt_ques_idx + 3, alt_ques_idx + 5
+                                        )
+                                    ]
                                 ):
                                     alt_acts[t_idx] = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone().save()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
+                                        .save()
                                     )
 
                             with tracer.invoke(org_prompt):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * mask.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
                                 for t_idx, t in enumerate(
-                                    [i for i in range(org_ques_idx + 3, org_ques_idx + 5)]
+                                    [
+                                        i
+                                        for i in range(
+                                            org_ques_idx + 3, org_ques_idx + 5
+                                        )
+                                    ]
                                 ):
                                     curr_output = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
                                     )
 
-                                    alt_proj = torch.matmul(alt_acts[t_idx], proj_matrix)
+                                    alt_proj = torch.matmul(
+                                        alt_acts[t_idx], proj_matrix
+                                    )
                                     org_proj = torch.matmul(curr_output, proj_matrix)
 
                                     modified_out = curr_output - org_proj + alt_proj
-                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                    model.model.layers[layer_idx].output[0][0, t] = (
+                                        modified_out
+                                    )
 
                                 logits = model.lm_head.output[0, -1].save()
 
@@ -186,19 +230,31 @@ def train_mask(
 
                             with tracer.invoke(alt_prompt):
                                 for t_idx, t in enumerate(
-                                    [i for i in range(alt_vis_sent_start_idx, alt_ques_idx)]
+                                    [
+                                        i
+                                        for i in range(
+                                            alt_vis_sent_start_idx, alt_ques_idx
+                                        )
+                                    ]
                                 ):
                                     alt_layer_out[t_idx] = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone().save()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
+                                        .save()
                                     )
 
                             with tracer.invoke(org_prompt):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * mask.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
-                                org_vis_sent_start_idx = get_visitibility_sent_start_idx(
-                                    model.tokenizer, org_prompt
+                                org_vis_sent_start_idx = (
+                                    get_visitibility_sent_start_idx(
+                                        model.tokenizer, org_prompt
+                                    )
                                 )
 
                                 for t_idx, t in enumerate(
@@ -211,12 +267,18 @@ def train_mask(
                                     ]
                                 ):
                                     curr_output = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
                                     )
-                                    alt_proj = torch.matmul(alt_layer_out[t_idx], proj_matrix)
+                                    alt_proj = torch.matmul(
+                                        alt_layer_out[t_idx], proj_matrix
+                                    )
                                     org_proj = torch.matmul(curr_output, proj_matrix)
                                     modified_out = curr_output - org_proj + alt_proj
-                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                    model.model.layers[layer_idx].output[0][0, t] = (
+                                        modified_out
+                                    )
 
                                 logits = model.lm_head.output[0, -1].save()
 
@@ -266,7 +328,9 @@ def train_mask(
                 mask_name = f"{layer_idx}.pt"
                 torch.save(mask_data, f"../masks/BigToM/{variable_name}/{mask_name}")
 
-                for bi, batch in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
+                for bi, batch in tqdm(
+                    enumerate(test_dataloader), total=len(test_dataloader)
+                ):
                     alt_prompt = batch["alt_prompt"]
                     org_prompt = batch["org_prompt"]
                     alt_ans = batch["alt_ans"]
@@ -286,7 +350,11 @@ def train_mask(
                         ]:
                             # For Answer Variable and Answer State OID Variable
                             with model.trace(alt_prompt):
-                                alt_acts = model.model.layers[layer_idx].output[0][0, -1].save()
+                                alt_acts = (
+                                    model.model.layers[layer_idx]
+                                    .output[0][0, -1]
+                                    .save()
+                                )
 
                             with model.generate(
                                 org_prompt,
@@ -298,15 +366,23 @@ def train_mask(
                             ):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * rounded.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
-                                curr_output = model.model.layers[layer_idx].output[0][0, -1].clone()
+                                curr_output = (
+                                    model.model.layers[layer_idx]
+                                    .output[0][0, -1]
+                                    .clone()
+                                )
 
                                 alt_proj = torch.matmul(alt_acts, proj_matrix)
                                 org_proj = torch.matmul(curr_output, proj_matrix)
 
                                 modified_out = curr_output - org_proj + alt_proj
-                                model.model.layers[layer_idx].output[0][0, -1] = modified_out
+                                model.model.layers[layer_idx].output[0][0, -1] = (
+                                    modified_out
+                                )
 
                                 out = model.generator.output.save()
 
@@ -318,10 +394,17 @@ def train_mask(
                             alt_layer_out = defaultdict(dict)
                             with model.trace(alt_prompt):
                                 for t_idx, t in enumerate(
-                                    [i for i in range(alt_ques_idx + 3, alt_ques_idx + 5)]
+                                    [
+                                        i
+                                        for i in range(
+                                            alt_ques_idx + 3, alt_ques_idx + 5
+                                        )
+                                    ]
                                 ):
                                     alt_layer_out[t_idx] = (
-                                        model.model.layers[layer_idx].output[0][0, t].save()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .save()
                                     )
 
                             with model.generate(
@@ -334,18 +417,31 @@ def train_mask(
                             ):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * rounded.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
                                 for t_idx, t in enumerate(
-                                    [i for i in range(org_ques_idx + 3, org_ques_idx + 5)]
+                                    [
+                                        i
+                                        for i in range(
+                                            org_ques_idx + 3, org_ques_idx + 5
+                                        )
+                                    ]
                                 ):
                                     curr_output = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
                                     )
-                                    alt_proj = torch.matmul(alt_layer_out[t_idx], proj_matrix)
+                                    alt_proj = torch.matmul(
+                                        alt_layer_out[t_idx], proj_matrix
+                                    )
                                     org_proj = torch.matmul(curr_output, proj_matrix)
                                     modified_out = curr_output - org_proj + alt_proj
-                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                    model.model.layers[layer_idx].output[0][0, t] = (
+                                        modified_out
+                                    )
 
                                 out = model.generator.output.save()
 
@@ -361,10 +457,17 @@ def train_mask(
 
                             with model.trace(alt_prompt):
                                 for t_idx, t in enumerate(
-                                    [i for i in range(alt_vis_sent_start_idx, alt_ques_idx)]
+                                    [
+                                        i
+                                        for i in range(
+                                            alt_vis_sent_start_idx, alt_ques_idx
+                                        )
+                                    ]
                                 ):
                                     alt_layer_out[t_idx] = (
-                                        model.model.layers[layer_idx].output[0][0, t].save()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .save()
                                     )
 
                             with model.generate(
@@ -377,10 +480,14 @@ def train_mask(
                             ):
                                 sing_vec = sing_vecs[layer_idx].cuda()
                                 masked_vec = sing_vec * rounded.unsqueeze(-1)
-                                proj_matrix = torch.matmul(masked_vec.t(), masked_vec).half()
+                                proj_matrix = torch.matmul(
+                                    masked_vec.t(), masked_vec
+                                ).half()
 
-                                org_vis_sent_start_idx = get_visitibility_sent_start_idx(
-                                    model.tokenizer, org_prompt
+                                org_vis_sent_start_idx = (
+                                    get_visitibility_sent_start_idx(
+                                        model.tokenizer, org_prompt
+                                    )
                                 )
 
                                 for t_idx, t in enumerate(
@@ -393,12 +500,18 @@ def train_mask(
                                     ]
                                 ):
                                     curr_output = (
-                                        model.model.layers[layer_idx].output[0][0, t].clone()
+                                        model.model.layers[layer_idx]
+                                        .output[0][0, t]
+                                        .clone()
                                     )
-                                    alt_proj = torch.matmul(alt_layer_out[t_idx], proj_matrix)
+                                    alt_proj = torch.matmul(
+                                        alt_layer_out[t_idx], proj_matrix
+                                    )
                                     org_proj = torch.matmul(curr_output, proj_matrix)
                                     modified_out = curr_output - org_proj + alt_proj
-                                    model.model.layers[layer_idx].output[0][0, t] = modified_out
+                                    model.model.layers[layer_idx].output[0][0, t] = (
+                                        modified_out
+                                    )
 
                                 out = model.generator.output.save()
 
@@ -412,13 +525,21 @@ def train_mask(
                     total += 1
 
                 accuracy = round(correct / total, 2)
-                print(f"Test accuracy: {accuracy:.2f} | Correct: {correct} | Total: {total}\n")
+                print(
+                    f"Test accuracy: {accuracy:.2f} | Correct: {correct} | Total: {total}\n"
+                )
 
                 # Save result for this layer and lambda
                 test_accs[lamb][layer_idx] = accuracy
 
                 # Save test accuracy to a JSON file
-                with open(os.path.join(results_dir, f"{variable_name}-{layer_range[0]}-{layer_range[-1]}.json"), "w") as f:
+                with open(
+                    os.path.join(
+                        results_dir,
+                        f"{variable_name}-{layer_range[0]}-{layer_range[-1]}.json",
+                    ),
+                    "w",
+                ) as f:
                     json.dump(test_accs, f, indent=4)
 
     return test_accs
@@ -433,8 +554,12 @@ def main():
         choices=["answer", "answer_state", "query_character", "visibility"],
         help="Which variable to train: answer, answer_state, query_character, or visibility",
     )
-    parser.add_argument("--layer_start", type=int, default=0, help="Starting layer index")
-    parser.add_argument("--layer_end", type=int, default=80, help="Ending layer index (exclusive)")
+    parser.add_argument(
+        "--layer_start", type=int, default=0, help="Starting layer index"
+    )
+    parser.add_argument(
+        "--layer_end", type=int, default=80, help="Ending layer index (exclusive)"
+    )
     parser.add_argument("--layer_step", type=int, default=2, help="Step between layers")
     parser.add_argument(
         "--lambda_values",
@@ -443,7 +568,9 @@ def main():
         default=[0.05, 0.005],
         help="Regularization parameters",
     )
-    parser.add_argument("--epochs", type=int, default=2, help="Number of training epochs")
+    parser.add_argument(
+        "--epochs", type=int, default=2, help="Number of training epochs"
+    )
     parser.add_argument(
         "--cache_dir",
         type=str,
