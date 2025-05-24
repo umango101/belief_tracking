@@ -128,6 +128,8 @@ from experiments.causalToM_novis.utils import (
     get_answer_lookback_payload,
     get_answer_lookback_pointer,
     get_binding_addr_and_payload,
+    get_character_oi_exps,
+    get_object_oi_exps,
     get_query_charac_oi,
     get_query_object_oi,
 )
@@ -138,6 +140,8 @@ exp_to_ds_func_map = {
     "answer_lookback-payload": get_answer_lookback_payload,
     "binding_lookback-pointer_object": get_query_object_oi,
     "binding_lookback-pointer_character": get_query_charac_oi,
+    "binding_lookback-object_oi": get_object_oi_exps,
+    "binding_lookback-character_oi": get_character_oi_exps,
     "binding_lookback-address_and_payload": get_binding_addr_and_payload,
     "visibility_lookback-payload": get_visibility_lookback_data,
     "visibility_lookback-source": get_visibility_lookback_data,

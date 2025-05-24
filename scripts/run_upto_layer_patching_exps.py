@@ -1,22 +1,17 @@
-import argparse
 import json
 import os
+import sys
+from collections import defaultdict
 from typing import Literal
 
+import fire
 import torch
-from nnsight import CONFIG, LanguageModel
-
-CONFIG.API.HOST = "nagoya.research.khoury.northeastern.edu:5001"
-CONFIG.API.SSL = False
-CONFIG.API.APIKEY = "hi"  # API key needs to be non-empty due to NDIF bug
-
-from collections import defaultdict
-
+from nnsight import LanguageModel
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import BitsAndBytesConfig
 
-from scripts.run_patching_exp_utils import (
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from run_patching_exp_utils import (
     Accuracy,
     exp_to_vec_type,
     free_gpu_cache,
@@ -24,7 +19,11 @@ from scripts.run_patching_exp_utils import (
     prepare_dataset,
     set_seed,
 )
-from . import env_utils
+
+from src import env_utils
+
+os.environ["NDIF_KEY"] = env_utils.load_env_var("NDIF_KEY")
+os.environ["HF_TOKEN"] = env_utils.load_env_var("HF_WRITE")
 
 charac_indices = [131, 133, 146, 147, 158, 159]
 reversed_charac_indices = [133, 131, 158, 159, 146, 147]
@@ -37,22 +36,22 @@ query_character_indices = [-8, -7]
 query_object_indices = [-5, -4]
 
 retain_full_indices = {
-    "object_position": state_indices,
-    "character_position": object_indices + state_indices,
-    "source_1": state_indices,
-    "source_2": [],
+    "binding_lookback-object_oi": state_indices,
+    "binding_lookback-character_oi": object_indices + state_indices,
+    "binding_lookback-source_1": state_indices,
+    "binding_lookback-source_2": [],
 }
 retain_upto_indices = {
-    "object_position": query_character_indices,
-    "character_position": query_object_indices,
-    "source_1": [],
-    "source_2": [],
+    "binding_lookback-object_oi": query_object_indices,
+    "binding_lookback-character_oi": query_character_indices,
+    "binding_lookback-source_1": [],
+    "binding_lookback-source_2": [],
 }
 patch_indices = {
-    "object_position": reversed_object_indices,
-    "character_position": reversed_charac_indices,
-    "source_1": reversed_charac_indices + reversed_object_indices,
-    "source_2": reversed_charac_indices + reversed_object_indices,
+    "binding_lookback-object_oi": reversed_object_indices,
+    "binding_lookback-character_oi": reversed_charac_indices,
+    "binding_lookback-source_1": reversed_charac_indices + reversed_object_indices,
+    "binding_lookback-source_2": reversed_charac_indices + reversed_object_indices,
 }
 
 
@@ -62,7 +61,12 @@ def is_mixed_projections(experiment_name):
 
 @torch.inference_mode()
 def validate(
-    exp_name: Literal["object_position", "character_position", "source_1", "source_2"],
+    exp_name: Literal[
+        "binding_lookback-object_oi",
+        "binding_lookback-character_oi",
+        "binding_lookback-source_1",
+        "binding_lookback-source_2",
+    ],
     lm: LanguageModel,
     layer_idx: int,
     validation_loader: DataLoader,
@@ -72,13 +76,9 @@ def validate(
     verbose: bool = False,
     restore_state: bool = True,
     save_outputs: bool = True,
-    projection_type: Literal[
-        "full_rank", "singular_vector", "principal_component"
-    ] = "full_rank",
+    projection_type: Literal["full_rank", "singular_vector"] = "full_rank",
     remote: bool = False,
 ) -> float:
-    # lm.tokenizer.padding_side = "left"
-    # lm.model.eval()
     save_outputs = save_outputs and not remote
 
     cuda_last_index = torch.cuda.device_count() - 1
@@ -114,7 +114,6 @@ def validate(
             reversed_charac_indices + reversed_object_indices,
         )
     }
-    # print(patch_to_cache_map)
 
     correct, total = 0, 0
     for batch_idx, batch in tqdm(
@@ -187,7 +186,7 @@ def validate(
 
                     for layer in range(lm.config.num_hidden_layers):
                         for t in retain_full_indices[exp_name]:
-                            if restore_state == False:
+                            if not restore_state:
                                 if t in state_indices:
                                     continue
                             lm.model.layers[layer].output[0][:, t] = org_acts[layer][t]
@@ -198,13 +197,7 @@ def validate(
 
             return logits, pred
 
-        # logits, pred = (
-        #     nnsight_request(return_logits=not remote)
-        #     if not remote
-        #     else send_request_to_ndif(nnsight_request, timeout=1800, n_try=5)
-        # )
         logits, pred = nnsight_request(return_logits=not remote)
-        print(f"{pred=}")
 
         for i in range(batch_size):
             total += 1
@@ -262,9 +255,6 @@ def get_low_rank_projection(
     restore_state: bool = True,
     remote: bool = False,
 ) -> tuple[torch.Tensor, dict]:
-    # lm.tokenizer.padding_side = "left"
-    # lm.model.eval()
-
     if remote is True:
         raise NotImplementedError("Training not tested for remote yet")
 
@@ -286,9 +276,8 @@ def get_low_rank_projection(
             reversed_charac_indices + reversed_object_indices,
         )
     }
-    # print(patch_to_cache_map)
 
-    if is_mixed_projections(exp_name) == False:
+    if not is_mixed_projections(exp_name):
         basis_indices = list(range(all_basis_directions[0].size(0)))
         mask = torch.ones(
             (layer_idx + 1, len(basis_indices)),
@@ -343,7 +332,7 @@ def get_low_rank_projection(
                                     layer
                                 ][patch_to_cache_map[t]]
 
-                        if is_mixed_projections(exp_name) == False:
+                        if not is_mixed_projections(exp_name):
                             masked_directions = all_basis_directions[layer].to(
                                 device=device_p
                             ) * mask[layer].unsqueeze(-1)
@@ -384,7 +373,7 @@ def get_low_rank_projection(
 
                     for layer in range(lm.config.num_hidden_layers):
                         for t in retain_full_indices[exp_name]:
-                            if restore_state == False:
+                            if not restore_state:
                                 if t in state_indices:
                                     continue
                             lm.model.layers[layer].output[0][:, t] = org_acts[layer][t]
@@ -393,7 +382,7 @@ def get_low_rank_projection(
 
             target_logit = logits[torch.arange(batch_size), target_tokens]
             task_loss = -torch.mean(target_logit)
-            if is_mixed_projections(exp_name) == False:
+            if not is_mixed_projections(exp_name):
                 l1_loss = lamb * torch.norm(mask, p=1)
             else:
                 l1_loss = 0
@@ -405,7 +394,7 @@ def get_low_rank_projection(
                 print(
                     f"Epoch: {epoch}, Batch: {batch_idx}, Loss: {loss.item()} |>> l_task: {task_loss.item()}, l1: {l1_loss.item()}"
                 )
-                if is_mixed_projections(exp_name) == False:
+                if not is_mixed_projections(exp_name):
                     mask_data = mask.data.clone().clamp(0, 1).round()
                     print(
                         {
@@ -430,7 +419,7 @@ def get_low_rank_projection(
 
             # Clamp after optimizer step
             with torch.no_grad():
-                if is_mixed_projections(exp_name) == False:
+                if not is_mixed_projections(exp_name):
                     mask.data.clamp_(0, 1)
                 else:
                     for key in mask:
@@ -450,7 +439,7 @@ def get_low_rank_projection(
             free_gpu_cache()
 
     # build the projections after training
-    if is_mixed_projections(exp_name) == False:
+    if not is_mixed_projections(exp_name):
         projections = {}
         meta_data = {}
         for layer in range(layer_idx + 1):
@@ -493,7 +482,12 @@ def get_low_rank_projection(
 
 
 def run_experiment(
-    experiment_name: Literal["object_position", "character_position"],
+    experiment_name: Literal[
+        "binding_lookback-object_oi",
+        "binding_lookback-character_oi",
+        "binding_lookback-source_1",
+        "binding_lookback-source_2",
+    ],
     lm: LanguageModel,
     layers: list[int] = list(range(34, 60, 2)),
     train_size: int = 80,
@@ -505,7 +499,7 @@ def run_experiment(
     lamb: float = 0.01,
     save_path: str = "results/",
     restore_state: bool = True,
-    save_outputs_on_val: bool = True,
+    save_outputs_on_val: bool = False,
     remote: bool = False,
 ):
     print("#" * 30)
@@ -513,7 +507,7 @@ def run_experiment(
     print("#" * 30)
 
     exp_subdir = experiment_name
-    if restore_state == False:
+    if not restore_state:
         exp_subdir += "_wo_state"
     lm_shorthand = lm.config._name_or_path.split("/")[-1]
     if remote:
@@ -530,27 +524,14 @@ def run_experiment(
         remote=remote,
     )
 
-    # train_dataset = train_dataloader.dataset
-    # idx = 5
-    # tokens = lm.tokenizer.encode(
-    #     train_dataset[idx]["corrupt_prompt"], return_tensors="pt"
-    # )
-    # print(lm.tokenizer.decode(tokens[0][object_indices]))
-
-    # tokens = lm.tokenizer.encode(
-    #     train_dataset[idx]["clean_prompt"], return_tensors="pt"
-    # )
-    # print(lm.tokenizer.decode(tokens[0][object_indices]))
-
-    singular_vectors, principal_components = None, None
-    # exclude_projections = ["source_1", "source_2"]
+    singular_vectors = None
     exclude_projections = []
 
     skip_low_rank_projection = (experiment_name in exclude_projections) or (
         "405B" in lm.config._name_or_path
     )
 
-    if skip_low_rank_projection == False:
+    if not skip_low_rank_projection:
         direction_type = exp_to_vec_type[experiment_name]
         if isinstance(direction_type, list):
             singular_vectors = {
@@ -558,16 +539,6 @@ def run_experiment(
             }
         else:
             singular_vectors = load_basis_directions("singular_vecs", direction_type)
-
-        if isinstance(direction_type, list):
-            principal_components = {
-                d: load_basis_directions("principal_components", d)
-                for d in direction_type
-            }
-        else:
-            principal_components = load_basis_directions(
-                "principal_components", direction_type
-            )
 
     print("Running experiment === > ", experiment_name)
     progress_bar = tqdm(layers)
@@ -642,47 +613,6 @@ def run_experiment(
                 },
             ).to_dict()
 
-        if principal_components is not None:
-            # principal component patching
-            print(f"Training principal components with {training_metadata}")
-            principal_projection, principal_metadata = get_low_rank_projection(
-                exp_name=experiment_name,
-                lm=lm,
-                layer_idx=layer,
-                train_loader=train_dataloader,
-                all_basis_directions=principal_components,
-                learning_rate=learning_rate,
-                n_epochs=n_epochs,
-                lamb=lamb,
-                verbose=verbose,
-                remote=remote,
-            )
-
-            print("validating ...")
-            principal_acc = validate(
-                exp_name=experiment_name,
-                lm=lm,
-                layer_idx=layer,
-                validation_loader=valid_dataloader,
-                projections=principal_projection,
-                verbose=verbose,
-                save_outputs=save_outputs_on_val,
-                restore_state=restore_state,
-                projection_type="principal_component",
-                remote=remote,
-            )
-            print("-" * 30)
-            print(f"Principal component patching val: {principal_acc}")
-            print("-" * 30)
-
-            layer_performance["principal_component"] = Accuracy(
-                accuracy=principal_acc,
-                metadata={
-                    "training_args": training_metadata,
-                    "metadata": principal_metadata,
-                },
-            ).to_dict()
-
         # save results after each layer
         with open(os.path.join(save_path, f"{layer}.json"), "w") as f:
             json.dump(
@@ -694,144 +624,82 @@ def run_experiment(
 
 experiment_layers = {
     "meta-llama/Meta-Llama-3-70B-Instruct": {
-        # "object_position": list(range(10, 40, 1)),
-        "object_position": [],
-        # "character_position": list(range(10, 40, 1)),
-        "character_position": [],
-        "source_1": list(range(10, 40, 1)),
-        "source_2": list(range(10, 40, 1)),
+        "binding_lookback-object_oi": list(range(10, 40, 1)),
+        "binding_lookback-character_oi": list(range(10, 40, 1)),
+        "binding_lookback-source_1": list(range(10, 40, 1)),
+        "binding_lookback-source_2": list(range(10, 40, 1)),
     },
     "meta-llama/Meta-Llama-3.1-405B-Instruct": {
-        "source_1": list(range(20, 80, 2)),
-        "source_2": list(range(20, 80, 2)),
-        "object_position": list(range(20, 80, 2)),
-        "character_position": list(range(20, 80, 2)),
+        "binding_lookback-source_1": list(range(20, 80, 2)),
+        "binding_lookback-source_2": list(range(20, 80, 2)),
+        "binding_lookback-object_oi": list(range(20, 80, 2)),
+        "binding_lookback-character_oi": list(range(20, 80, 2)),
     },
 }
 
-if __name__ == "__main__":
-    import os
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--experiment",
-        type=str,
-        choices=["object_position", "character_position", "source_1", "source_2"],
-    )
-    parser.add_argument(
-        "--model_key", type=str, default="meta-llama/Meta-Llama-3-70B-Instruct"
-    )
-    parser.add_argument(
-        "--layers",
-        type=int,
-        nargs="+",
-        # default=list(range(0, 80, 10)),
-        # default=[14, 22, 32],
-        # default=[30, 34, 38],
-    )
-    parser.add_argument("--train_size", type=int, default=80)
-    parser.add_argument("--validation_size", type=int, default=80)
-    parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--learning_rate", type=float, default=0.1)
-    parser.add_argument("--n_epochs", type=int, default=1)
-    parser.add_argument("--lamb", type=float, default=0.01)
-    parser.add_argument(
-        "--save_path",
-        type=str,
-        default="results",
-    )
-    parser.add_argument("--save_outputs", type=bool, default=True)
-    parser.add_argument(
-        "--restore_state", action="store_true", default=True, help="Restore state"
-    )
-    parser.add_argument(
-        "--no-restore_state",
-        dest="restore_state",
-        action="store_false",
-        help="Don't restore state",
-    )
-    parser.add_argument("--verbose", action="store_true", default=False)
-
-    args = parser.parse_args()
-
-    print(args)
-
-    is_remote = "405B" in args.model_key
-    print(f"<><><><> {is_remote=}")
-
-    if is_remote:
-        NDIF_KEY = env_utils.load_env_var("NDIF_KEY")
-        HF_KEY = env_utils.load_env_var("HF_WRITE")
-
-        print(f"NDIF_KEY: {NDIF_KEY}")
-        print(f"HF_KEY: {HF_KEY}")
-        local_loading_kwargs = dict()
-
+def main(
+    experiment: Literal[
+        "binding_lookback-object_oi",
+        "binding_lookback-character_oi",
+        "binding_lookback-source_1",
+        "binding_lookback-source_2",
+    ],
+    model_key: str = "meta-llama/Meta-Llama-3-70B-Instruct",
+    layers: list[int] = None,
+    train_size: int = 80,
+    validation_size: int = 80,
+    batch_size: int = 1,
+    verbose: bool = False,
+    learning_rate: float = 0.1,
+    n_epochs: int = 1,
+    lamb: float = 0.01,
+    save_path: str = "experiments/causalToM_novis/results",
+    save_outputs: bool = False,
+    restore_state: bool = True,
+    no_restore_state: bool = False,
+    remote: bool = False,
+):
+    if remote:
+        lm = LanguageModel("meta-llama/Meta-Llama-3.1-405B-Instruct")
     else:
-        local_loading_kwargs = dict(
-            cache_dir="/disk/u/arnab/.cache/huggingface/hub/",
+        lm = LanguageModel(
+            "meta-llama/Meta-Llama-3-70B-Instruct",
             device_map="auto",
-            torch_dtype=torch.bfloat16,
+            torch_dtype=torch.float16,
             dispatch=True,
         )
 
-    if "405B" in args.model_key:
-        local_loading_kwargs["quantization_config"] = (
-            BitsAndBytesConfig(load_in_4bit=True),
-        )
-
-    # print(f"loading model with {is_remote = } | {local_loading_kwargs=}")
-
-    if is_remote:
-        # CONFIG.set_default_api_key(env_utils.load_env_var("NDIF_KEY"))
-        os.environ["HF_TOKEN"] = env_utils.load_env_var("HF_WRITE")
-        print("Loading model remotely")
-        lm = LanguageModel(
-            args.model_key,
-        )
-        # print(lm.device)
-
-    else:
-        lm = LanguageModel(
-            args.model_key,
-            cache_dir="/disk/u/arnab/.cache/huggingface/hub/",
-            device_map="auto",
-            torch_dtype=torch.bfloat16,
-            dispatch=True,
-            # quantization_config=BitsAndBytesConfig(
-            #     # load_in_4bit=True
-            #     load_in_8bit=True
-            # ),
-        )
-
-    if args.layers is None:
+    if layers is None:
         n_layer = lm.config.num_hidden_layers
-        args.layers = sorted(
+        layers = sorted(
             list(
                 set(
                     list(range(0, n_layer, 10))
-                    + experiment_layers[args.model_key].get(args.experiment, [])
+                    + experiment_layers[model_key].get(experiment, [])
                     + [n_layer - 1]
                 )
             )
         )
 
-    set_seed(123456)
+    set_seed(10)
     run_experiment(
-        experiment_name=args.experiment,
+        experiment_name=experiment,
         lm=lm,
-        layers=args.layers,
-        train_size=args.train_size,
-        validation_size=args.validation_size,
-        batch_size=args.batch_size,
-        verbose=args.verbose,
-        learning_rate=args.learning_rate,
-        n_epochs=args.n_epochs,
-        lamb=args.lamb,
-        save_path=args.save_path,
-        restore_state=args.restore_state,
-        save_outputs_on_val=args.save_outputs,
-        remote=is_remote,
+        layers=layers,
+        train_size=train_size,
+        validation_size=validation_size,
+        batch_size=batch_size,
+        verbose=verbose,
+        learning_rate=learning_rate,
+        n_epochs=n_epochs,
+        lamb=lamb,
+        save_path=save_path,
+        restore_state=restore_state,
+        save_outputs_on_val=save_outputs,
+        remote=remote,
     )
+
+
+if __name__ == "__main__":
+    fire.Fire(main)

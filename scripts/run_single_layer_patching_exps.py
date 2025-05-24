@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from scripts.run_patching_exp_utils import (
+from run_patching_exp_utils import (
     exp_to_intervention_positions,
     exp_to_vec_type,
     free_gpu_cache,
@@ -19,6 +19,7 @@ from scripts.run_patching_exp_utils import (
     prepare_dataset,
     set_seed,
 )
+
 from src import env_utils
 
 os.environ["NDIF_KEY"] = env_utils.load_env_var("NDIF_KEY")
@@ -36,8 +37,6 @@ def validate(
         "binding_lookback-pointer_object",
         "binding_lookback-pointer_character",
         "binding_lookback-address_and_payload",
-        "binding_lookback-object_oi",
-        "binding_lookback-character_oi",
         "visibility_lookback-source",
         "visibility_lookback-payload",
         "visibility_lookback-address_and_pointer",
@@ -49,9 +48,7 @@ def validate(
     projection: torch.Tensor | dict[str, torch.Tensor] | None = None,
     verbose: bool = False,
     save_outputs: bool = False,
-    projection_type: Literal[
-        "full_rank", "singular_vector", "principal_component"
-    ] = "full_rank",
+    projection_type: Literal["full_rank", "singular_vector"] = "full_rank",
     remote: bool = False,
 ) -> float:
     save_outputs = save_outputs and not remote
