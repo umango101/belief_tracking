@@ -4,6 +4,7 @@ import inspect
 import json
 import os
 import random
+import sys
 import threading
 from dataclasses import dataclass
 from typing import Any, Callable, Literal
@@ -15,7 +16,8 @@ from nnsight import LanguageModel
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from src.utils import env_utils
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src import env_utils
 
 
 def free_gpu_cache():
@@ -149,20 +151,20 @@ exp_to_ds_func_map = {
 exp_to_vec_type = {
     "answer_lookback-pointer": "last_token",
     "answer_lookback-payload": "last_token",
-    "binding_lookback-pointer_object": "query_obj_ordering_id",
-    "binding_lookback-pointer_character": "query_charac_ordering_id",
-    "binding_lookback-address_and_payload": "state_ordering_id",
-    "binding_lookback-object_oi": "object_ordering_id",
-    "binding_lookback-character_oi": "character_ordering_id",
+    "binding_lookback-pointer_object": "query_obj_tokens",
+    "binding_lookback-pointer_character": "query_charac_tokens",
+    "binding_lookback-address_and_payload": "state_tokens",
+    "binding_lookback-object_oi": "object_tokens",
+    "binding_lookback-character_oi": "character_tokens",
     "visibility_lookback-payload": "second_visibility_sent",
     "visibility_lookback-source": None,
     "visibility_lookback-address_and_payload": None,
     "vis_2nd_to_1st_and_ques": None,
-    "binding_lookback-source_1": ["object_ordering_id", "character_ordering_id"],
-    "binding_lookback-source_2": ["object_ordering_id", "character_ordering_id"],
+    "binding_lookback-source_1": ["object_tokens", "character_tokens"],
+    "binding_lookback-source_2": ["object_tokens", "character_tokens"],
     "binding_lookback-pointer_charac_and_object": [
-        "query_obj_ordering_id",
-        "query_charac_ordering_id",
+        "query_obj_tokens",
+        "query_charac_tokens",
     ],
 }
 
@@ -275,7 +277,7 @@ def check_lm_on_sample(lm, sample, remote=False):
         sample["clean_ans"] if "clean_ans" in sample else sample["clean_target"],
     ]
     inputs = lm.tokenizer(prompts, return_tensors="pt", padding=True)
-    if remote == False:
+    if not remote:
         inputs = inputs.to(lm.device)
 
     def nnsight_request():
@@ -289,7 +291,7 @@ def check_lm_on_sample(lm, sample, remote=False):
     # predicted = nnsight_request()
     predicted = (
         nnsight_request()
-        if remote == False
+        if not remote
         else send_request_to_ndif(nnsight_request, timeout=100, n_try=5)
     )
 
@@ -297,7 +299,7 @@ def check_lm_on_sample(lm, sample, remote=False):
     #     logits = lm.lm_head.output[:, -1]
     #     predicted = torch.argmax(logits, dim=-1).save()
 
-    predicted = predicted.value if remote == True else predicted
+    predicted = predicted.value if remote else predicted
     predicted = [lm.tokenizer.decode(pred) for pred in predicted]
 
     ok = True

@@ -8,7 +8,7 @@ from nnsight import LanguageModel
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from scripts.run_exp_utils import (
+from scripts.run_patching_exp_utils import (
     exp_to_intervention_positions,
     free_gpu_cache,
 )

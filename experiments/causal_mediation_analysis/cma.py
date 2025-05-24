@@ -27,7 +27,7 @@ project_root = os.path.dirname(
 )
 sys.path.append(project_root)
 from src.dataset import STORY_TEMPLATES
-from src.utils import env_utils
+from . import env_utils
 
 
 # Define entity types

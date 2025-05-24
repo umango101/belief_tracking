@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import BitsAndBytesConfig
 
-from scripts.run_exp_utils import (
+from scripts.run_patching_exp_utils import (
     Accuracy,
     exp_to_vec_type,
     free_gpu_cache,
@@ -24,7 +24,7 @@ from scripts.run_exp_utils import (
     prepare_dataset,
     set_seed,
 )
-from src.utils import env_utils
+from . import env_utils
 
 charac_indices = [131, 133, 146, 147, 158, 159]
 reversed_charac_indices = [133, 131, 158, 159, 146, 147]

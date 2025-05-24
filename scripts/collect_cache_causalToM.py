@@ -12,7 +12,7 @@ from nnsight import CONFIG, LanguageModel
 
 sys.path.append("../")
 from src.dataset import Sample, Dataset, STORY_TEMPLATES
-from src.utils import env_utils
+from . import env_utils
 from additionals.utils import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

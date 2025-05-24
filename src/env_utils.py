@@ -13,7 +13,7 @@ ENV_RESULTS_DIR = "RELATIONS_RESULTS_DIR"
 logger = logging.getLogger(__name__)
 
 try:
-    PROJECT_ROOT = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-2])
+    PROJECT_ROOT = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1])
     with open(os.path.join(PROJECT_ROOT, "env.yml"), "r") as f:
         config = yaml.safe_load(f)
         DEFAULT_MODELS_DIR = config["MODEL_DIR"]
@@ -35,7 +35,7 @@ Other defaults are set to:
 def load_env_var(var: str) -> Union[str, None]:
     try:
         PROJECT_ROOT = "/".join(
-            os.path.dirname(os.path.abspath(__file__)).split("/")[:-2]
+            os.path.dirname(os.path.abspath(__file__)).split("/")[:-1]
         )
         with open(os.path.join(PROJECT_ROOT, "env.yml"), "r") as f:
             config = yaml.safe_load(f)
