@@ -7,19 +7,21 @@ from typing import Literal
 import fire
 import torch
 from nnsight import LanguageModel
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from run_patching_exp_utils import (
     exp_to_intervention_positions,
     exp_to_vec_type,
     free_gpu_cache,
+    get_bigtom_intervention_positions,
     load_basis_directions,
+    prepare_bigtom_dataset,
     prepare_dataset,
     set_seed,
 )
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from experiments.bigToM.utils import check_pred
 from src import env_utils
 
 os.environ["NDIF_KEY"] = env_utils.load_env_var("NDIF_KEY")
@@ -49,29 +51,24 @@ def validate(
     verbose: bool = False,
     save_outputs: bool = False,
     projection_type: Literal["full_rank", "singular_vector"] = "full_rank",
+    bigtom: bool = False,
     remote: bool = False,
 ) -> float:
-    save_outputs = save_outputs and not remote
-
-    if save_outputs:
-        save_path = os.path.join(
-            "results",
-            "lm_pred_on_val_set",
-            lm.config._name_or_path.split("/")[-1],
-            exp_name,
-            f"layer_{layer_idx}",
-            projection_type,
-        )
-        os.makedirs(save_path, exist_ok=True)
-        valid_data = validation_loader.dataset
-
-    intervention_positions = exp_to_intervention_positions[exp_name]
-    patch_to_cache_map = {
-        k: v
-        for k, v in zip(
-            intervention_positions["patch"], intervention_positions["cache"]
-        )
-    }
+    if (
+        not bigtom
+        or exp_name == "answer_lookback-pointer"
+        or exp_name == "answer_lookback-payload"
+    ):
+        intervention_positions = exp_to_intervention_positions[exp_name]
+        patch_to_cache_map = {
+            k: v
+            for k, v in zip(
+                intervention_positions["patch"], intervention_positions["cache"]
+            )
+        }
+    else:
+        # Intervention positions are dynamic for bigtom samples
+        intervention_positions, patch_to_cache_map = None, None
 
     correct, total = 0, 0
     for batch_idx, batch in tqdm(
@@ -83,6 +80,48 @@ def validate(
         target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[:, -1]
         batch_size = target_tokens.size(0)
         alt_acts, org_acts_state = defaultdict(dict), defaultdict(dict)
+
+        if intervention_positions is None:
+            intervention_positions, prompt_struct = get_bigtom_intervention_positions(
+                exp_name, lm, org_prompts, alt_prompts
+            )
+            patch_to_cache_map = {
+                k: v
+                for k, v in zip(
+                    intervention_positions["patch"], intervention_positions["cache"]
+                )
+            }
+
+        def bigtom_nnsight_request(return_logits: bool = False):
+            with lm.session(remote=remote) as session:
+                with lm.trace(alt_prompts):
+                    for t in intervention_positions["cache"]:
+                        alt_acts[t] = lm.model.layers[layer_idx].output[0][:, t].clone()
+
+                with lm.generate(
+                    org_prompts,
+                    max_new_tokens=2,
+                    do_sample=False,
+                    num_return_sequences=1,
+                    pad_token_id=lm.tokenizer.pad_token_id,
+                    eos_token_id=lm.tokenizer.eos_token_id,
+                ):
+                    for t in intervention_positions["patch"]:
+                        curr_output = lm.model.layers[layer_idx].output[0][:, t].clone()
+                        if projection is not None:
+                            pass
+                        else:
+                            patch = alt_acts[patch_to_cache_map[t]]
+
+                        lm.model.layers[layer_idx].output[0][:, t] = patch
+
+                    out = lm.generator.output.save()
+
+                pred = lm.tokenizer.decode(
+                    out[0][prompt_struct["org_prompt_len"] : -1]
+                ).strip()
+
+                return pred
 
         def nnsight_request(return_logits: bool = False):
             with lm.trace(remote=remote) as tracer:
@@ -122,43 +161,32 @@ def validate(
 
             return logits, pred
 
-        logits, pred = nnsight_request(return_logits=not remote)
+        _, pred = (
+            nnsight_request(return_logits=not remote)
+            if not bigtom
+            or exp_name == "answer_lookback-pointer"
+            or exp_name == "answer_lookback-payload"
+            else bigtom_nnsight_request()
+        )
 
         pred = pred.cpu()
 
         for i in range(batch_size):
             pred_token = lm.tokenizer.decode(pred[i])
-            is_correct = pred_token.lower().strip() == targets[i].lower().strip()
+            if not bigtom:
+                is_correct = pred_token.lower().strip() == targets[i].lower().strip()
+            else:
+                is_correct = check_pred(lm, pred_token, targets[i], verbose=verbose)
+                is_correct = is_correct == "Yes"
             if verbose:
                 print(
                     f"Predicted: {pred_token.lower().strip()}, Target: {targets[i].lower().strip()}"
                 )
             correct += int(is_correct)
 
-            if save_outputs:
-                sample = valid_data[batch_idx * batch_size + i]
-                with open(
-                    os.path.join(save_path, f"sample_{total}.json"),
-                    "w",
-                ) as f:
-                    json.dump(
-                        {
-                            "sample": sample,
-                            "pred": {
-                                "token": pred_token,
-                                "token_id": pred[i].item(),
-                                "logit": logits[i, pred[i]].item(),
-                            },
-                            "logit_distribution": logits[i].tolist(),
-                            "is_correct": is_correct,
-                        },
-                        f,
-                        indent=4,
-                    )
-
             total += 1
 
-        del alt_acts, alt_prompts, org_prompts, targets, target_tokens, logits, pred
+        del alt_acts, alt_prompts, org_prompts, targets, target_tokens, pred
         free_gpu_cache()
 
     return correct / total
@@ -175,9 +203,6 @@ def get_low_rank_projection(
         "visibility_lookback-payload",
         "visibility_lookback-address_and_pointer",
         "binding_lookback-pointer_character_and_object",
-        "character_oi",
-        "object_oi",
-        "pointer",
     ],
     lm: LanguageModel,
     layer_idx: int,
@@ -187,21 +212,29 @@ def get_low_rank_projection(
     n_epochs: int = 1,
     lamb: float = 0.1,
     verbose: bool = False,
+    bigtom: bool = False,
     remote: bool = False,
 ) -> tuple[torch.Tensor, dict]:
     if remote:
         raise NotImplementedError("Training not tested for remote yet")
 
-    intervention_positions = exp_to_intervention_positions[exp_name]
-    patch_to_cache_map = {
-        k: v
-        for k, v in zip(
-            intervention_positions["patch"], intervention_positions["cache"]
-        )
-    }
+    if (
+        not bigtom
+        or exp_name == "answer_lookback-pointer"
+        or exp_name == "answer_lookback-payload"
+    ):
+        intervention_positions = exp_to_intervention_positions[exp_name]
+        patch_to_cache_map = {
+            k: v
+            for k, v in zip(
+                intervention_positions["patch"], intervention_positions["cache"]
+            )
+        }
+    else:
+        # Intervention positions are dynamic for bigtom samples
+        intervention_positions, patch_to_cache_map = None, None
 
-    if isinstance(basis_directions, dict) == False:
-        print("Basis directions is a tensor")
+    if not isinstance(basis_directions, dict):
         basis_indices = list(range(basis_directions.size(0)))
         mask = torch.ones(
             len(basis_indices), requires_grad=True, device="cuda", dtype=torch.bfloat16
@@ -209,7 +242,6 @@ def get_low_rank_projection(
         basis_directions = basis_directions.to("cuda")
         optimizer = torch.optim.Adam([mask], lr=learning_rate)
     else:
-        print("Basis directions is a dict")
         masks = {}
         for key in basis_directions:
             basis_indices = list(range(basis_directions[key].size(0)))
@@ -235,7 +267,20 @@ def get_low_rank_projection(
             batch_size = target_tokens.size(0)
             alt_acts, org_acts_state = defaultdict(dict), defaultdict(dict)
 
-            if isinstance(basis_directions, dict) == False:
+            if intervention_positions is None:
+                intervention_positions, prompt_struct = (
+                    get_bigtom_intervention_positions(
+                        exp_name, lm, org_prompts, alt_prompts
+                    )
+                )
+                patch_to_cache_map = {
+                    k: v
+                    for k, v in zip(
+                        intervention_positions["patch"], intervention_positions["cache"]
+                    )
+                }
+
+            if not isinstance(basis_directions, dict):
                 masked_directions = basis_directions * mask.unsqueeze(-1)
                 proj_matrix = torch.matmul(masked_directions.T, masked_directions).to(
                     lm.dtype
@@ -255,7 +300,7 @@ def get_low_rank_projection(
 
                 with tracer.invoke(org_prompts):
                     for t in intervention_positions["patch"]:
-                        if isinstance(basis_directions, dict) == False:
+                        if not isinstance(basis_directions, dict):
                             proj = proj_matrix
                         else:
                             if t in query_object_indices:
@@ -279,7 +324,7 @@ def get_low_rank_projection(
 
             target_logit = logits[torch.arange(batch_size), target_tokens]
             task_loss = -torch.mean(target_logit)
-            if isinstance(basis_directions, dict) is False:
+            if not isinstance(basis_directions, dict):
                 l1_loss = lamb * torch.norm(mask, p=1)
             else:
                 l1_loss = 0
@@ -288,7 +333,7 @@ def get_low_rank_projection(
             loss = task_loss + l1_loss.to(task_loss.device)
 
             if verbose:
-                if isinstance(basis_directions, dict) is False:
+                if not isinstance(basis_directions, dict):
                     mask_data = mask.data.clone().clamp(0, 1).round()
                     cur_rank = mask_data.sum().item()
                 else:
@@ -307,7 +352,7 @@ def get_low_rank_projection(
 
             # Clamp after optimizer step
             with torch.no_grad():
-                if isinstance(basis_directions, dict) is False:
+                if not isinstance(basis_directions, dict):
                     mask.data.clamp_(0, 1)
                 else:
                     for key in masks:
@@ -319,7 +364,7 @@ def get_low_rank_projection(
             free_gpu_cache()
 
     # build the projection after training
-    if isinstance(basis_directions, dict) is False:
+    if not isinstance(basis_directions, dict):
         mask_data = mask.data.clone()
         mask_data.clamp_(0, 1)
         rounded = torch.round(mask_data)
@@ -373,6 +418,7 @@ def run_experiment(
     lamb: float = 0.1,
     save_path: str = "results",
     save_outputs_on_val: bool = False,
+    bigtom: bool = False,
     remote: bool = False,
 ):
     print("#" * 30)
@@ -389,14 +435,22 @@ def run_experiment(
     )
     os.makedirs(save_path, exist_ok=True)
 
-    train_dataloader, valid_dataloader = prepare_dataset(
-        lm=lm,
-        experiment_name=experiment_name,
-        train_size=train_size,
-        valid_size=validation_size,
-        batch_size=batch_size,
-        remote=remote,
-    )
+    if not bigtom:
+        train_dataloader, valid_dataloader = prepare_dataset(
+            lm=lm,
+            experiment_name=experiment_name,
+            train_size=train_size,
+            valid_size=validation_size,
+            batch_size=batch_size,
+            remote=remote,
+        )
+    else:
+        train_dataloader, valid_dataloader = prepare_bigtom_dataset(
+            experiment_name=experiment_name,
+            train_size=train_size,
+            valid_size=validation_size,
+            batch_size=batch_size,
+        )
 
     singular_vectors = None
     exclude_projections = []
@@ -411,9 +465,13 @@ def run_experiment(
             or experiment_name == "visibility_lookback-source"
         ):
             direction_type = exp_to_vec_type[experiment_name]
+            path = "bigToM" if bigtom else "causalToM"
             if isinstance(direction_type, list):
                 directions = {
-                    d: load_basis_directions("singular_vecs", d) for d in direction_type
+                    d: load_basis_directions(
+                        direction_type="singular_vecs", vector_type=d, path=path
+                    )
+                    for d in direction_type
                 }
                 singular_vectors = {
                     l: {d: directions[d][l] for d in direction_type} for l in layers
@@ -422,6 +480,7 @@ def run_experiment(
                 singular_vectors = load_basis_directions(
                     direction_type="singular_vecs",
                     vector_type=exp_to_vec_type[experiment_name],
+                    path=path,
                 )
 
     print("Running experiment === > ", experiment_name)
@@ -441,6 +500,7 @@ def run_experiment(
             verbose=verbose,
             save_outputs=save_outputs_on_val,
             projection_type="full_rank",
+            bigtom=bigtom,
             remote=remote,
         )
         print("-" * 30)
@@ -466,6 +526,7 @@ def run_experiment(
                 n_epochs=n_epochs,
                 lamb=lamb,
                 verbose=verbose,
+                bigtom=bigtom,
                 remote=remote,
             )
 
@@ -543,7 +604,6 @@ def main(
         "visibility_lookback-source",
         "visibility_lookback-payload",
         "visibility_lookback-address_and_pointer",
-        "vis_2nd_to_1st_and_ques",
         "pointer",
     ],
     model_key: str = "meta-llama/Meta-Llama-3-70B-Instruct",
@@ -552,11 +612,12 @@ def main(
     validation_size: int = 80,
     batch_size: int = 1,
     verbose: bool = False,
-    learning_rate: float = 0.1,
+    learning_rate: float = 0.1,  # 0.005 for BigToM
     n_epochs: int = 1,
     lamb: float = None,
     save_path: str = "experiments/causalToM_novis/results",
     save_outputs: bool = False,
+    bigtom: bool = False,
     remote: bool = False,
 ):
     """
@@ -575,6 +636,8 @@ def main(
         lamb: L1 regularization parameter
         save_path: Path to save results
         save_outputs: Whether to save outputs
+        bigtom: Whether to run experiments on BigToM
+        verbose: Whether to print verbose output
         remote: Whether to run experiments remotely
     """
     if lamb is None:
@@ -582,6 +645,17 @@ def main(
             lamb = 0.03
         else:
             lamb = 0.1
+
+    if bigtom:
+        # save_path = "experiments/bigToM/results"
+        if experiment not in [
+            "answer_lookback-pointer",
+            "answer_lookback-payload",
+            "binding_lookback-pointer_character",
+            "visibility_lookback-source",
+            "visibility_lookback-payload",
+        ]:
+            raise ValueError(f"Experiment {experiment} is not supported for BigToM")
 
     print(f"Running experiment: {experiment}")
     print(f"Model: {model_key}")
@@ -594,8 +668,9 @@ def main(
     print(f"Lambda: {lamb}")
     print(f"Save path: {save_path}")
     print(f"Save outputs: {save_outputs}")
+    print(f"BigToM: {bigtom}")
     print(f"Remote: {remote}")
-
+    print(f"Verbose: {verbose}")
     if remote:
         lm = LanguageModel("meta-llama/Meta-Llama-3.1-405B-Instruct")
     else:
@@ -632,6 +707,7 @@ def main(
         lamb=lamb,
         save_path=save_path,
         save_outputs_on_val=save_outputs and not remote,
+        bigtom=bigtom,
         remote=remote,
     )
 

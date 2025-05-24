@@ -243,7 +243,12 @@ def validate(
 
 
 def get_low_rank_projection(
-    exp_name: Literal["object_position", "character_position", "source_1", "source_2"],
+    exp_name: Literal[
+        "binding_lookback-object_oi",
+        "binding_lookback-character_oi",
+        "binding_lookback-source_1",
+        "binding_lookback-source_2",
+    ],
     lm: LanguageModel,
     layer_idx: int,
     train_loader: DataLoader,

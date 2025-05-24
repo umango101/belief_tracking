@@ -162,14 +162,14 @@ def get_answer_lookback_pointer_exps(
 
         samples.append(
             {
-                "org_story": false_stories[idx]["story"],
-                "org_question": false_stories[idx]["question"],
-                "org_prompt": org_prompt,
-                "org_ans": org_ans,
-                "alt_story": true_stories[random_sample_idx]["story"],
-                "alt_question": true_stories[random_sample_idx]["question"],
-                "alt_prompt": alt_prompt,
-                "alt_ans": alt_ans,
+                "clean_story": false_stories[idx]["story"],
+                "clean_question": false_stories[idx]["question"],
+                "clean_prompt": org_prompt,
+                "clean_ans": org_ans,
+                "corrupt_story": true_stories[random_sample_idx]["story"],
+                "corrupt_question": true_stories[random_sample_idx]["question"],
+                "corrupt_prompt": alt_prompt,
+                "corrupt_ans": alt_ans,
                 "target": org_fb_ans,
             }
         )
@@ -246,14 +246,14 @@ def get_answer_lookback_payload_exps(
 
         samples.append(
             {
-                "org_story": true_stories[idx]["story"],
-                "org_question": true_stories[idx]["question"],
-                "org_prompt": org_prompt,
-                "org_ans": org_ans,
-                "alt_story": true_stories[random_sample_idx]["story"],
-                "alt_question": true_stories[random_sample_idx]["question"],
-                "alt_prompt": alt_prompt,
-                "alt_ans": alt_ans,
+                "clean_story": true_stories[idx]["story"],
+                "clean_question": true_stories[idx]["question"],
+                "clean_prompt": org_prompt,
+                "clean_ans": org_ans,
+                "corrupt_story": true_stories[random_sample_idx]["story"],
+                "corrupt_question": true_stories[random_sample_idx]["question"],
+                "corrupt_prompt": alt_prompt,
+                "corrupt_ans": alt_ans,
                 "target": alt_ans,
             }
         )
@@ -330,14 +330,14 @@ def get_binding_lookback_pointer_exps(df_false, df_true, n_samples):
 
         samples.append(
             {
-                "org_story": true_stories[random_sample_idx]["story"],
-                "org_question": org_question,
-                "org_prompt": org_prompt,
-                "org_ans": org_ans,
-                "alt_story": true_stories[idx]["story"],
-                "alt_question": alt_question,
-                "alt_prompt": alt_prompt,
-                "alt_ans": alt_ans,
+                "clean_story": true_stories[random_sample_idx]["story"],
+                "clean_question": org_question,
+                "clean_prompt": org_prompt,
+                "clean_ans": org_ans,
+                "corrupt_story": true_stories[idx]["story"],
+                "corrupt_question": alt_question,
+                "corrupt_prompt": alt_prompt,
+                "corrupt_ans": alt_ans,
                 "target": org_tb_ans,
             }
         )
@@ -407,14 +407,14 @@ def get_visibility_lookback_exps(
 
         samples.append(
             {
-                "org_story": org_story,
-                "org_question": org_question,
-                "org_prompt": org_prompt,
-                "org_ans": org_ans,
-                "alt_story": alt_story,
-                "alt_question": alt_question,
-                "alt_prompt": alt_prompt,
-                "alt_ans": alt_ans,
+                "clean_story": org_story,
+                "clean_question": org_question,
+                "clean_prompt": org_prompt,
+                "clean_ans": org_ans,
+                "corrupt_story": alt_story,
+                "corrupt_question": alt_question,
+                "corrupt_prompt": alt_prompt,
+                "corrupt_ans": alt_ans,
                 "target": alt_ans,
             }
         )
