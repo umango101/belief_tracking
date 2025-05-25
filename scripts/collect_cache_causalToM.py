@@ -127,13 +127,13 @@ class CacheCollector:
                 1,
                 self.model.config.hidden_size,
             ).cpu(),
-            "query_charac_acts": torch.zeros(
+            "query_charac_token_acts": torch.zeros(
                 self.n_samples,
                 self.model.config.num_hidden_layers,
                 len(self.query_charac_indices),
                 self.model.config.hidden_size,
             ).cpu(),
-            "query_object_acts": torch.zeros(
+            "query_object_token_acts": torch.zeros(
                 self.n_samples,
                 self.model.config.num_hidden_layers,
                 len(self.query_object_indices),
@@ -294,7 +294,7 @@ class CacheCollector:
                 activations["last_token_acts"][i * 20 : (i + 1) * 20] = tmp_tensors[
                     "last_token"
                 ].value
-                activations["query_charac_acts"][i * 20 : (i + 1) * 20] = tmp_tensors[
+                activations["query_charac_token_acts"][i * 20 : (i + 1) * 20] = tmp_tensors[
                     "query_charac"
                 ].value
                 activations["query_object_acts"][i * 20 : (i + 1) * 20] = tmp_tensors[

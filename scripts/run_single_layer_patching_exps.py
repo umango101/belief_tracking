@@ -518,22 +518,22 @@ def run_experiment(
 
         layer_performance = {}
 
-        # # full state patching
-        # full_acc = validate(
-        #     experiment_name,
-        #     lm,
-        #     layer,
-        #     valid_dataloader,
-        #     verbose=verbose,
-        #     save_outputs=save_outputs_on_val,
-        #     projection_type="full_rank",
-        #     bigtom=bigtom,
-        #     remote=remote,
-        # )
-        # print("-" * 30)
-        # print(f"Full state patching val: {full_acc}")
-        # print("-" * 30)
-        # layer_performance["full_rank"] = {"accuracy": full_acc, "rank": None}
+        # full state patching
+        full_acc = validate(
+            experiment_name,
+            lm,
+            layer,
+            valid_dataloader,
+            verbose=verbose,
+            save_outputs=save_outputs_on_val,
+            projection_type="full_rank",
+            bigtom=bigtom,
+            remote=remote,
+        )
+        print("-" * 30)
+        print(f"Full state patching val: {full_acc}")
+        print("-" * 30)
+        layer_performance["full_rank"] = {"accuracy": full_acc, "rank": None}
 
         if singular_vectors is not None:
             # singular vector patching
