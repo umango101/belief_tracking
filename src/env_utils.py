@@ -16,7 +16,6 @@ try:
     PROJECT_ROOT = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1])
     with open(os.path.join(PROJECT_ROOT, "env.yml"), "r") as f:
         config = yaml.safe_load(f)
-        DEFAULT_MODELS_DIR = config["MODEL_DIR"]
         DEFAULT_DATA_DIR = os.path.join(PROJECT_ROOT, config["DATA_DIR"])
 
 except FileNotFoundError:

@@ -276,11 +276,6 @@ def set_seed(seed: int) -> None:
     torch.cuda.manual_seed_all(seed)
 
 
-directions_folder = {
-    "singular_vecs": "svd",
-}
-
-
 def get_bigtom_intervention_positions(
     exp_name: str, lm: LanguageModel, org_prompts: str, alt_prompts: str
 ) -> tuple[dict, dict]:
@@ -326,11 +321,11 @@ def load_basis_directions(
     vector_type: (
         Literal[
             "last_token",
-            "state_ordering_id",
-            "object_ordering_id",
-            "character_ordering_id",
-            "query_charac_ordering_id",
-            "query_obj_ordering_id",
+            "state_tokens",
+            "object_tokens",
+            "character_tokens",
+            "query_charac_tokens",
+            "query_obj_tokens",
             "second_visibility_sent",
         ]
         | None
@@ -341,9 +336,7 @@ def load_basis_directions(
     if vector_type is None:
         print("WARNING: No direction type specified")
         return None
-    path = os.path.join(
-        prefix, directions_folder[direction_type], path, vector_type, direction_type
-    )
+    path = os.path.join(prefix, "svd", path, vector_type, direction_type)
     directions = {}
     for file in os.listdir(path):
         idx = int(file.split(".")[0])
