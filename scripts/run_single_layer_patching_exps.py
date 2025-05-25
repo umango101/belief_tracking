@@ -21,7 +21,6 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from experiments.bigToM.utils import check_pred
 from src import env_utils
 
 os.environ["NDIF_KEY"] = env_utils.load_env_var("NDIF_KEY")
@@ -81,7 +80,10 @@ def validate(
         batch_size = target_tokens.size(0)
         alt_acts, org_acts_state = defaultdict(dict), defaultdict(dict)
 
-        if intervention_positions is None:
+        if bigtom and not (
+            exp_name == "answer_lookback-pointer"
+            or exp_name == "answer_lookback-payload"
+        ):
             intervention_positions, prompt_struct = get_bigtom_intervention_positions(
                 exp_name, lm, org_prompts, alt_prompts
             )
@@ -94,12 +96,12 @@ def validate(
 
         def bigtom_nnsight_request(return_logits: bool = False):
             with lm.session(remote=remote) as session:
-                with lm.trace(alt_prompts):
+                with lm.trace(alt_prompts[0]):
                     for t in intervention_positions["cache"]:
                         alt_acts[t] = lm.model.layers[layer_idx].output[0][:, t].clone()
 
                 with lm.generate(
-                    org_prompts,
+                    org_prompts[0],
                     max_new_tokens=2,
                     do_sample=False,
                     num_return_sequences=1,
@@ -109,7 +111,23 @@ def validate(
                     for t in intervention_positions["patch"]:
                         curr_output = lm.model.layers[layer_idx].output[0][:, t].clone()
                         if projection is not None:
-                            pass
+                            if isinstance(projection, dict):
+                                if t in query_object_indices:
+                                    proj = projection["query_obj_ordering_id"]
+                                elif t in query_character_indices:
+                                    proj = projection["query_charac_ordering_id"]
+                                else:
+                                    raise ValueError("Invalid projection type")
+                            else:
+                                proj = projection
+                            alt_proj = torch.matmul(
+                                alt_acts[patch_to_cache_map[t]], proj
+                            )
+                            org_proj = torch.matmul(curr_output, proj)
+                            patch = curr_output - org_proj + alt_proj
+
+                            del alt_proj, org_proj
+                            free_gpu_cache()
                         else:
                             patch = alt_acts[patch_to_cache_map[t]]
 
@@ -117,13 +135,11 @@ def validate(
 
                     out = lm.generator.output.save()
 
-                pred = lm.tokenizer.decode(
-                    out[0][prompt_struct["org_prompt_len"] : -1]
-                ).strip()
+            pred = out[0][prompt_struct["org_prompt_len"] : -1]
 
-                return pred
+            return pred
 
-        def nnsight_request(return_logits: bool = False):
+        def nnsight_request():
             with lm.trace(remote=remote) as tracer:
                 with tracer.invoke(alt_prompts):
                     for t in intervention_positions["cache"]:
@@ -156,13 +172,12 @@ def validate(
                         lm.model.layers[layer_idx].output[0][:, t] = patch
 
                     logits = lm.lm_head.output[:, -1]
-                    logits = logits.save() if return_logits else logits
                     pred = torch.argmax(logits, dim=-1).save()
 
-            return logits, pred
+            return pred
 
-        _, pred = (
-            nnsight_request(return_logits=not remote)
+        pred = (
+            nnsight_request()
             if not bigtom
             or exp_name == "answer_lookback-pointer"
             or exp_name == "answer_lookback-payload"
@@ -176,11 +191,10 @@ def validate(
             if not bigtom:
                 is_correct = pred_token.lower().strip() == targets[i].lower().strip()
             else:
-                is_correct = check_pred(lm, pred_token, targets[i], verbose=verbose)
-                is_correct = is_correct == "Yes"
+                is_correct = pred_token.lower().strip() in targets[i].lower().strip()
             if verbose:
                 print(
-                    f"Predicted: {pred_token.lower().strip()}, Target: {targets[i].lower().strip()}"
+                    f"Correct: {is_correct} | Predicted: {pred_token.lower().strip()} | Target: {targets[i].lower().strip()}"
                 )
             correct += int(is_correct)
 
@@ -263,11 +277,21 @@ def get_low_rank_projection(
             alt_prompts = batch["corrupt_prompt"]
             org_prompts = batch["clean_prompt"]
             targets = batch["target"] if "target" in batch else batch["corrupt_target"]
-            target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[:, -1]
+            if not bigtom:
+                target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[
+                    :, -1
+                ]
+            else:
+                target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[
+                    :, 1:
+                ]
             batch_size = target_tokens.size(0)
             alt_acts, org_acts_state = defaultdict(dict), defaultdict(dict)
 
-            if intervention_positions is None:
+            if bigtom and not (
+                exp_name == "answer_lookback-pointer"
+                or exp_name == "answer_lookback-payload"
+            ):
                 intervention_positions, prompt_struct = (
                     get_bigtom_intervention_positions(
                         exp_name, lm, org_prompts, alt_prompts
@@ -323,7 +347,10 @@ def get_low_rank_projection(
                     free_gpu_cache()
 
             target_logit = logits[torch.arange(batch_size), target_tokens]
-            task_loss = -torch.mean(target_logit)
+            if not bigtom:
+                task_loss = -torch.mean(target_logit)
+            else:
+                task_loss = -target_logit.sum()
             if not isinstance(basis_directions, dict):
                 l1_loss = lamb * torch.norm(mask, p=1)
             else:
@@ -343,7 +370,7 @@ def get_low_rank_projection(
                         cur_rank[key] = mask_data.sum().item()
 
                 print(
-                    f"Epoch: {epoch}, Batch: {batch_idx}, Rank: {cur_rank} ,Loss: {loss.item()} |>> l_task: {task_loss.item()}, l1: {l1_loss.item()}"
+                    f"Epoch: {epoch}, Batch: {batch_idx}, Rank: {cur_rank}, Loss: {loss.item()} | l_task: {task_loss.item()}, l1: {l1_loss.item()}"
                 )
 
             loss.backward()
@@ -491,22 +518,22 @@ def run_experiment(
 
         layer_performance = {}
 
-        # full state patching
-        full_acc = validate(
-            experiment_name,
-            lm,
-            layer,
-            valid_dataloader,
-            verbose=verbose,
-            save_outputs=save_outputs_on_val,
-            projection_type="full_rank",
-            bigtom=bigtom,
-            remote=remote,
-        )
-        print("-" * 30)
-        print(f"Full state patching val: {full_acc}")
-        print("-" * 30)
-        layer_performance["full_rank"] = {"accuracy": full_acc, "rank": None}
+        # # full state patching
+        # full_acc = validate(
+        #     experiment_name,
+        #     lm,
+        #     layer,
+        #     valid_dataloader,
+        #     verbose=verbose,
+        #     save_outputs=save_outputs_on_val,
+        #     projection_type="full_rank",
+        #     bigtom=bigtom,
+        #     remote=remote,
+        # )
+        # print("-" * 30)
+        # print(f"Full state patching val: {full_acc}")
+        # print("-" * 30)
+        # layer_performance["full_rank"] = {"accuracy": full_acc, "rank": None}
 
         if singular_vectors is not None:
             # singular vector patching
@@ -532,15 +559,16 @@ def run_experiment(
 
             print("validating ...")
             singular_acc = validate(
-                experiment_name,
-                lm,
-                layer,
-                valid_dataloader,
+                exp_name=experiment_name,
+                lm=lm,
+                layer_idx=layer,
+                validation_loader=valid_dataloader,
                 projection=singular_projection,
                 verbose=verbose,
                 save_outputs=save_outputs_on_val,
                 projection_type="singular_vector",
                 remote=remote,
+                bigtom=bigtom,
             )
             print("-" * 30)
             print(

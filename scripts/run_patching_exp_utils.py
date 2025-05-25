@@ -192,7 +192,7 @@ exp_to_vec_type = {
 }
 
 bigtom_exp_to_intervention_positions = {
-    "binding_lookback-pointer_object": {
+    "binding_lookback-pointer_character": {
         "cache": ["alt_ques_start_idx", "alt_ques_start_idx"],
         "patch": ["org_ques_start_idx", "org_ques_start_idx"],
         "cache_offset": [3, 5],
@@ -283,7 +283,7 @@ directions_folder = {
 
 def get_bigtom_intervention_positions(
     exp_name: str, lm: LanguageModel, org_prompts: str, alt_prompts: str
-) -> dict:
+) -> tuple[dict, dict]:
     prompt_struct = {
         "org_ques_start_idx": get_ques_start_token_idx(lm.tokenizer, org_prompts),
         "alt_ques_start_idx": get_ques_start_token_idx(lm.tokenizer, alt_prompts),
@@ -295,7 +295,6 @@ def get_bigtom_intervention_positions(
         ),
         "org_prompt_len": get_prompt_token_len(lm.tokenizer, org_prompts),
         "alt_prompt_len": get_prompt_token_len(lm.tokenizer, alt_prompts),
-        "intervention_positions_keys": bigtom_exp_to_intervention_positions[exp_name],
     }
 
     meta_intervention_positions = bigtom_exp_to_intervention_positions[exp_name]
@@ -353,7 +352,6 @@ def load_basis_directions(
     print(
         f"""Loaded {len(directions)} {direction_type} directions for {vector_type} | shape: {directions[0].shape}"""
     )
-    print(type(directions))
 
     return directions
 
