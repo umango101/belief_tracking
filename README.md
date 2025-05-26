@@ -19,14 +19,14 @@ cd mind
 2. Set up the environment:
 ```bash
 conda env create -f environment.yml
-conda activate mind
+conda activate belief
 ```
 
 3. Configure `env.yml` with following environment variables:
 - Set `NDIF_KEY` for API access
 - Set `HF_WRITE` for Hugging Face access
 
-4. Download the singular vectors tensors from [here]().
+4. Download the singular vector tensors from [here]() at the repo directory.
 
 
 ## Repository Structure
@@ -53,7 +53,7 @@ The repository contains several components:
 
 1. **Dataset**: The `data/` contains the CausalToM templates and synthetic entities used to generate samples. Additionally, it also contains BigToM samples. `src/dataset.py` file contains code for generating and processing the CausalToM dataset.
 
-2. **Experiments**: The `experiments/` directory contains configurations and results for various experiments investigating the underlying mechanisms. Use notebooks in `experiments/causalToM_novis` and `experiments/causalToM_vis` for mechanism exploration. Use `scripts/run_single_layer_patching_exps.py` and `scripts/run_single_layer_patching_exps.py` with appropriate arguments to scale up the interchange intervention experiments for mechanism discovery.
+2. **Experiments**: The `experiments/` directory contains configurations and results for various experiments investigating the underlying mechanisms. Use notebooks in `experiments/causalToM_novis` and `experiments/causalToM_vis` for mechanism exploration. Notebooks do not include subspace intervention experiments. Use `scripts/run_single_layer_patching_exps.py` and `scripts/run_single_layer_patching_exps.py`, which includes subspace interchange intervention experiments, with appropriate arguments to scale up the experiments.
 
 3. **Utilities**: Utilities are included in their respective directories.
 
