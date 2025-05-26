@@ -12,8 +12,8 @@ Please check [belief.baulab.info](https://belief.baulab.info/) for more informat
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Nix07/mind.git
-cd mind
+git clone https://github.com/Nix07/belief_tracking.git
+cd belief_tracking
 ```
 
 2. Set up the environment:
@@ -26,7 +26,7 @@ conda activate belief
 - Set `NDIF_KEY` for API access
 - Set `HF_WRITE` for Hugging Face access
 
-4. Download the singular vector tensors from [here]() at the repo directory.
+4. Download the singular vector tensors from [here]() at the root.
 
 
 ## Repository Structure
