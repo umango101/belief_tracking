@@ -18,8 +18,8 @@ cd belief_tracking
 
 2. Set up the environment:
 ```bash
-conda env create -f environment.yml
-conda activate belief
+uv sync
+source .venv/bin/activate
 ```
 
 3. Configure `env.yml` with following environment variables:
@@ -34,16 +34,24 @@ conda activate belief
 ```
 .
 ├── 📊 data/                              # Dataset files
-├── 🧪 experiments/                       # Experiment configurations and results
-│   ├── attn_knockout/                   # Attention knockout implementation
+├── 📓 notebooks/                         # Jupyter notebooks for experiments
+│   ├── attn_knockout/                   # Attention knockout experiments
 │   ├── bigToM/                          # BigToM causal model experiments 
-│   ├── causal_mediation_analysis/       # Tracing experiments
 │   ├── causal_subspace_analysis/        # Causal subspace analysis
 │   ├── causalToM_novis/                 # Causal model in no-visibility
 │   └── causalToM_vis/                   # Causal model in explicit visibility   
 ├── 📜 scripts/                          # Utility scripts
+│   ├── patching_scripts/                # Patching experiment scripts
+│   └── tracing_scripts/                 # Causal mediation analysis scripts
 ├── 🔧 src/                              # Source code
-├── 📐 svd/                              # Singular vectors
+├── 📈 results/                          # Experiment results
+│   ├── attn_knockout/                   # Attention knockout results
+│   ├── bigToM/                          # BigToM experiment results
+│   ├── causal_mediation_analysis/       # Tracing experiment results
+│   ├── causalToM_novis/                 # No-visibility experiment results
+│   └── causalToM_vis/                   # Visibility experiment results
+├── 📐 svd/                              # Singular vector decompositions
+├── 🗂️ additionals/                      # Additional data and caches
 └── ⚙️ env.yml                           # Environment configuration
 ```
 
@@ -51,11 +59,15 @@ conda activate belief
 
 The repository contains several components:
 
-1. **Dataset**: The `data/` contains the CausalToM templates and synthetic entities used to generate samples. Additionally, it also contains BigToM samples. `src/dataset.py` file contains code for generating and processing the CausalToM dataset.
+1. **Dataset**: The `data/` directory contains the CausalToM templates and synthetic entities used to generate samples. Additionally, it also contains BigToM samples. `src/dataset.py` file contains code for generating and processing the CausalToM dataset.
 
-2. **Experiments**: The `experiments/` directory contains configurations and results for various experiments investigating the underlying mechanisms. Use notebooks in `experiments/causalToM_novis` and `experiments/causalToM_vis` for mechanism exploration. Notebooks do not include subspace intervention experiments. Use `scripts/run_single_layer_patching_exps.py` and `scripts/run_single_layer_patching_exps.py`, which includes subspace interchange intervention experiments, with appropriate arguments to scale up the experiments.
+2. **Notebooks**: The `notebooks/` directory contains Jupyter notebooks for various experiments investigating the underlying mechanisms. Use notebooks in `notebooks/causalToM_novis` and `notebooks/causalToM_vis` for mechanism exploration. Notebooks do not include subspace intervention experiments.
 
-3. **Utilities**: Utilities are included in their respective directories.
+3. **Scripts**: The `scripts/` directory contains utility scripts organized by experiment type:
+   - `scripts/patching_scripts/`: Contains patching experiment scripts including `run_single_layer_patching_exps.py` and `run_upto_layer_patching_exps.py` for subspace interchange intervention experiments
+   - `scripts/tracing_scripts/`: Contains causal mediation analysis scripts including `cma.py` for tracing experiments
+
+4. **Results**: The `results/` directory contains experiment outputs organized by experiment type, including attention knockout results, BigToM results, causal mediation analysis results, and CausalToM experiment results.
 
 ## Citation
 
