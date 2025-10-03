@@ -1,6 +1,6 @@
 # Language Models use Lookbacks to Track Beliefs
 
-This repository contains the code and experiments for the paper ["Language Models use Lookbacks to Track Beliefs"](https://arxiv.org/abs/2505.14685) by Prakash et al. The work investigates how language models (specifically Llama-3-70B-Instruct) represent and track characters' beliefs usin
+This repository contains the code and experiments for the paper ["Language Models use Lookbacks to Track Beliefs"](https://arxiv.org/abs/2505.14685) by Prakash et al, 2025. The work investigates how language models (specifically Llama-3-70B-Instruct and Llama-3.1-405B-Instruct) represent and track characters' beliefs.
 
 
 ![Causal Model in No-Visibility Setting](causalmodel_novis.png)
@@ -26,8 +26,7 @@ source .venv/bin/activate
 - Set `NDIF_KEY` for API access
 - Set `HF_WRITE` for Hugging Face access
 
-4. Download the singular vector tensors from [here]() at the root.
-
+4. To perform subspace level analysis, you would need singular vectors that you can request by sending an email to [Nikhil](https://nix07.github.io/).
 
 ## Repository Structure
 
@@ -61,11 +60,11 @@ The repository contains several components:
 
 1. **Dataset**: The `data/` directory contains the CausalToM templates and synthetic entities used to generate samples. Additionally, it also contains BigToM samples. `src/dataset.py` file contains code for generating and processing the CausalToM dataset.
 
-2. **Notebooks**: The `notebooks/` directory contains Jupyter notebooks for various experiments investigating the underlying mechanisms. Use notebooks in `notebooks/causalToM_novis` and `notebooks/causalToM_vis` for mechanism exploration. Notebooks do not include subspace intervention experiments.
+2. **Notebooks**: The `notebooks/` directory contains Jupyter notebooks for various experiments investigating the underlying mechanisms. Use notebooks in `notebooks/causalToM_novis` and `notebooks/causalToM_vis` for mechanism exploration. Notebooks do not include subspace intervention experiments. 
 
 3. **Scripts**: The `scripts/` directory contains utility scripts organized by experiment type:
-   - `scripts/patching_scripts/`: Contains patching experiment scripts including `run_single_layer_patching_exps.py` and `run_upto_layer_patching_exps.py` for subspace interchange intervention experiments
-   - `scripts/tracing_scripts/`: Contains causal mediation analysis scripts including `trace.py` for tracing experiments
+   - `scripts/patching_scripts/`: Contains patching experiment scripts including `run_single_layer_patching_exps.py` and `run_upto_layer_patching_exps.py` to conduct large-scale interchange intervention experiments, including subspace patching.
+   - `scripts/tracing_scripts/`: Contains causal mediation analysis scripts including `trace.py` for tracing experiments.
 
 4. **Results**: The `results/` directory contains experiment outputs organized by experiment type, including attention knockout results, BigToM results, causal mediation analysis results, and CausalToM experiment results.
 
