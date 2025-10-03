@@ -21,10 +21,10 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from src import env_utils
+from src import global_utils
 
-os.environ["NDIF_KEY"] = env_utils.load_env_var("NDIF_KEY")
-os.environ["HF_TOKEN"] = env_utils.load_env_var("HF_WRITE")
+os.environ["NDIF_KEY"] = global_utils.load_env_var("NDIF_KEY")
+os.environ["HF_TOKEN"] = global_utils.load_env_var("HF_WRITE")
 
 query_object_indices = [-5, -4]
 query_character_indices = [-8, -7]
@@ -73,9 +73,11 @@ def validate(
     for batch_idx, batch in tqdm(
         enumerate(validation_loader), total=len(validation_loader)
     ):
-        alt_prompts = batch["corrupt_prompt"]
+        alt_prompts = batch["counterfactual_prompt"]
         org_prompts = batch["clean_prompt"]
-        targets = batch["target"] if "target" in batch else batch["corrupt_target"]
+        targets = (
+            batch["target"] if "target" in batch else batch["counterfactual_target"]
+        )
         target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[:, -1]
         batch_size = target_tokens.size(0)
         alt_acts, org_acts_state = defaultdict(dict), defaultdict(dict)
@@ -274,9 +276,11 @@ def get_low_rank_projection(
         epoch_loss = 0
 
         for batch_idx, batch in tqdm(enumerate(train_loader), total=len(train_loader)):
-            alt_prompts = batch["corrupt_prompt"]
+            alt_prompts = batch["counterfactual_prompt"]
             org_prompts = batch["clean_prompt"]
-            targets = batch["target"] if "target" in batch else batch["corrupt_target"]
+            targets = (
+                batch["target"] if "target" in batch else batch["counterfactual_target"]
+            )
             if not bigtom:
                 target_tokens = lm.tokenizer(targets, return_tensors="pt").input_ids[
                     :, -1
@@ -447,6 +451,7 @@ def run_experiment(
     save_outputs_on_val: bool = False,
     bigtom: bool = False,
     remote: bool = False,
+    skip_subspace_patching: bool = True,
 ):
     print("#" * 30)
     print(f"Running experiment: {experiment_name}")
@@ -482,8 +487,10 @@ def run_experiment(
     singular_vectors = None
     exclude_projections = []
 
-    skip_low_rank_projection = (experiment_name in exclude_projections) or (
-        "405B" in lm.config._name_or_path
+    skip_low_rank_projection = (
+        (experiment_name in exclude_projections)
+        or ("405B" in lm.config._name_or_path)
+        or skip_subspace_patching
     )
 
     if not skip_low_rank_projection:
@@ -647,6 +654,7 @@ def main(
     save_outputs: bool = False,
     bigtom: bool = False,
     remote: bool = False,
+    skip_subspace_patching: bool = True,
 ):
     """
     Run single layer patching experiments.
@@ -699,13 +707,14 @@ def main(
     print(f"BigToM: {bigtom}")
     print(f"Remote: {remote}")
     print(f"Verbose: {verbose}")
+    print(f"Skip subspace patching: {skip_subspace_patching}")
     if remote:
         lm = LanguageModel("meta-llama/Meta-Llama-3.1-405B-Instruct")
     else:
         lm = LanguageModel(
             "meta-llama/Meta-Llama-3-70B-Instruct",
             device_map="auto",
-            torch_dtype=torch.float16,
+            dtype=torch.float16,
             dispatch=True,
         )
 
@@ -737,6 +746,7 @@ def main(
         save_outputs_on_val=save_outputs and not remote,
         bigtom=bigtom,
         remote=remote,
+        skip_subspace_patching=skip_subspace_patching,
     )
 
 
