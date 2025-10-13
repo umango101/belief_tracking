@@ -655,3 +655,90 @@ def get_character_oi_exps(
         )
 
     return samples
+
+def get_answer_lookback_payload_mcqa(
+    n_samples: int,
+) -> list:
+    """
+    Generates samples for answer lookback payload by creating clean and counterfactual configurations
+    with different character-object-state mappings.
+
+    Args:
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and counterfactual samples with their configurations.
+    """
+    clean_configs, counterfactual_configs = [], []
+    samples = []
+    all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
+    all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
+    all_symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    for idx in range(n_samples):
+        template_idx = 2
+        object = random.sample(all_objects, 1)
+        colors = random.sample(all_colors, 2)
+        symbols = random.sample(all_symbols, 2)
+        counterfactual_symbols = random.sample(all_symbols, 2)
+
+    #     sample = Sample(
+    #         template_idx=template_idx,
+    #         characters=characters,
+    #         objects=containers,
+    #         states=states,
+    #     )
+    #     clean_configs.append(sample)
+
+    #     characters = random.sample(all_characters, 2)
+    #     containers = random.sample(all_objects, 2)
+    #     states = random.sample(all_states, 2)
+    #     sample = Sample(
+    #         template_idx=template_idx,
+    #         characters=characters,
+    #         objects=containers,
+    #         states=states,
+    #     )
+    #     counterfactual_configs.append(sample)
+
+    # clean_dataset = Dataset(clean_configs)
+    # counterfactual_dataset = Dataset(counterfactual_configs)
+
+    # for idx in range(n_samples):
+        answer_choice = random.choice([0, 1])
+        # clean = clean_dataset.__getitem__(
+        #     idx,
+        #     set_character=random_choice,
+        #     set_container=1 ^ random_choice,
+        # )
+        clean_prompt = "The " + object + " is " + colors[answer_choice] + ". What color is the " + object + "? " + symbols[0] + ". " + colors[0] + " " + symbols[1] + ". " + colors[1] + " Answer: "
+        clean_ans = symbols[answer_choice]
+        counterfactual_prompt = "The " + object + " is " + colors[answer_choice] + ". What color is the " + object + "? " + counterfactual_symbols[0] + ". " + colors[1] + " " + counterfactual_symbols[1] + ". " + colors[0] + " Answer: "
+        counterfactual_ans = counterfactual_symbols[1 ^ answer_choice]
+        # counterfactual = counterfactual_dataset.__getitem__(
+        #     idx,
+        #     set_character=random_choice,
+        #     set_container=random_choice,
+        # )
+
+        samples.append(
+            {
+                "clean_characters": symbols,
+                "clean_objects": [object],
+                "clean_states": colors,
+                "clean_story": [],
+                "clean_question": [],
+                "clean_ans": clean_ans,
+                "clean_prompt": clean_promp,
+                "counterfactual_characters": counterfactual_symbols,
+                "counterfactual_objects": [object],
+                "counterfactual_states": colors,
+                "counterfactual_story": [],
+                "counterfactual_question": [],
+                "counterfactual_ans": counterfactual_ans,
+                "counterfactual_prompt": counterfactual_prompt,
+                "target": counterfactual_ans,
+            }
+        )
+
+    return samples
