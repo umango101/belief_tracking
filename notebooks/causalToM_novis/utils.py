@@ -678,7 +678,7 @@ def get_answer_lookback_payload_mcqa(
     samples = []
     all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
     all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
-    all_symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    all_symbols = 'ABCDEFGHKLMNPQRSTUVWXYZ'
 
     for idx in range(n_samples):
         template_idx = 2
@@ -732,7 +732,7 @@ def get_answer_lookback_pointer_mcqa(
     samples = []
     all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
     all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
-    all_symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    all_symbols = 'ABCDEFGHKLMNPQRSTUVWXYZ'
 
     for idx in range(n_samples):
         template_idx = 2
