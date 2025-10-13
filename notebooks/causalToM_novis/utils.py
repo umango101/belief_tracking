@@ -51,7 +51,10 @@ def error_detection(
                     counterfactual_pred = (
                         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
                     )
-
+        print("Clean answer: ", model.tokenizer.decode([clean_pred]).lower().strip())
+        print("Clean target: ", clean_target)
+        print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
+        print("Counterfactual target: ", counterfactual_target)
         if (
             model.tokenizer.decode([clean_pred]).lower().strip() == clean_target
             and model.tokenizer.decode([counterfactual_pred]).lower().strip()
@@ -728,16 +731,16 @@ def get_answer_lookback_payload_mcqa(
                 "clean_states": colors,
                 "clean_story": [],
                 "clean_question": [],
-                "clean_ans": clean_ans,
-                "clean_prompt": clean_prompt,
-                "counterfactual_characters": counterfactual_symbols,
-                "counterfactual_objects": [object],
+                "clean_ans": [clean_ans],
+                "clean_prompt": [clean_prompt],
+                "counterfactual_characters": [counterfactual_symbols],
+                "counterfactual_objects": object,
                 "counterfactual_states": colors,
                 "counterfactual_story": [],
                 "counterfactual_question": [],
-                "counterfactual_ans": counterfactual_ans,
-                "counterfactual_prompt": counterfactual_prompt,
-                "target": counterfactual_ans,
+                "counterfactual_ans": [counterfactual_ans],
+                "counterfactual_prompt": [counterfactual_prompt],
+                "target": [counterfactual_ans],
             }
         )
 
