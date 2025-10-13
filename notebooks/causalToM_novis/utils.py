@@ -58,9 +58,9 @@ def error_detection(
         print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
         print("Counterfactual target: ", counterfactual_target)
         if (
-            model.tokenizer.decode([clean_pred]).lower().strip() == clean_target
+            model.tokenizer.decode([clean_pred]).lower().strip() == clean_target.lower().strip() 
             and model.tokenizer.decode([counterfactual_pred]).lower().strip()
-            == counterfactual_target
+            == counterfactual_target.lower().strip() 
         ):
             correct += 1
         else:
