@@ -733,16 +733,16 @@ def get_answer_lookback_payload_mcqa(
                 "clean_states": colors,
                 "clean_story": [],
                 "clean_question": [],
-                "clean_ans": [clean_ans],
-                "clean_prompt": [clean_prompt],
-                "counterfactual_characters": [counterfactual_symbols],
+                "clean_ans": clean_ans,
+                "clean_prompt": clean_prompt,
+                "counterfactual_characters": counterfactual_symbols,
                 "counterfactual_objects": object,
                 "counterfactual_states": colors,
                 "counterfactual_story": [],
                 "counterfactual_question": [],
-                "counterfactual_ans": [counterfactual_ans],
-                "counterfactual_prompt": [counterfactual_prompt],
-                "target": [counterfactual_ans],
+                "counterfactual_ans": counterfactual_ans,
+                "counterfactual_prompt": counterfactual_prompt,
+                "target": counterfactual_ans,
             }
         )
 
