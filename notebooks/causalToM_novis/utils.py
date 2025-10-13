@@ -711,9 +711,9 @@ def get_answer_lookback_payload_mcqa(
         #     set_character=random_choice,
         #     set_container=1 ^ random_choice,
         # )
-        clean_prompt = "The " + object + " is " + colors[answer_choice] + ". What color is the " + object + "? " + symbols[0] + ". " + colors[0] + " " + symbols[1] + ". " + colors[1] + " Answer: "
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object + "? " + symbols[0] + ". " + colors[0] + " " + symbols[1] + ". " + colors[1] + " Answer: "
         clean_ans = symbols[answer_choice]
-        counterfactual_prompt = "The " + object + " is " + colors[answer_choice] + ". What color is the " + object + "? " + counterfactual_symbols[0] + ". " + colors[1] + " " + counterfactual_symbols[1] + ". " + colors[0] + " Answer: "
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object + "? " + counterfactual_symbols[0] + ". " + colors[1] + " " + counterfactual_symbols[1] + ". " + colors[0] + " Answer: "
         counterfactual_ans = counterfactual_symbols[1 ^ answer_choice]
         # counterfactual = counterfactual_dataset.__getitem__(
         #     idx,
@@ -724,7 +724,7 @@ def get_answer_lookback_payload_mcqa(
         samples.append(
             {
                 "clean_characters": symbols,
-                "clean_objects": [object],
+                "clean_objects": object,
                 "clean_states": colors,
                 "clean_story": [],
                 "clean_question": [],
