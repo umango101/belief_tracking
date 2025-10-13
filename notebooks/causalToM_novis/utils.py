@@ -729,7 +729,7 @@ def get_answer_lookback_payload_mcqa(
                 "clean_story": [],
                 "clean_question": [],
                 "clean_ans": clean_ans,
-                "clean_prompt": clean_promp,
+                "clean_prompt": clean_prompt,
                 "counterfactual_characters": counterfactual_symbols,
                 "counterfactual_objects": [object],
                 "counterfactual_states": colors,
