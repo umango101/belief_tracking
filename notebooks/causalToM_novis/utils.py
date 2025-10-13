@@ -688,9 +688,9 @@ def get_answer_lookback_payload_mcqa(
         counterfactual_symbols = random.sample(all_symbols, 2)
 
         answer_choice = random.choice([0, 1])
-        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + ". \nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
         clean_ans = symbols[answer_choice]
-        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + ". \nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
         counterfactual_ans = counterfactual_symbols[1 ^ answer_choice]
 
         samples.append(
@@ -742,9 +742,9 @@ def get_answer_lookback_pointer_mcqa(
         counterfactual_symbols = random.sample(all_symbols, 2)
 
         answer_choice = random.choice([0, 1])
-        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + ". \nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
         clean_ans = symbols[answer_choice]
-        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + ". \nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
         counterfactual_ans = counterfactual_symbols[answer_choice]
 
         samples.append(
