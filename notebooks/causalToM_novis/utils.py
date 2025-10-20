@@ -49,18 +49,21 @@ def error_detection(
                         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
                     )
 
-                with tracer.invoke(counterfactual_prompt):
-                    counterfactual_pred = (
-                        model.lm_head.output[0, -1].argmax(dim=-1).item().save()
-                    )
+                # with tracer.invoke(counterfactual_prompt):
+                #     counterfactual_pred = (
+                #         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
+                #     )
         print("Clean answer: ", model.tokenizer.decode(clean_pred).lower().strip())
         print("Clean target: ", clean_target)
         print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
         print("Counterfactual target: ", counterfactual_target)
+        # if (
+        #     model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip() 
+        #     and model.tokenizer.decode([counterfactual_pred]).lower().strip()
+        #     == counterfactual_target.lower().strip() 
+        # ):
         if (
-            model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip() 
-            and model.tokenizer.decode([counterfactual_pred]).lower().strip()
-            == counterfactual_target.lower().strip() 
+            model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip()
         ):
             correct += 1
         else:
@@ -716,6 +719,113 @@ def get_answer_lookback_payload_mcqa(
     return samples
 
 def get_answer_lookback_pointer_mcqa(
+    n_samples: int,
+) -> list:
+    """
+    Generates samples for answer lookback payload by creating clean and counterfactual configurations
+    with different character-object-state mappings.
+
+    Args:
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and counterfactual samples with their configurations.
+    """
+    clean_configs, counterfactual_configs = [], []
+    samples = []
+    all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
+    all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
+    all_symbols = 'ABCDEFGHKLMNPQRSTUVWXYZ'
+
+    for idx in range(n_samples):
+        template_idx = 2
+        object = random.sample(all_objects, 1)
+        colors = random.sample(all_colors, 2)
+        symbols = random.sample(all_symbols, 2)
+        counterfactual_symbols = random.sample(all_symbols, 2)
+
+        answer_choice = random.choice([0, 1])
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        clean_ans = symbols[answer_choice]
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        counterfactual_ans = counterfactual_symbols[answer_choice]
+
+        samples.append(
+            {
+                "clean_characters": symbols,
+                "clean_objects": object,
+                "clean_states": colors,
+                "clean_story": [],
+                "clean_question": [],
+                "clean_ans": [clean_ans],
+                "clean_prompt": [clean_prompt],
+                "counterfactual_characters": [counterfactual_symbols],
+                "counterfactual_objects": object,
+                "counterfactual_states": colors,
+                "counterfactual_story": [],
+                "counterfactual_question": [],
+                "counterfactual_ans": [counterfactual_ans],
+                "counterfactual_prompt": [counterfactual_prompt],
+                "target": [counterfactual_ans],
+            }
+        )
+
+    return samples
+def get_order_lookback_payload_mcqa(
+    n_samples: int,
+) -> list:
+    """
+    Generates samples for answer lookback payload by creating clean and counterfactual configurations
+    with different character-object-state mappings.
+
+    Args:
+        n_samples (int): Number of samples to generate
+
+    Returns:
+        list: List of dictionaries containing clean and counterfactual samples with their configurations.
+    """
+    clean_configs, counterfactual_configs = [], []
+    samples = []
+    all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
+    all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
+    all_symbols = 'ABCDEFGHKLMNPQRSTUVWXYZ'
+
+    for idx in range(n_samples):
+        template_idx = 2
+        object = random.sample(all_objects, 1)
+        colors = random.sample(all_colors, 2)
+        symbols = random.sample(all_symbols, 2)
+        counterfactual_symbols = random.sample(all_symbols, 2)
+
+        answer_choice = random.choice([0, 1])
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        clean_ans = symbols[answer_choice]
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + counterfactual_symbols[0] + ". " + colors[1] + "\n" + counterfactual_symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
+        counterfactual_ans = counterfactual_symbols[1 ^ answer_choice]
+
+        samples.append(
+            {
+                "clean_characters": symbols,
+                "clean_objects": object,
+                "clean_states": colors,
+                "clean_story": [],
+                "clean_question": [],
+                "clean_ans": clean_ans,
+                "clean_prompt": clean_prompt,
+                "counterfactual_characters": counterfactual_symbols,
+                "counterfactual_objects": object,
+                "counterfactual_states": colors,
+                "counterfactual_story": [],
+                "counterfactual_question": [],
+                "counterfactual_ans": counterfactual_ans,
+                "counterfactual_prompt": counterfactual_prompt,
+                "target": counterfactual_ans,
+            }
+        )
+
+    return samples
+
+def get_order_lookback_pointer_mcqa(
     n_samples: int,
 ) -> list:
     """
