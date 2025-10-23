@@ -55,7 +55,7 @@ def error_detection(
                 #     )
         print("Clean answer: ", model.tokenizer.decode(clean_pred).lower().strip())
         print("Clean target: ", clean_target)
-        print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
+        # print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
         print("Counterfactual target: ", counterfactual_target)
         # if (
         #     model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip() 
@@ -70,7 +70,8 @@ def error_detection(
             errors.append(bi)
         total += 1
 
-        del clean_pred, counterfactual_pred
+        # del clean_pred, counterfactual_pred
+        del clean_pred
         torch.cuda.empty_cache()
 
     return correct / total, errors
