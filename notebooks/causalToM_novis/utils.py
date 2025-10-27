@@ -772,7 +772,7 @@ def get_answer_lookback_pointer_mcqa(
         )
 
     return samples
-def get_order_lookback_payload_mcqa(
+def get_order_lookback_mcqa(
     n_samples: int,
 ) -> list:
     """
@@ -799,10 +799,10 @@ def get_order_lookback_payload_mcqa(
         counterfactual_symbols = random.sample(all_symbols, 2)
 
         answer_choice = random.choice([0, 1])
-        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the correct color. Do not respond with a number or letter. \nAnswer: "
-        clean_ans = colors[answer_choice]
-        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[1] + "\n" + symbols[1] + ". " + colors[0] + "\nPlease respond only with the correct color. Do not respond with a number or letter. \nAnswer: "
-        counterfactual_ans = colors[answer_choice]
+        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number. \nAnswer: "
+        clean_ans = symbols[answer_choice]
+        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[1] + "\n" + symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number. \nAnswer: "
+        counterfactual_ans = symbols[1^answer_choice]
 
         samples.append(
             {
@@ -826,56 +826,3 @@ def get_order_lookback_payload_mcqa(
 
     return samples
 
-def get_order_lookback_pointer_mcqa(
-    n_samples: int,
-) -> list:
-    """
-    Generates samples for answer lookback payload by creating clean and counterfactual configurations
-    with different character-object-state mappings.
-
-    Args:
-        n_samples (int): Number of samples to generate
-
-    Returns:
-        list: List of dictionaries containing clean and counterfactual samples with their configurations.
-    """
-    clean_configs, counterfactual_configs = [], []
-    samples = []
-    all_objects = ['pen', 'book', 'bag', 'toy', 'car', 'bike', 'chair', 'desk', 'rug', 'paper']
-    all_colors = ['green', 'orange', 'black', 'red', 'blue', 'yellow', 'grey', 'pink', 'white', 'purple']
-    all_symbols = 'ABCDEFGHKLMNPQRSTUVWXYZ'
-
-    for idx in range(n_samples):
-        template_idx = 2
-        object = random.sample(all_objects, 1)
-        colors = random.sample(all_colors, 2)
-        symbols = random.sample(all_symbols, 2)
-        counterfactual_symbols = random.sample(all_symbols, 2)
-
-        answer_choice = random.choice([0, 1])
-        clean_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[0] + "\n" + symbols[1] + ". " + colors[1] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
-        clean_ans = colors[answer_choice]
-        counterfactual_prompt = "The " + object[0] + " is " + colors[answer_choice] + ". What color is the " + object[0] + "? \n" + symbols[0] + ". " + colors[1] + "\n" + symbols[1] + ". " + colors[0] + "\nPlease respond only with the letter corresponding with the correct color. Do not respond with a number. \nAnswer: "
-        counterfactual_ans = colors[1^answer_choice]
-
-        samples.append(
-            {
-                "clean_characters": symbols,
-                "clean_objects": object,
-                "clean_states": colors,
-                "clean_story": [],
-                "clean_question": [],
-                "clean_ans": [clean_ans],
-                "clean_prompt": [clean_prompt],
-                "counterfactual_characters": [counterfactual_symbols],
-                "counterfactual_objects": object,
-                "counterfactual_states": colors,
-                "counterfactual_story": [],
-                "counterfactual_question": [],
-                "counterfactual_ans": [counterfactual_ans],
-                "counterfactual_prompt": [counterfactual_prompt],
-                "target": [counterfactual_ans],
-            }
-        )
-
-    return samples
