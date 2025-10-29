@@ -49,22 +49,22 @@ def error_detection(
                         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
                     )
 
-                # with tracer.invoke(counterfactual_prompt):
-                #     counterfactual_pred = (
-                #         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
-                #     )
+                with tracer.invoke(counterfactual_prompt):
+                    counterfactual_pred = (
+                        model.lm_head.output[0, -1].argmax(dim=-1).item().save()
+                    )
         print("Clean answer: ", model.tokenizer.decode(clean_pred).lower().strip())
         print("Clean target: ", clean_target)
-        # print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
+        print("Counterfactual answer: ", model.tokenizer.decode([counterfactual_pred]).lower().strip())
         print("Counterfactual target: ", counterfactual_target)
-        # if (
-        #     model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip() 
-        #     and model.tokenizer.decode([counterfactual_pred]).lower().strip()
-        #     == counterfactual_target.lower().strip() 
-        # ):
         if (
-            model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip()
+            model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip() 
+            and model.tokenizer.decode([counterfactual_pred]).lower().strip()
+            == counterfactual_target.lower().strip() 
         ):
+        # if (
+        #     model.tokenizer.decode(clean_pred).lower().strip() == clean_target.lower().strip()
+        # ):
             correct += 1
         else:
             errors.append(bi)
