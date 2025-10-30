@@ -44,12 +44,12 @@ def error_detection(
 
         with torch.no_grad():
             with model.trace(remote=is_remote) as tracer:
-                with tracer.invoke(clean_prompt):
+                with tracer.invoke("The paper is grey. What color is the paper? \nS. green\nV. grey\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number.\nAnswer: "):
                     clean_pred = (
                         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
                     )
 
-                with tracer.invoke(counterfactual_prompt):
+                with tracer.invoke("The paper is grey. What color is the paper? \nS. grey\nV. green\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number.\nAnswer: "):
                     counterfactual_pred = (
                         model.lm_head.output[0, -1].argmax(dim=-1).item().save()
                     )
