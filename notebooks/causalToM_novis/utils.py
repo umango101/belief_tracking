@@ -34,11 +34,13 @@ def error_detection(
     errors = []
 
     for bi, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
-        clean_prompt = batch["clean_prompt"][0]
-        counterfactual_prompt = batch["counterfactual_prompt"][0]
-        clean_target = batch["clean_ans"][0]
-        counterfactual_target = batch["counterfactual_ans"][0]
-        clean_target = batch["clean_ans"][0]
+        clean_prompt = "The paper is grey. What color is the paper? \nS. green\nV. grey\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number.\nAnswer: "
+        counterfactual_prompt = "The paper is grey. What color is the paper? \nS. grey\nV. green\nPlease respond only with the letter corresponding to the correct color. Do not respond with a number.\nAnswer: "
+        # clean_target = batch["clean_ans"][0]
+        # counterfactual_target = batch["counterfactual_ans"][0]
+        # clean_target = batch["clean_ans"][0]
+        clean_target = "V"
+        counterfactual_target = "S"
         print("Clean prompt: ", clean_prompt)
         print("Counterfactual_prompt: ", counterfactual_prompt)
 
